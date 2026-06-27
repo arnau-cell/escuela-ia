@@ -1,0 +1,21 @@
+# Dependencias y build
+node_modules/
+.astro/
+dist/
+.cache/
+
+# Entorno y secretos (NUNCA subir)
+.env
+.env.*
+!.env.example
+
+# Datos / PII (nunca a GitHub)
+_DATOS/
+*.local
+
+# Scripts efímeros
+.dot_*
+
+# OS / editor
+.DS_Store
+Thumbs.db
