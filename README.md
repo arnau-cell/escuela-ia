@@ -44,8 +44,10 @@ Ver [CONTRIBUTING.md](./CONTRIBUTING.md). El plan completo del producto está en
 
 ## Licencias
 
-- **Código**: [MIT](./LICENSE).
-- **Contenido** (`src/content/`, `_conocimiento/`): [CC BY-SA 4.0](./LICENSE-content.md).
+Este repositorio usa un esquema dual:
+
+- **Código** — configuración, componentes, scripts, estilos: [MIT](./LICENSE).
+- **Contenido educativo** — `src/content/`, `_conocimiento/`: [CC BY-SA 4.0](./LICENSE-content.md).
 
 ## Sobre el proyecto
 
