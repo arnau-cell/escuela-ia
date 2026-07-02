@@ -1,0 +1,9 @@
+---
+// Override de PageTitle: el h1 por defecto de Starlight + el banner de traducción
+// desactualizada debajo, en toda página de docs.
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import TranslationStatus from './TranslationStatus.astro';
+---
+
+<Default><slot /></Default>
+<TranslationStatus />

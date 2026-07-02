@@ -1,0 +1,42 @@
+---
+// Override de LanguageSelect: resuelve el par ES/EN por translationKey (Starlight solo
+// empareja por slug idéntico, y nuestros slugs están traducidos). Ver src/routeData.ts.
+import { getCollection } from 'astro:content';
+
+const { starlightRoute } = Astro.locals;
+const { locale, entry } = starlightRoute;
+const currentLang = locale === 'en' ? 'en' : 'es';
+const targetLang = currentLang === 'en' ? 'es' : 'en';
+
+const allDocs = await getCollection('docs');
+const counterpart = allDocs.find((doc) => {
+	const isEn = doc.id.startsWith('en/');
+	const docLang = isEn ? 'en' : 'es';
+	return docLang === targetLang && doc.data.translationKey === entry.data.translationKey;
+});
+
+const targetHref = counterpart
+	? `/${counterpart.id}/`.replace(/\/+/g, '/')
+	: targetLang === 'en'
+		? '/en/'
+		: '/';
+
+const label = targetLang === 'en' ? 'English' : 'Español';
+---
+
+<a href={targetHref} rel="alternate" hreflang={targetLang} class="language-select-link">
+	{label}
+</a>
+
+<style>
+	.language-select-link {
+		display: inline-flex;
+		align-items: center;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-text-accent);
+		white-space: nowrap;
+	}
+	.language-select-link:hover {
+		text-decoration: underline;
+	}
+</style>

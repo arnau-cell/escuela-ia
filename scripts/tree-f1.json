@@ -1,0 +1,30 @@
+[
+  { "type": "docs", "es": "aprende/empieza-aqui", "en": "learn/start-here", "titleEs": "Empieza aquí", "titleEn": "Start here", "order": 1 },
+  { "type": "docs", "es": "aprende/nivel-0/index", "en": "learn/level-0/index", "titleEs": "Nivel 0 · IA para todos", "titleEn": "Level 0 · AI for everyone", "order": 2 },
+  { "type": "docs", "es": "aprende/nivel-1/index", "en": "learn/level-1/index", "titleEs": "Nivel 1 · Usuario", "titleEn": "Level 1 · User", "order": 3 },
+  { "type": "docs", "es": "aprende/nivel-2/index", "en": "learn/level-2/index", "titleEs": "Nivel 2 · Constructor", "titleEn": "Level 2 · Builder", "order": 4 },
+  { "type": "docs", "es": "aprende/nivel-3/index", "en": "learn/level-3/index", "titleEs": "Nivel 3 · Técnico", "titleEn": "Level 3 · Technical", "order": 5 },
+  { "type": "docs", "es": "aprende/conceptos/index", "en": "learn/concepts/index", "titleEs": "Conceptos transversales", "titleEn": "Cross-cutting concepts", "order": 6 },
+  { "type": "docs", "es": "aprende/conceptos/que-es-un-modelo", "en": "learn/concepts/what-is-a-model", "titleEs": "¿Qué es un modelo?", "titleEn": "What is a model?" },
+
+  { "type": "docs", "es": "hazlo/monta-tu-setup", "en": "build/set-up-your-ai", "titleEs": "Monta tu setup", "titleEn": "Set up your AI", "order": 1 },
+  { "type": "docs", "es": "hazlo/recetas/index", "en": "build/recipes/index", "titleEs": "Recetas y rutas", "titleEn": "Recipes and paths", "order": 2 },
+  { "type": "docs", "es": "hazlo/plataformas/index", "en": "build/platforms/index", "titleEs": "Plataformas", "titleEn": "Platforms", "order": 3 },
+
+  { "type": "docs", "es": "por-sector/index", "en": "by-industry/index", "titleEs": "Por sector", "titleEn": "By industry", "order": 1 },
+  { "type": "docs", "es": "por-sector/contabilidad-finanzas", "en": "by-industry/accounting-finance", "titleEs": "Contabilidad y finanzas", "titleEn": "Accounting and finance" },
+  { "type": "docs", "es": "por-sector/salud", "en": "by-industry/healthcare", "titleEs": "Salud", "titleEn": "Healthcare" },
+  { "type": "docs", "es": "por-sector/legal", "en": "by-industry/legal", "titleEs": "Legal", "titleEn": "Legal" },
+  { "type": "docs", "es": "por-sector/agricultura-ganaderia", "en": "by-industry/agriculture-livestock", "titleEs": "Agricultura y ganadería", "titleEn": "Agriculture and livestock" },
+  { "type": "docs", "es": "por-sector/informatica", "en": "by-industry/information-technology", "titleEs": "Informática", "titleEn": "Information technology" },
+  { "type": "docs", "es": "por-sector/marketing-ventas", "en": "by-industry/marketing-sales", "titleEs": "Marketing y ventas", "titleEn": "Marketing and sales" },
+  { "type": "docs", "es": "por-sector/educacion", "en": "by-industry/education", "titleEs": "Educación", "titleEn": "Education" },
+  { "type": "docs", "es": "por-sector/plantilla-sector", "en": "by-industry/industry-template", "titleEs": "Plantilla de sector", "titleEn": "Industry template" },
+
+  { "type": "docs", "es": "noticias/index", "en": "news/index", "titleEs": "Noticias", "titleEn": "News", "order": 1 },
+  { "type": "docs", "es": "comparte/index", "en": "share/index", "titleEs": "Comparte", "titleEn": "Share", "order": 1 },
+
+  { "type": "docs", "es": "recursos/glosario", "en": "resources/glossary", "titleEs": "Glosario", "titleEn": "Glossary", "order": 1 },
+  { "type": "docs", "es": "recursos/mapa-ia", "en": "resources/ai-map", "titleEs": "Mapa de la IA", "titleEn": "AI map", "order": 2 },
+  { "type": "docs", "es": "recursos/sobre-el-proyecto", "en": "resources/about", "titleEs": "Sobre el proyecto", "titleEn": "About the project", "order": 3 }
+]

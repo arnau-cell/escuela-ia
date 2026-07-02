@@ -1,0 +1,30 @@
+{
+  "name": "escuela-ia",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "check:i18n": "node scripts/i18n-check.mjs",
+    "new": "node scripts/new-content.mjs",
+    "test": "node --test \"scripts/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.41.2",
+    "astro": "^7.0.2",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.3",
+    "yaml": "^2.7.0"
+  }
+}

@@ -1,54 +1,52 @@
-# Escuela IA · 4º mundo (nombre PROVISIONAL)
+# Escuela de la IA / AI School
 
-> **Qué es este mundo:** el hogar del proyecto "Escuela de la IA / AI School" — una web pública,
-> gratuita, neutral y bilingüe (ES/EN) para que cualquiera entienda la IA de cero a nivel técnico,
-> con guía "monta tu setup", noticias, herramientas por sector y comunidad.
-> Idea de Arnau (2026-06-27). Proyecto para **ayudar**, no negocio; monetización fuera de foco.
+**ES** — El sitio de referencia gratuito y neutral para entender la IA de cero a nivel técnico, bilingüe (ES/EN). Sin afiliados de pago, siempre alternativas open-source, y una guía "monta tu setup" que te dice exactamente qué instalar según tu ordenador, presupuesto y objetivo. No es un negocio: es un proyecto para ayudar.
 
-> **Estado: SOLO BASE ORGANIZATIVA.** Hoy NO se ha construido la web. Esto es la casa del mundo
-> (carpetas + conocimiento + accesos) para empezar a construir mañana desde aquí.
+**EN** — The free, neutral reference site for understanding AI from zero to technical level, bilingual (ES/EN). No paid affiliates, always open-source alternatives, and a "set up your AI" guide that tells you exactly what to install based on your computer, budget and goal. Not a business — a project to help.
 
----
+🌐 [escuela-ia.pages.dev](https://escuela-ia.pages.dev) _(dominio provisional, definitivo pendiente)_
 
-## Decisiones tomadas (2026-06-27)
+## Stack
 
-- **Mundo nuevo separado** (4º mundo, decisión explícita de Arnau — rompe a propósito la regla de "solo 3 mundos").
-- **Repo público / open source** (código MIT · contenido CC BY-SA).
-- **Nombre/dominio**: provisional `Escuela IA` / `escuela-ia`. Definitivo se decide antes de lanzar.
-- **Stack** (investigado): Astro + Starlight · Cloudflare Pages · Pagefind · Giscus. Coste ~€12-20/año (dominio).
+[Astro](https://astro.build) + [Starlight](https://starlight.astro.build) · [Cloudflare Pages](https://pages.cloudflare.com) · [Pagefind](https://pagefind.app) (buscador) · [Giscus](https://giscus.app) (comentarios del blog) · analítica Cloudflare/Umami (sin cookies de rastreo).
 
-## Dónde está cada cosa
+## Desarrollo local
 
-| Pieza | Ruta |
-|---|---|
-| Código del mundo (este repo) | `C:\Work\EscuelaIA\` |
-| Conocimiento / plan / investigación | `C:\Work\EscuelaIA\_conocimiento\` |
-| Workspace VS Code | `C:\Work\EscuelaIA.code-workspace` |
-| Accesos directos del mundo | `C:\Work\_ACCESOS\Escuela IA\` (puerta única, vía escritorio `ACCESOS · Trabajo`) |
-| GitHub | `arnau-cell/escuela-ia` (público) — **pendiente de crear** (no se ha tocado nada externo hoy) |
-| Web (Cloudflare Pages) | pendiente (v1) |
+```bash
+npm install
+npm run dev          # http://localhost:4321
+npm run build         # build de producción
+npm run preview       # sirve el build de producción
+npm run check:i18n     # verifica que todos los pares ES/EN estén completos
+npm test               # tests de los scripts
+```
 
 ## Estructura
 
 ```
-EscuelaIA/
-├─ README.md                 ← este archivo (puerta del mundo)
-├─ CLAUDE.md / AGENTS.md     ← contexto fino para Claude Code / Codex en este mundo
-├─ .gitignore
-└─ _conocimiento/
-   ├─ PLAN_MAESTRO.md        ← el plan completo (IA, secciones, MVP, fases, riesgos)
-   ├─ DECISIONES.md          ← decisiones + reglas del sistema que aplican
-   └─ investigacion/
-      ├─ 01_stack-web-bilingue.md
-      ├─ 02_competidores-y-fuentes-contenido.md
-      └─ 03_diseno-arquitectura.md
+src/
+├─ content/
+│  ├─ docs/        # ES en la raíz, EN bajo docs/en/ (mismo translationKey)
+│  ├─ news/        # noticias, generadas por el pipeline automático
+│  └─ blog/        # entradas de blog (COMPARTE)
+├─ content.config.ts
+├─ components/
+├─ data/setup/      # reglas del configurador "monta tu setup"
+└─ i18n/ui.ts
+scripts/
+├─ new-content.mjs   # genera un par ES+EN nuevo con translationKey compartido
+└─ i18n-check.mjs     # falla si hay páginas huérfanas o traducciones desactualizadas
 ```
 
-> El scaffold de la web (Astro/Starlight, `src/`, etc.) se creará mañana, en este mismo repo.
+## Contribuir
 
-## Pendiente para mañana (primer arranque)
+Ver [CONTRIBUTING.md](./CONTRIBUTING.md). El plan completo del producto está en [`_conocimiento/PLAN_MAESTRO.md`](./_conocimiento/PLAN_MAESTRO.md) — es un documento abierto, cualquiera puede leer hacia dónde va el proyecto.
 
-1. Fijar **nombre + dominio** definitivos.
-2. Decidir el **vault de conocimiento en Drive** del 4º mundo (hoy el conocimiento vive aquí en local; falta su copia en Drive — los 3 mundos actuales usan G/I/H, el 4º no tiene unidad asignada todavía).
-3. Crear el **repo público** `arnau-cell/escuela-ia` y conectar Cloudflare Pages.
-4. Empezar por **F0+F1** del plan (scaffold Astro + i18n + deploy vacío) — ver `_conocimiento/PLAN_MAESTRO.md`.
+## Licencias
+
+- **Código**: [MIT](./LICENSE).
+- **Contenido** (`src/content/`, `_conocimiento/`): [CC BY-SA 4.0](./LICENSE-content.md).
+
+## Sobre el proyecto
+
+Idea y desarrollo: [Arnau Muset](https://github.com/arnau-cell). Sin afiliados de pago, sin patrocinios que condicionen el contenido core (que siempre es gratuito). Ver la sección "Sobre el proyecto" del propio sitio para la política de neutralidad completa.

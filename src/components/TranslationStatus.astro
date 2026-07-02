@@ -1,0 +1,51 @@
+---
+// Banner "traducción desactualizada" — solo se muestra en EN cuando la página declara
+// translationOutdated: true en su frontmatter (ver scripts/i18n-check.mjs, que exige ese
+// flag como única forma válida de tener un EN más antiguo que su par ES).
+import { getCollection } from 'astro:content';
+import { t } from '../i18n/ui';
+
+const { starlightRoute } = Astro.locals;
+const { locale, entry } = starlightRoute;
+const isEn = locale === 'en';
+const outdated = isEn && entry.data.translationOutdated === true;
+
+let sourceHref: string | undefined;
+if (outdated) {
+	const allDocs = await getCollection('docs');
+	const source = allDocs.find(
+		(doc) => !doc.id.startsWith('en/') && doc.data.translationKey === entry.data.translationKey,
+	);
+	sourceHref = source ? `/${source.id}/`.replace(/\/+/g, '/') : undefined;
+}
+---
+
+{
+	outdated && (
+		<aside role="note" class="translation-status">
+			<p>
+				{t(locale, 'translation.outdated')}
+				{sourceHref && (
+					<>
+						{' '}
+						<a href={sourceHref}>{t(locale, 'translation.viewSource')}</a>
+					</>
+				)}
+			</p>
+		</aside>
+	)
+}
+
+<style>
+	.translation-status {
+		border: 1px solid var(--sl-color-orange);
+		background-color: var(--sl-color-orange-low);
+		padding: 0.75rem 1rem;
+		border-radius: 0.25rem;
+		margin-block: 1rem;
+		font-size: var(--sl-text-sm);
+	}
+	.translation-status p {
+		margin: 0;
+	}
+</style>

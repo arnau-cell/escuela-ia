@@ -1,0 +1,39 @@
+---
+// Enlace a un concepto transversal (aprende/conceptos/<slug>). Falla el build si el
+// concepto no existe — validación gratuita de la red de enlaces pedagógicos.
+import { getCollection } from 'astro:content';
+
+interface Props {
+	/** Slug ES relativo a aprende/conceptos/, p.ej. "que-es-un-modelo". */
+	slug: string;
+}
+
+const { slug } = Astro.props;
+const { starlightRoute } = Astro.locals;
+const lang = starlightRoute.locale === 'en' ? 'en' : 'es';
+
+const translationKey = `aprende/conceptos/${slug}`;
+const allDocs = await getCollection('docs');
+const target = allDocs.find((doc) => {
+	const isEn = doc.id.startsWith('en/');
+	const docLang = isEn ? 'en' : 'es';
+	return docLang === lang && doc.data.translationKey === translationKey;
+});
+
+if (!target) {
+	throw new Error(
+		`ConceptLink: no existe el concepto "${slug}" (translationKey "${translationKey}") en idioma "${lang}"`,
+	);
+}
+
+const href = `/${target.id}/`.replace(/\/+/g, '/');
+---
+
+<a href={href} class="concept-link"><slot /></a>
+
+<style>
+	.concept-link {
+		text-decoration: underline dotted;
+		text-underline-offset: 3px;
+	}
+</style>

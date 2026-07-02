@@ -1,0 +1,8 @@
+---
+title: "Information technology"
+description: "Page in preparation."
+translationKey: por-sector/informatica
+sourceUpdated: 2026-07-02
+---
+
+> 🚧 **Page under construction.** The structure is final; content lands in the next phase.
