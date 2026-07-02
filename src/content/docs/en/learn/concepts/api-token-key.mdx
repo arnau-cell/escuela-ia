@@ -1,0 +1,29 @@
+---
+title: "API, token and key: the basics"
+description: "What an API is, what a token is, what an API key is, and how to use them safely."
+translationKey: aprende/conceptos/api-token-clave
+sourceUpdated: 2026-07-02
+---
+
+These three terms show up constantly in any AI tutorial, and they're easy to mix up. Here's how they fit together:
+
+## API
+
+An **API** (Application Programming Interface) is the way one program asks another program for things. When an app "uses the OpenAI API," it means it sends a request ("generate this text") to OpenAI's servers and gets a response back, without any person typing into a chat in between. It's the back door programs use to talk to each other.
+
+## API key
+
+A long, unique password that identifies who you are when you use an API — it lets the provider know who to bill and lets them cut off access if needed. It looks something like: `sk-ab12cd34...`.
+
+**Golden rule: an API key is never shared, never pushed to a public repository, and never pasted into a chat.** If it leaks, anyone can use it and you pay the bill. It's kept in a separate file your project ignores when pushing code (usually called `.env`), never directly in the code.
+
+## Token
+
+The word "token" has two different meanings depending on context, which is exactly why it's confusing:
+
+1. **Token as a "chunk of text"**: language models don't read whole words, they break text into fragments called tokens (roughly, 1 token ≈ 4 characters in English). When a service charges "per token," it's charging for how much text you process — both what you write and what the model generates.
+2. **Token as a "temporary access credential"**: in an authentication context, a token is like an API key but meant to last a short time or for a specific use (for example, when you log into a website and the browser stores a token that proves you already identified yourself, so you don't need to type your password on every click).
+
+## In practice
+
+When you connect an AI tool to a service, you'll typically: (1) create an account with the provider (OpenAI, Anthropic, Google...), (2) generate an API key from their dashboard, (3) paste it into a `.env` file in your project, never into visible code. That key authenticates each request (the "API"), and each request is billed based on the tokens (the "chunk of text") it uses.

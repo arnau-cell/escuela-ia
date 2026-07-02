@@ -1,0 +1,38 @@
+---
+title: "Local vs. nube: ¿qué ordenador necesito?"
+description: "Cuándo tiene sentido correr IA en tu propio ordenador y cuándo es mejor usar un servicio en la nube, con criterios claros de decisión."
+translationKey: aprende/conceptos/local-vs-nube
+sourceUpdated: 2026-07-02
+---
+
+import ConceptLink from '../../../../components/ConceptLink.astro';
+
+"Correr algo en local" significa que el modelo o la herramienta funciona dentro de tu propio ordenador, sin mandar nada a un servidor externo. "En la nube" significa que le mandas la petición a un servidor de otra empresa (OpenAI, Anthropic, Google...) y ese servidor hace el trabajo pesado y te devuelve el resultado.
+
+## Cuándo tiene sentido local
+
+- **Privacidad**: los datos no salen de tu máquina. Importante si trabajas con información sensible (clientes, historiales médicos, contratos).
+- **Coste a largo plazo**: una vez tienes el hardware, usarlo no tiene coste marginal por petición.
+- **Sin conexión**: funciona sin internet.
+- **Control total**: eliges exactamente qué modelo usar y cuándo cambiarlo.
+
+El contra: necesitas hardware capaz (ver <ConceptLink slug="gpu-cpu-vram">GPU, CPU y VRAM</ConceptLink>) y los modelos que caben en un ordenador normal son más limitados que los más grandes de la nube.
+
+## Cuándo tiene sentido la nube
+
+- **No tienes hardware potente** y no quieres comprarlo.
+- **Necesitas el modelo más capaz que existe** ahora mismo — los modelos de frontera (los más potentes) casi nunca están disponibles para correr en local.
+- **Uso esporádico**: pagar por uso sale más barato que comprar una GPU que vas a usar poco.
+- **Quieres empezar ya**, sin instalar nada.
+
+El contra: tus datos pasan por los servidores de otra empresa (revisa su política de privacidad), y el coste escala con el uso.
+
+## Una tercera vía: mixta
+
+Mucha gente usa ambas: modelos pequeños en local para tareas rápidas y privadas (resumir una nota, autocompletar código), y modelos grandes en la nube para lo que requiere más capacidad. No es una decisión de todo o nada.
+
+## Qué ordenador hace falta para local
+
+Como referencia (verificado julio 2026): con **16 GB de RAM y una GPU con 8-12 GB de VRAM** (por ejemplo, una NVIDIA RTX 4060, o un Mac con chip Apple Silicon y 16 GB de memoria unificada) puedes correr modelos de 7 000-14 000 millones de parámetros de forma fluida usando cuantización (ver <ConceptLink slug="que-es-un-modelo">modelo, peso y cuantización</ConceptLink>). Sin GPU dedicada también es posible, pero más lento.
+
+Usa la guía [«Monta tu setup»](/hazlo/monta-tu-setup/) para una recomendación concreta según tu ordenador, presupuesto y objetivo.

@@ -1,0 +1,47 @@
+---
+title: "Level 1 · User"
+description: "How to get more out of the AI tools you already use: better prompts, choosing a model, and understanding their real limits."
+translationKey: aprende/nivel-1/index
+sourceUpdated: 2026-07-02
+sidebar:
+  order: 3
+---
+
+import ConceptLink from '../../../../../components/ConceptLink.astro';
+
+This level assumes you've already used an AI chatbot at some point (see [Level 0](/en/learn/level-0/) if that's not the case) and want to move from "I use it sometimes" to "I know why it works better when I do it one way or another."
+
+## Asking better: the art of the prompt
+
+A **prompt** is simply what you write to the model. The difference between a mediocre answer and a useful one is almost always in how you ask, not which model you use. A few rules that work almost every time:
+
+- **Give context**, not just the question. "Fix this email" gets a worse result than "Fix this email addressed to a client, formal but approachable tone: [text]".
+- **Ask for the format you want**: "as a table," "in 3 bullet points," "under 100 words."
+- **Give it a role if it helps**: "act as a copy editor" focuses the response.
+- **Iterate**: the first answer is almost never the final one. "Make it shorter," "change the tone," "give me another version" is normal, expected use, not a failure on your part.
+- **Break complex tasks into steps**: instead of asking for everything at once, ask for one step, review, move to the next.
+
+## Not all models are the same
+
+Different providers (OpenAI, Anthropic, Google, Meta, Mistral...) release different <ConceptLink slug="que-es-un-modelo">models</ConceptLink>, and within each provider there are usually several versions (faster and cheaper, or more capable and slower). There's no "best model" in the abstract — it depends on the task: some are better at writing, others at step-by-step reasoning, others at coding. If a tool lets you choose the model, trying two or three with the same question is the fastest way to learn which one suits which task.
+
+## Context has a limit
+
+Every conversation has a limit to how much text it can "remember" at once — measured in the same <ConceptLink slug="api-token-clave">tokens</ConceptLink> you're sometimes billed for. If a conversation runs very long, the model can start "forgetting" what was said earlier. If you notice it losing the thread, that's a good sign to start a new conversation and summarize what matters at the top.
+
+## Beyond chat
+
+Using a chatbot on a website is just one way to access a model. Other increasingly common ways:
+
+- **Browser extensions** that summarize the page you're viewing.
+- **Integrations inside other apps** (text editors, spreadsheets, email) that use AI without you leaving the tool.
+- **Custom assistants** ("GPTs" or equivalents) configured with fixed instructions for a specific task, so you don't have to repeat the context every time.
+- **Connecting your own documents**: many tools let you upload files so the model answers based on them, not just on what it learned during training.
+
+## Privacy: what to be careful with
+
+Everything you type into a cloud chatbot passes through that company's servers. Before pasting sensitive information (client data, passwords, medical information), check the service's privacy policy, and if in doubt, don't — there are alternatives that run on your own computer (see <ConceptLink slug="local-vs-nube">local vs. cloud</ConceptLink>) built precisely for these cases.
+
+## Next step
+
+If you want to start building things with AI (automations, your own assistant, running models yourself), continue with [Level 2 · Builder](/en/learn/level-2/) or go straight to [Set up your AI](/en/build/set-up-your-ai/).

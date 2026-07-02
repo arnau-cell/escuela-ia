@@ -1,0 +1,29 @@
+---
+title: "Modelo, peso y cuantización"
+description: "Qué es un modelo de IA, qué son sus \"pesos\" o parámetros, y qué significa cuantizarlo para que quepa en tu ordenador."
+translationKey: aprende/conceptos/que-es-un-modelo
+sourceUpdated: 2026-07-02
+lastVerified: 2026-07-02
+---
+
+import ConceptLink from '../../../../components/ConceptLink.astro';
+
+## ¿Qué es un modelo?
+
+Un **modelo** de IA es un programa que ha "aprendido" un patrón a partir de muchísimos ejemplos, y que después puede aplicar ese patrón a ejemplos nuevos que nunca vio. Un modelo de lenguaje aprendió a predecir qué palabra viene después dada una secuencia de texto; con eso solo, es capaz de escribir código, resumir documentos o mantener una conversación.
+
+## ¿Qué son los "pesos"?
+
+Durante el entrenamiento, el modelo ajusta millones (o miles de millones) de números internos hasta que sus predicciones se acercan a lo correcto. Esos números son los **pesos** (o *parámetros*). Cuando lees "un modelo de 8B" o "de 70B", esa cifra son los miles de millones de pesos que tiene — más pesos generalmente significa más capacidad, pero también más hardware necesario para correrlo.
+
+Los pesos son, literalmente, el archivo que descargas cuando bajas un modelo para usarlo en local: un fichero de varios gigabytes con esos números dentro.
+
+## ¿Qué es la cuantización?
+
+Los pesos se guardan originalmente con mucha precisión numérica (por ejemplo, 16 bits por número). **Cuantizar** significa redondear esos números a una precisión menor (por ejemplo, 4 bits) para que el archivo pese mucho menos y necesite menos memoria — a cambio de una pérdida de calidad casi siempre pequeña.
+
+Como referencia (verificado julio 2026): un modelo de 7 000 millones de parámetros que en su versión completa (16 bits) necesita unos 16 GB de memoria, cuantizado a 4 bits (formato habitual: **GGUF**, cuantización `Q4_K_M`) baja a unos **4-6 GB**, con una pérdida de calidad inferior al 1% en la mayoría de tareas. Es lo que hace posible correr modelos "grandes" en un ordenador normal — ver <ConceptLink slug="gpu-cpu-vram">GPU, CPU y VRAM</ConceptLink> y <ConceptLink slug="local-vs-nube">local vs. nube</ConceptLink>.
+
+## En la práctica
+
+Cuando descargas un modelo con una herramienta como Ollama o LM Studio, vas a ver nombres como `llama3.1:8b-q4_K_M`. Ahora ya sabes descifrarlo: es el modelo Llama 3.1, con 8 000 millones de parámetros (pesos), cuantizado a 4 bits en formato K_M. Cuanta más cuantización, más ligero y rápido, pero algo menos preciso — el punto justo para la mayoría de usos personales suele ser 4 u 8 bits.

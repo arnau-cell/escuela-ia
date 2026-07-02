@@ -1,0 +1,47 @@
+---
+title: "Nivel 1 · Usuario"
+description: "Cómo sacarle más partido a las herramientas de IA que ya usas: prompts mejores, elegir modelo, y entender sus límites reales."
+translationKey: aprende/nivel-1/index
+sourceUpdated: 2026-07-02
+sidebar:
+  order: 3
+---
+
+import ConceptLink from '../../../../components/ConceptLink.astro';
+
+Este nivel asume que ya usaste un chatbot de IA alguna vez (ver [Nivel 0](/aprende/nivel-0/) si no es tu caso) y quieres pasar de "lo uso de vez en cuando" a "sé por qué funciona mejor cuando lo hago de una forma u otra".
+
+## Pedir mejor: el arte del prompt
+
+Un **prompt** es simplemente lo que le escribes al modelo. La diferencia entre una respuesta mediocre y una útil casi siempre está en cómo pides, no en qué modelo usas. Algunas reglas que funcionan casi siempre:
+
+- **Da contexto**, no solo la pregunta. "Corrige este email" da peor resultado que "Corrige este email dirigido a un cliente, tono formal pero cercano: [texto]".
+- **Pide el formato que quieres**: "en una tabla", "en 3 puntos", "en menos de 100 palabras".
+- **Dale un rol si ayuda**: "actúa como editor de estilo" enfoca la respuesta.
+- **Itera**: la primera respuesta casi nunca es la final. "Hazlo más corto", "cambia el tono", "dame otra versión" es un uso normal y esperado, no un fallo tuyo.
+- **Divide tareas complejas en pasos**: en vez de pedir todo de golpe, pide un paso, revisa, sigue con el siguiente.
+
+## No todos los modelos son iguales
+
+Distintos proveedores (OpenAI, Anthropic, Google, Meta, Mistral...) sacan distintos <ConceptLink slug="que-es-un-modelo">modelos</ConceptLink>, y dentro de cada proveedor suele haber varias versiones (más rápidas y baratas, o más capaces y lentas). No existe "el mejor modelo" en abstracto — depende de la tarea: unos son mejores escribiendo, otros razonando paso a paso, otros programando. Si una herramienta te deja elegir modelo, probar dos o tres con la misma pregunta es la forma más rápida de aprender cuál te conviene para qué.
+
+## El contexto tiene un límite
+
+Cada conversación tiene un límite de cuánto texto puede "recordar" a la vez — se mide en los mismos <ConceptLink slug="api-token-clave">tokens</ConceptLink> por los que a veces se cobra. Si una conversación se alarga mucho, el modelo puede empezar a "olvidar" lo de más al principio. Si notas que pierde el hilo, es buena señal para empezar una conversación nueva y resumir lo importante al principio.
+
+## Más allá del chat
+
+Usar un chatbot en una web es solo una forma de acceder a un modelo. Otras formas cada vez más comunes:
+
+- **Extensiones de navegador** que resumen la página que estás viendo.
+- **Integraciones dentro de otras apps** (editores de texto, hojas de cálculo, correo) que usan IA sin que tengas que salir de la herramienta.
+- **Asistentes personalizados** ("GPTs" o equivalentes) configurados con instrucciones fijas para una tarea concreta, sin que tengas que repetir el contexto cada vez.
+- **Conectar tus propios documentos**: muchas herramientas te dejan subir archivos para que el modelo responda basándose en ellos, no solo en lo que aprendió durante su entrenamiento.
+
+## Privacidad: qué hacer con cuidado
+
+Todo lo que escribes en un chatbot en la nube pasa por los servidores de esa empresa. Antes de pegar información sensible (datos de clientes, contraseñas, información médica), revisa la política de privacidad del servicio, y si tienes dudas, no lo hagas — hay alternativas que corren en tu propio ordenador (ver <ConceptLink slug="local-vs-nube">local vs. nube</ConceptLink>) precisamente para estos casos.
+
+## Siguiente paso
+
+Si quieres empezar a construir cosas con IA (automatizaciones, tu propio asistente, correr modelos tú mismo), sigue con [Nivel 2 · Constructor](/aprende/nivel-2/) o directamente con [Monta tu setup](/hazlo/monta-tu-setup/).

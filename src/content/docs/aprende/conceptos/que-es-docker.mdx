@@ -1,0 +1,36 @@
+---
+title: "¿Qué es Docker?"
+description: "Qué es un contenedor, para qué sirve Docker y por qué tantas herramientas de IA piden instalarlo primero."
+translationKey: aprende/conceptos/que-es-docker
+sourceUpdated: 2026-07-02
+---
+
+import ConceptLink from '../../../../components/ConceptLink.astro';
+
+Cuando instalas software, el problema clásico es "en mi ordenador funciona, en el tuyo no" — versiones distintas de programas, librerías que faltan, sistemas operativos diferentes. **Docker** existe para resolver eso.
+
+## La idea central: contenedores
+
+Un **contenedor** es como una caja cerrada que incluye el programa Y todo lo que necesita para funcionar (sus librerías, su configuración, su versión exacta de cada dependencia). Esa caja se comporta igual en cualquier ordenador que tenga Docker instalado, sea Windows, Mac o Linux.
+
+No es lo mismo que una máquina virtual completa (que simula un ordenador entero): un contenedor comparte el sistema operativo base y solo empaqueta lo que la aplicación necesita, así que arranca en segundos y pesa mucho menos.
+
+## Por qué te lo vas a encontrar constantemente
+
+Muchísimas herramientas de IA que se instalan en local (bases de datos vectoriales, interfaces de chat, herramientas de desarrollo) se distribuyen como una **imagen de Docker**: un paquete listo para correr con un solo comando, sin tener que instalar manualmente cada pieza que necesitan por debajo.
+
+En la práctica, cuando un tutorial dice:
+
+```
+docker run -p 3000:3000 nombre-de-la-herramienta
+```
+
+Está diciendo: "descarga esta caja ya preparada y ponla a correr". Eso es todo lo que necesitas entender para seguir la mayoría de tutoriales — no hace falta saber programar Docker para usarlo así.
+
+## Relación con desplegar
+
+Docker también es la base de cómo muchos servicios en la nube ejecutan aplicaciones (ver <ConceptLink slug="que-es-desplegar-una-app">qué significa desplegar una app</ConceptLink>): empaquetas tu app en una imagen de Docker y el servicio de hosting sabe exactamente cómo hacerla correr, sin sorpresas de "en mi máquina funcionaba".
+
+## Para empezar
+
+Instala **Docker Desktop** (Windows/Mac) o **Docker Engine** (Linux) — es gratis para uso personal. A partir de ahí, la mayoría de herramientas de IA que lo requieren te dan el comando exacto a copiar y pegar.

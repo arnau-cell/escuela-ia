@@ -1,0 +1,28 @@
+---
+title: "¿Qué significa \"desplegar\" una app?"
+description: "Qué significa poner una aplicación online para que otras personas puedan usarla, y las opciones más simples para hacerlo."
+translationKey: aprende/conceptos/que-es-desplegar-una-app
+sourceUpdated: 2026-07-02
+---
+
+import ConceptLink from '../../../../components/ConceptLink.astro';
+
+**Desplegar** (o "hacer deploy de") una aplicación significa ponerla a funcionar en un servidor accesible desde internet, para que cualquiera pueda usarla desde un enlace, sin depender de que tu ordenador esté encendido.
+
+Mientras programas o pruebas algo, lo normal es que corra "en local": solo tú lo ves, en `localhost` (tu propio ordenador). Desplegar es el paso de pasar de "solo yo lo veo" a "cualquiera con el enlace lo ve".
+
+## Las piezas del proceso
+
+1. **El código vive en algún sitio** — normalmente un repositorio de Git (GitHub, GitLab).
+2. **Un servicio de hosting lo construye y lo sirve** — recibe el código, lo prepara (esto se llama *build*) y lo publica en una URL.
+3. **Un dominio apunta ahí** — puedes usar la URL gratis que te da el hosting, o comprar tu propio dominio y apuntarlo.
+
+## Las opciones más simples hoy
+
+- **Sitios estáticos** (como este, hecho con Astro): Cloudflare Pages, Netlify, Vercel o GitHub Pages. Conectas tu repositorio de GitHub y cada cambio se publica solo. Gratis para proyectos personales.
+- **Apps con backend** (que necesitan un servidor corriendo todo el tiempo, no solo archivos estáticos): Railway, Render o Fly.io tienen niveles gratuitos o muy baratos para empezar.
+- **Contenedores** (ver <ConceptLink slug="que-es-docker">Docker</ConceptLink>): si tu app usa Docker, casi cualquier proveedor de hosting moderno lo acepta directamente.
+
+## Por qué te importa esto
+
+Cuando una herramienta de IA dice "puedes desplegarla en tu propia infraestructura" o "self-hosted", se refiere exactamente a esto: tú controlas dónde vive, en vez de depender del servicio de otra empresa. Es la diferencia entre usar un servicio como ChatGPT (alguien más lo despliega y lo mantiene) y montar tu propio asistente (lo despliegas tú, con más control pero más responsabilidad).

@@ -1,0 +1,38 @@
+---
+title: "Local vs. cloud: what computer do I need?"
+description: "When it makes sense to run AI on your own computer and when a cloud service is the better call, with clear decision criteria."
+translationKey: aprende/conceptos/local-vs-nube
+sourceUpdated: 2026-07-02
+---
+
+import ConceptLink from '../../../../../components/ConceptLink.astro';
+
+"Running something locally" means the model or tool works inside your own computer, without sending anything to an external server. "In the cloud" means you send the request to another company's server (OpenAI, Anthropic, Google...) and that server does the heavy lifting and sends you back the result.
+
+## When local makes sense
+
+- **Privacy**: data never leaves your machine. Important if you work with sensitive information (client data, medical records, contracts).
+- **Long-term cost**: once you have the hardware, using it has no marginal cost per request.
+- **Offline**: works without internet.
+- **Full control**: you choose exactly which model to use and when to switch.
+
+The downside: you need capable hardware (see <ConceptLink slug="gpu-cpu-vram">GPU, CPU and VRAM</ConceptLink>) and the models that fit on a regular computer are more limited than the biggest cloud ones.
+
+## When the cloud makes sense
+
+- **You don't have powerful hardware** and don't want to buy it.
+- **You need the most capable model that exists** right now — frontier models (the most powerful ones) are almost never available to run locally.
+- **Occasional use**: paying per use is cheaper than buying a GPU you'll barely use.
+- **You want to start right now**, without installing anything.
+
+The downside: your data passes through another company's servers (check their privacy policy), and cost scales with usage.
+
+## A third way: mixed
+
+Many people use both: small local models for fast, private tasks (summarizing a note, autocompleting code), and large cloud models for whatever needs more capability. It's not an all-or-nothing decision.
+
+## What computer local actually needs
+
+As a reference (verified July 2026): with **16 GB of RAM and a GPU with 8-12 GB of VRAM** (for example, an NVIDIA RTX 4060, or a Mac with Apple Silicon and 16 GB of unified memory) you can run 7-14 billion parameter models smoothly using quantization (see <ConceptLink slug="que-es-un-modelo">model, weights and quantization</ConceptLink>). Without a dedicated GPU it's still possible, just slower.
+
+Use the [«Set up your AI»](/en/build/set-up-your-ai/) guide for a concrete recommendation based on your computer, budget and goal.

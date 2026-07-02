@@ -29,6 +29,11 @@ function parseArgs(argv) {
 	return args;
 }
 
+/** Escapa un valor para usarlo dentro de un escalar YAML entre comillas dobles. */
+export function yamlString(value) {
+	return String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
+
 function todayIso() {
 	// Sin Date.now()/new Date() argless por convención de reproducibilidad de scripts;
 	// aquí SÍ es apropiado (CLI interactiva, no un workflow determinista) — se permite `new Date()`.
@@ -38,7 +43,7 @@ function todayIso() {
 function docsFrontmatter({ title, translationKey, sourceUpdated, order }) {
 	const lines = [
 		'---',
-		`title: "${title}"`,
+		`title: "${yamlString(title)}"`,
 		`description: "Página en preparación."`,
 		`translationKey: ${translationKey}`,
 		`sourceUpdated: ${sourceUpdated}`,
@@ -51,7 +56,7 @@ function docsFrontmatter({ title, translationKey, sourceUpdated, order }) {
 function docsFrontmatterEn({ title, translationKey, sourceUpdated, order }) {
 	const lines = [
 		'---',
-		`title: "${title}"`,
+		`title: "${yamlString(title)}"`,
 		`description: "Page in preparation."`,
 		`translationKey: ${translationKey}`,
 		`sourceUpdated: ${sourceUpdated}`,
@@ -64,12 +69,12 @@ function docsFrontmatterEn({ title, translationKey, sourceUpdated, order }) {
 function newsFrontmatter({ title, translationKey, sourceUpdated, lab, lang, sourceUrl }) {
 	return [
 		'---',
-		`title: "${title}"`,
+		`title: "${yamlString(title)}"`,
 		`description: "Resumen en preparación."`,
 		`translationKey: ${translationKey}`,
 		`sourceUpdated: ${sourceUpdated}`,
 		`publishedAt: ${sourceUpdated}`,
-		`sourceUrl: "${sourceUrl ?? 'https://example.com'}"`,
+		`sourceUrl: "${yamlString(sourceUrl ?? 'https://example.com')}"`,
 		`lab: ${lab ?? 'otros'}`,
 		'trending: false',
 		'reviewed: false',
@@ -82,7 +87,7 @@ function newsFrontmatter({ title, translationKey, sourceUpdated, lab, lang, sour
 function blogFrontmatter({ title, translationKey, sourceUpdated, category, lang }) {
 	return [
 		'---',
-		`title: "${title}"`,
+		`title: "${yamlString(title)}"`,
 		`description: "Entrada en preparación."`,
 		`translationKey: ${translationKey}`,
 		`sourceUpdated: ${sourceUpdated}`,

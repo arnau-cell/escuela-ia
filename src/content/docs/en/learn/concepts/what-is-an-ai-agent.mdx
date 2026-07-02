@@ -1,0 +1,30 @@
+---
+title: "What is an AI agent?"
+description: "The difference between a chatbot and an AI agent: what it means for a model to \"act\" instead of just responding."
+translationKey: aprende/conceptos/que-es-un-agente-de-ia
+sourceUpdated: 2026-07-02
+lastVerified: 2026-07-02
+---
+
+import ConceptLink from '../../../../../components/ConceptLink.astro';
+
+A regular chatbot does one thing: you write to it, it replies with text, and its job ends there. An **AI agent** goes a step further: it can **use tools** (search the web, run code, read a file, send an email), **chain several steps on its own**, and **evaluate its own results** to decide the next step — all without you having to give instructions at every point along the way.
+
+## An agent's loop
+
+A typical agent works in a cycle: it **perceives** the context (what you asked, what it already knows) → **reasons** through a plan (which steps to take, which tool to use) → **acts** (runs that tool: an <ConceptLink slug="api-token-clave">API call</ConceptLink>, a search, a calculation) → **observes** the result → and repeats, adjusting the plan if something didn't go as expected.
+
+## A concrete example
+
+- **Chatbot**: you ask "what's the weather like in Montevideo?" and it tells you it doesn't have access to real-time information.
+- **Agent**: gets the same question, decides it needs to use a web search tool, runs it, reads the result, and answers you with the actual data — without you telling it how to search.
+
+The difference isn't the model itself (it can be the exact same language model in both cases), but the **ability to act and chain steps** built around it.
+
+## Why it matters right now (2026)
+
+Agents are the piece that's replacing "copy-paste between a chatbot and other apps" workflows: instead of asking a model something and doing the rest by hand yourself, the agent does the rest for you. Most agents in production today use a common standard for connecting to external tools called **MCP** (Model Context Protocol), which standardizes how a model "discovers" and uses tools without every integration being coded from scratch.
+
+## A healthy warning
+
+More autonomy means more room for error without supervision — a poorly configured agent can loop a wrong step, overspend on API calls, or take an action you didn't want (like sending a real email). To start, use agents with narrow permissions and review what they do, especially for tasks with real consequences.

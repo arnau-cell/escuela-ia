@@ -1,0 +1,27 @@
+---
+title: "What is a database?"
+description: "What a database is, the types that exist, and why you'll keep running into this term when using AI tools."
+translationKey: aprende/conceptos/que-es-una-base-de-datos
+sourceUpdated: 2026-07-02
+---
+
+import ConceptLink from '../../../../../components/ConceptLink.astro';
+
+A **database** is, at its core, an organized place to store information so it can be searched, updated, and related later on. The difference from saving things in a text document or a spreadsheet is that a database is built to do this fast, with thousands or millions of records, without two people stepping on each other while writing at the same time.
+
+Whenever you use almost any AI tool — a chatbot with memory, an app that remembers your documents, an assistant that searches your email — there's a database underneath holding that information.
+
+## The types you'll run into
+
+- **Relational (SQL)**: information lives in tables with rows and columns, linked to each other (a "users" table linked to an "orders" table, for example). Examples: PostgreSQL, MySQL, SQLite. The default choice when your data has a clear structure.
+- **Document (NoSQL)**: each record is a flexible block (similar to JSON), with no mandatory fixed structure. Example: MongoDB. Useful when records vary a lot from one to another.
+- **Vector**: these store "meanings" instead of literal text — they're what makes it possible for an AI assistant to find the most *relevant* document for your question, not just the one containing the same words. Examples: Chroma, Pinecone, or vector extensions for PostgreSQL like pgvector. This is the type you'll see constantly mentioned in AI tools with "memory" or "search your documents" (RAG).
+- **Key-value and in-memory**: store simple pairs (a key, a value) that are very fast to read. Example: Redis. Used for caches and temporary data, not as the main store.
+
+## Local or in the cloud?
+
+A database can live on your own computer (SQLite, for instance, is literally a file) or on a server managed by another company (Supabase, PlanetScale, MongoDB Atlas...). See <ConceptLink slug="local-vs-nube">local vs. cloud</ConceptLink> for how to choose.
+
+## Why this matters even if you don't code
+
+If you're going to "set up your AI stack," you'll read terms like "this tool needs a vector database" or "saves your chats in local SQLite." Now you know what that means: where and how the information the tool needs to remember gets stored.

@@ -1,0 +1,38 @@
+---
+title: "GPU, CPU and VRAM: what hardware AI needs"
+description: "What CPU, GPU and VRAM are, why local AI depends so heavily on the GPU, and how much VRAM you need depending on model size."
+translationKey: aprende/conceptos/gpu-cpu-vram
+sourceUpdated: 2026-07-02
+lastVerified: 2026-07-02
+---
+
+import ConceptLink from '../../../../../components/ConceptLink.astro';
+
+## CPU vs. GPU
+
+The **CPU** (central processor) is your computer's "general brain": it does many different tasks, one after another, very well. The **GPU** (graphics card) was born to draw graphics, and for that it needs to do thousands of simple calculations **at the same time** — it turns out that same trick (huge numbers of simple math operations in parallel) is exactly what an AI model needs to run fast. That's why almost all modern AI depends on GPU, not CPU.
+
+You can run a model with just a CPU, but it will be much slower (sometimes 10-20x slower than with a GPU).
+
+## What is VRAM?
+
+**VRAM** is the graphics card's own memory (separate from the computer's regular RAM). When you run an AI model locally, its <ConceptLink slug="que-es-un-modelo">weights</ConceptLink> need to fit entirely in VRAM for the GPU to use them at full speed. If they don't fit, either you can't run the model, or it splits between VRAM and regular RAM (much slower).
+
+## How much VRAM you need (reference, verified July 2026)
+
+With 4-bit quantization (`Q4_K_M` format, see <ConceptLink slug="que-es-un-modelo">model, weights and quantization</ConceptLink>):
+
+| Model size | Approximate VRAM |
+|---|---|
+| 7B-8B (e.g. Llama 3.1 8B, Qwen3 8B) | 4-6 GB |
+| 13B | 8-10 GB |
+| 32B | ~20 GB |
+| 70B | 40 GB+ |
+
+A current mid-range GPU (8-12 GB of VRAM, e.g. an NVIDIA RTX 4060) runs 7B-14B models at a comfortable speed (30-60 tokens per second). The longer the context (the text you feed it at once), the more extra VRAM it needs — roughly an extra 0.1 GB per 1,000 tokens of context on a 7-8B model.
+
+## What if my computer doesn't have a dedicated GPU?
+
+Macs with Apple Silicon (M1 onward) use **unified memory**: RAM and VRAM are the same shared block of memory between CPU and GPU, which in practice lets them run reasonably large models with 16 GB of total memory. On Windows/Linux without a dedicated GPU, it's still possible to run small models with CPU alone, but expect much less speed.
+
+See <ConceptLink slug="local-vs-nube">local vs. cloud</ConceptLink> to decide whether investing in hardware or using a cloud service makes more sense for you.

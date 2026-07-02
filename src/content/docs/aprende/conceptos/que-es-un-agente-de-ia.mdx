@@ -1,0 +1,30 @@
+---
+title: "¿Qué es un agente de IA?"
+description: "La diferencia entre un chatbot y un agente de IA: qué significa que un modelo \"actúe\" en vez de solo responder."
+translationKey: aprende/conceptos/que-es-un-agente-de-ia
+sourceUpdated: 2026-07-02
+lastVerified: 2026-07-02
+---
+
+import ConceptLink from '../../../../components/ConceptLink.astro';
+
+Un chatbot normal hace una cosa: le escribes, te responde con texto, y ahí termina su trabajo. Un **agente de IA** va un paso más allá: puede **usar herramientas** (buscar en internet, ejecutar código, leer un archivo, enviar un correo), **encadenar varios pasos por sí solo**, y **evaluar sus propios resultados** para decidir el siguiente paso — todo esto sin que tengas que darle instrucciones en cada punto del camino.
+
+## El bucle de un agente
+
+Un agente típico funciona en un ciclo: **percibe** el contexto (lo que le pediste, lo que ya sabe) → **razona** un plan (qué pasos seguir, qué herramienta usar) → **actúa** (ejecuta esa herramienta: una <ConceptLink slug="api-token-clave">llamada a una API</ConceptLink>, una búsqueda, un cálculo) → **observa** el resultado → y repite, ajustando el plan si algo no salió como esperaba.
+
+## Un ejemplo concreto
+
+- **Chatbot**: le preguntas "¿qué tiempo hace en Montevideo?" y te dice que no tiene acceso a información en tiempo real.
+- **Agente**: recibe la misma pregunta, decide que necesita usar una herramienta de búsqueda web, la ejecuta, lee el resultado, y te responde con el dato real — sin que le digas tú cómo buscarlo.
+
+La diferencia no es el modelo en sí (puede ser el mismo modelo de lenguaje en ambos casos), sino la **capacidad de actuar y encadenar pasos** que se le da alrededor.
+
+## Por qué importa ahora mismo (2026)
+
+Los agentes son la pieza que está reemplazando a los flujos de "copiar-pegar entre un chatbot y otras apps": en vez de preguntarle algo a un modelo y hacer tú el resto a mano, el agente hace el resto por ti. La mayoría de agentes en producción hoy usan un estándar común para conectarse con herramientas externas llamado **MCP** (Model Context Protocol), que estandariza cómo un modelo "descubre" y usa herramientas sin que cada integración se programe desde cero.
+
+## Una advertencia sana
+
+Más autonomía significa más margen de error sin supervisión — un agente mal configurado puede repetir un paso equivocado en bucle, gastar más de la cuenta en llamadas a APIs, o tomar una acción que no querías (como enviar un correo real). Para empezar, usa agentes con permisos acotados y revisa lo que hacen, sobre todo en tareas con consecuencias reales.
