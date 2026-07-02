@@ -168,7 +168,14 @@ Criterio listo: i18n-check verde, Lighthouse >90, configurador sensato en 5 perf
 
 ## Estado (actualizado 2026-07-02)
 
-El scaffold F0+F1 (fase **E1** del plan total del proyecto) está en ejecución. El plan técnico de producto
-sigue siendo este documento; el plan de negocio (legal, financiación, aceleradoras, visibilidad, Uruguay y
-Emiratos) vive fuera de este repo público, en `_privado/` (gitignored) — protocolo de construcción/auditoría
-en `_privado/protocolo/PROTOCOLO.md`.
+El plan técnico de producto sigue siendo este documento; el plan de negocio (legal, financiación,
+aceleradoras, visibilidad, Uruguay y Emiratos) vive fuera de este repo público, en `_privado/` (gitignored)
+— protocolo de construcción/auditoría en `_privado/protocolo/PROTOCOLO.md`.
+
+**Fases completadas y auditadas**: E1 (scaffold F0+F1), E2 (contenido núcleo APRENDE), E3 (Monta tu setup) —
+las tres **APROBADAS CON RESERVAS** (menores, no bloqueantes; detalle y estado de cada una en
+`_conocimiento/PENDIENTES.md` y en `_privado/auditorias/EN-veredicto.md`).
+
+**Siguiente sesión**: resolver la última reserva abierta (texto de `ConceptLink` en español dentro del
+configurador EN, ver `PENDIENTES.md`) y a continuación arrancar **E4** (3 sectores semilla + plantilla,
+`_privado/protocolo/prompts/E4-constructor.md`).
