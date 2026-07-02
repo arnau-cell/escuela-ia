@@ -1,0 +1,27 @@
+---
+title: "¿Qué es una base de datos?"
+description: "Qué es una base de datos, los tipos que existen y por qué te vas a topar con este término cuando uses herramientas de IA."
+translationKey: aprende/conceptos/que-es-una-base-de-datos
+sourceUpdated: 2026-07-02
+---
+
+import ConceptLink from '../../../../components/ConceptLink.astro';
+
+Una **base de datos** es, en el fondo, un sitio ordenado donde se guarda información para poder buscarla, actualizarla y relacionarla después. La diferencia con guardar cosas en un documento de texto o una hoja de cálculo es que una base de datos está diseñada para hacer eso rápido, con miles o millones de registros, y sin que dos personas se pisen al escribir a la vez.
+
+Cuando usas casi cualquier herramienta de IA —un chatbot con memoria, una app que recuerda tus documentos, un asistente que busca en tu correo— por debajo hay una base de datos guardando esa información.
+
+## Los tipos que te vas a encontrar
+
+- **Relacionales (SQL)**: la información vive en tablas con filas y columnas, conectadas entre sí (por ejemplo, una tabla de "usuarios" conectada a una de "pedidos"). Ejemplos: PostgreSQL, MySQL, SQLite. Son la opción por defecto cuando los datos tienen una estructura clara.
+- **De documentos (NoSQL)**: cada registro es un bloque flexible (parecido a un JSON), sin una estructura fija obligatoria. Ejemplo: MongoDB. Útiles cuando los datos varían mucho de un registro a otro.
+- **Vectoriales**: guardan "significados" en vez de texto literal — son las que hacen posible que un asistente de IA encuentre el documento más *relevante* para tu pregunta, no solo el que contiene las mismas palabras. Ejemplos: Chroma, Pinecone, o extensiones vectoriales de PostgreSQL como pgvector. Este es el tipo que vas a ver mencionado constantemente en herramientas de IA con "memoria" o "búsqueda en tus documentos" (RAG).
+- **Clave-valor y en memoria**: guardan pares simples (una clave, un valor) muy rápido de leer. Ejemplo: Redis. Se usan para cachés y datos temporales, no como almacén principal.
+
+## ¿Local o en la nube?
+
+Una base de datos puede vivir en tu propio ordenador (por ejemplo, SQLite es literalmente un archivo) o en un servidor gestionado por otra empresa (Supabase, PlanetScale, MongoDB Atlas...). Ver <ConceptLink slug="local-vs-nube">local vs. nube</ConceptLink> para cómo elegir.
+
+## Por qué te importa esto sin ser programador
+
+Si vas a "montar tu setup" de IA, vas a leer términos como "esta herramienta necesita una base de datos vectorial" o "guarda tus chats en SQLite local". Ahora ya sabes qué significa: dónde y cómo se guarda la información que la herramienta necesita recordar.

@@ -1,0 +1,29 @@
+---
+title: "API, token y clave: lo básico"
+description: "Qué es una API, qué es un token, qué es una API key, y cómo se usan de forma segura."
+translationKey: aprende/conceptos/api-token-clave
+sourceUpdated: 2026-07-02
+---
+
+Estos tres términos aparecen constantemente en cualquier tutorial de IA, y se confunden fácil. Van así:
+
+## API
+
+Una **API** (Application Programming Interface) es la forma en que un programa le pide cosas a otro programa. Cuando una app "usa la API de OpenAI", quiere decir que le manda una petición ("genera este texto") a los servidores de OpenAI y recibe una respuesta, sin que haya ninguna persona escribiendo en un chat de por medio. Es la puerta trasera que usan los programas para hablar entre sí.
+
+## API key (clave de API)
+
+Es una contraseña larga y única que identifica quién eres cuando usas una API — sirve para que el proveedor sepa a quién cobrar y pueda cortar el acceso si hace falta. Se ve algo así: `sk-ab12cd34...`.
+
+**Regla de oro: una API key nunca se comparte, nunca se sube a un repositorio público, y nunca se pega en un chat.** Si se filtra, cualquiera puede usarla y tú pagas la factura. Se guarda en un archivo separado que tu proyecto ignora al subir código (normalmente llamado `.env`), nunca directamente en el código.
+
+## Token
+
+La palabra "token" tiene dos significados distintos según el contexto, y por eso confunde:
+
+1. **Token como "trozo de texto"**: los modelos de lenguaje no leen palabras enteras, las cortan en fragmentos llamados tokens (más o menos, 1 token ≈ 4 caracteres en inglés, algo menos en español). Cuando un servicio cobra "por token", cobra por cuánto texto procesas — tanto lo que escribes como lo que el modelo genera.
+2. **Token como "credencial de acceso temporal"**: en el contexto de autenticación, un token es como una API key pero pensada para durar poco tiempo o para un uso concreto (por ejemplo, cuando inicias sesión en una web y el navegador guarda un token que demuestra que ya te identificaste, sin que tengas que meter la contraseña en cada clic).
+
+## En la práctica
+
+Cuando conectes una herramienta de IA a un servicio, normalmente vas a: (1) crear una cuenta en el proveedor (OpenAI, Anthropic, Google...), (2) generar una API key desde su panel, (3) pegarla en un archivo `.env` de tu proyecto, nunca en el código visible. Esa clave es la que autentica cada petición (la "API") y cada petición se cobra según los tokens (el "trozo de texto") que use.

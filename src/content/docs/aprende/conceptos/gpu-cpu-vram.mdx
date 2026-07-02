@@ -1,0 +1,38 @@
+---
+title: "GPU, CPU y VRAM: qué hardware pide la IA"
+description: "Qué son la CPU, la GPU y la VRAM, por qué la IA local depende tanto de la GPU, y cuánta VRAM necesitas según el tamaño del modelo."
+translationKey: aprende/conceptos/gpu-cpu-vram
+sourceUpdated: 2026-07-02
+lastVerified: 2026-07-02
+---
+
+import ConceptLink from '../../../../components/ConceptLink.astro';
+
+## CPU vs. GPU
+
+La **CPU** (procesador central) es el "cerebro general" de tu ordenador: hace muchas tareas distintas, una detrás de otra, muy bien. La **GPU** (tarjeta gráfica) nació para dibujar gráficos, y para eso necesita hacer miles de cálculos simples **al mismo tiempo** — resulta que ese mismo truco (muchísimas operaciones matemáticas simples en paralelo) es exactamente lo que necesita un modelo de IA para funcionar rápido. Por eso casi toda la IA moderna depende de GPU, no de CPU.
+
+Se puede correr un modelo solo con CPU, pero va a ser mucho más lento (a veces 10-20 veces más lento que con GPU).
+
+## ¿Qué es la VRAM?
+
+La **VRAM** es la memoria propia de la tarjeta gráfica (distinta de la RAM normal del ordenador). Cuando corres un modelo de IA en local, sus <ConceptLink slug="que-es-un-modelo">pesos</ConceptLink> tienen que caber enteros en la VRAM para que la GPU los use a máxima velocidad. Si no caben, o no puedes correr el modelo, o se reparte entre VRAM y RAM normal (mucho más lento).
+
+## Cuánta VRAM hace falta (referencia, verificado julio 2026)
+
+Con cuantización de 4 bits (formato `Q4_K_M`, ver <ConceptLink slug="que-es-un-modelo">modelo, peso y cuantización</ConceptLink>):
+
+| Tamaño del modelo | VRAM aproximada |
+|---|---|
+| 7B-8B (p. ej. Llama 3.1 8B, Qwen3 8B) | 4-6 GB |
+| 13B | 8-10 GB |
+| 32B | ~20 GB |
+| 70B | 40 GB+ |
+
+Una GPU de gama media actual (8-12 GB de VRAM, por ejemplo una NVIDIA RTX 4060) corre modelos de 7B-14B a una velocidad cómoda (30-60 tokens por segundo). Cuanto más largo el contexto (el texto que le das de golpe), más VRAM adicional necesita — unos 0.1 GB extra por cada 1000 tokens de contexto en un modelo de 7-8B.
+
+## ¿Y si mi ordenador no tiene GPU dedicada?
+
+Los Mac con chip Apple Silicon (M1 en adelante) usan **memoria unificada**: la RAM y la VRAM son el mismo bloque de memoria compartido entre CPU y GPU, lo que en la práctica les permite correr modelos razonablemente grandes con 16 GB de memoria total. En Windows/Linux sin GPU dedicada, sigue siendo posible correr modelos pequeños solo con CPU, pero espera mucha menos velocidad.
+
+Ver <ConceptLink slug="local-vs-nube">local vs. nube</ConceptLink> para decidir si te compensa invertir en hardware o usar un servicio en la nube.

@@ -1,0 +1,36 @@
+---
+title: "What is Docker?"
+description: "What a container is, what Docker is for, and why so many AI tools ask you to install it first."
+translationKey: aprende/conceptos/que-es-docker
+sourceUpdated: 2026-07-02
+---
+
+import ConceptLink from '../../../../../components/ConceptLink.astro';
+
+When you install software, the classic problem is "it works on my computer, not on yours" — different program versions, missing libraries, different operating systems. **Docker** exists to solve that.
+
+## The core idea: containers
+
+A **container** is like a sealed box that includes the program AND everything it needs to run (its libraries, its configuration, the exact version of every dependency). That box behaves the same on any computer that has Docker installed, whether Windows, Mac or Linux.
+
+It's not the same as a full virtual machine (which simulates an entire computer): a container shares the base operating system and only packages what the application needs, so it starts in seconds and weighs much less.
+
+## Why you'll run into it constantly
+
+A huge number of AI tools that get installed locally (vector databases, chat interfaces, dev tools) are distributed as a **Docker image**: a ready-to-run package with a single command, without having to manually install every piece they need underneath.
+
+In practice, when a tutorial says:
+
+```
+docker run -p 3000:3000 tool-name
+```
+
+It's saying: "download this pre-built box and start it running." That's all you need to understand to follow most tutorials — you don't need to know how to program Docker to use it this way.
+
+## Relation to deploying
+
+Docker is also the foundation of how many cloud services run applications (see <ConceptLink slug="que-es-desplegar-una-app">what deploying an app means</ConceptLink>): you package your app into a Docker image and the hosting service knows exactly how to run it, with no "it worked on my machine" surprises.
+
+## To get started
+
+Install **Docker Desktop** (Windows/Mac) or **Docker Engine** (Linux) — it's free for personal use. From there, most AI tools that require it give you the exact command to copy and paste.

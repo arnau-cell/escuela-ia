@@ -1,0 +1,28 @@
+---
+title: "What does \"deploying\" an app mean?"
+description: "What it means to put an application online so other people can use it, and the simplest options for doing so."
+translationKey: aprende/conceptos/que-es-desplegar-una-app
+sourceUpdated: 2026-07-02
+---
+
+import ConceptLink from '../../../../../components/ConceptLink.astro';
+
+**Deploying** an application means getting it running on a server reachable from the internet, so anyone can use it from a link, without depending on your computer being turned on.
+
+While you're coding or testing something, it usually runs "locally": only you can see it, at `localhost` (your own computer). Deploying is the step from "only I can see it" to "anyone with the link can see it."
+
+## The pieces of the process
+
+1. **The code lives somewhere** — usually a Git repository (GitHub, GitLab).
+2. **A hosting service builds and serves it** — it receives the code, prepares it (this step is called a *build*), and publishes it at a URL.
+3. **A domain points there** — you can use the free URL the hosting service gives you, or buy your own domain and point it there.
+
+## The simplest options today
+
+- **Static sites** (like this one, built with Astro): Cloudflare Pages, Netlify, Vercel or GitHub Pages. You connect your GitHub repository and every change publishes itself. Free for personal projects.
+- **Apps with a backend** (that need a server running all the time, not just static files): Railway, Render or Fly.io have free or very cheap tiers to get started.
+- **Containers** (see <ConceptLink slug="que-es-docker">Docker</ConceptLink>): if your app uses Docker, almost any modern hosting provider accepts it directly.
+
+## Why this matters
+
+When an AI tool says "you can deploy it on your own infrastructure" or "self-hosted," this is exactly what it means: you control where it lives, instead of depending on another company's service. It's the difference between using a service like ChatGPT (someone else deploys and maintains it) and setting up your own assistant (you deploy it, with more control but more responsibility).

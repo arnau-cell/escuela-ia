@@ -1,0 +1,29 @@
+---
+title: "Model, weights and quantization"
+description: "What an AI model is, what its \"weights\" or parameters are, and what quantizing it means so it fits on your computer."
+translationKey: aprende/conceptos/que-es-un-modelo
+sourceUpdated: 2026-07-02
+lastVerified: 2026-07-02
+---
+
+import ConceptLink from '../../../../../components/ConceptLink.astro';
+
+## What is a model?
+
+An AI **model** is a program that has "learned" a pattern from a huge number of examples, and can then apply that pattern to new examples it never saw before. A language model learned to predict which word comes next given a sequence of text; from that alone, it's able to write code, summarize documents, or hold a conversation.
+
+## What are "weights"?
+
+During training, the model adjusts millions (or billions) of internal numbers until its predictions get close to correct. Those numbers are the **weights** (or *parameters*). When you read "an 8B model" or "a 70B model," that figure is the billions of weights it has — more weights generally means more capability, but also more hardware needed to run it.
+
+The weights are, literally, the file you download when you get a model to use locally: a file of several gigabytes with those numbers inside.
+
+## What is quantization?
+
+Weights are originally stored with high numerical precision (16 bits per number, for example). **Quantizing** means rounding those numbers to lower precision (4 bits, for example) so the file weighs much less and needs less memory — at the cost of a quality loss that's almost always small.
+
+As a reference (verified July 2026): a 7-billion-parameter model that in its full version (16-bit) needs about 16 GB of memory drops to about **4-6 GB** when quantized to 4 bits (common format: **GGUF**, `Q4_K_M` quantization), with a quality loss under 1% on most tasks. This is what makes it possible to run "large" models on a regular computer — see <ConceptLink slug="gpu-cpu-vram">GPU, CPU and VRAM</ConceptLink> and <ConceptLink slug="local-vs-nube">local vs. cloud</ConceptLink>.
+
+## In practice
+
+When you download a model with a tool like Ollama or LM Studio, you'll see names like `llama3.1:8b-q4_K_M`. Now you can decode it: it's the Llama 3.1 model, with 8 billion parameters (weights), quantized to 4 bits in K_M format. More quantization means lighter and faster, but slightly less precise — the sweet spot for most personal use is usually 4 or 8 bits.

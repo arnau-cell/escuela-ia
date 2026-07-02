@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { parse as parseYaml } from 'yaml';
 import { generate, generateBatch } from './new-content.mjs';
 import { checkAll } from './i18n-check.mjs';
 
@@ -103,6 +105,26 @@ test('news genera par con lang correcto', () => {
 		});
 		assert.ok(existsSync(join(dir, 'src/content/news/es/2026-07-02-ejemplo.md')));
 		assert.ok(existsSync(join(dir, 'src/content/news/en/2026-07-02-example.md')));
+	} finally {
+		rmSync(dir, { recursive: true, force: true });
+	}
+});
+
+test('título con comillas dobles no rompe el YAML del frontmatter (regresión)', () => {
+	const dir = makeProject();
+	try {
+		generate('docs', {
+			es: 'a',
+			en: 'a',
+			titleEs: '¿Qué significa "desplegar" una app?',
+			titleEn: 'What does "deploying" an app mean?',
+			sourceUpdated: '2026-07-02',
+			baseDir: dir,
+		});
+		const esFile = readFileSync(join(dir, 'src/content/docs/a.md'), 'utf8');
+		const match = /^---\r?\n([\s\S]*?)\r?\n---/.exec(esFile);
+		const fm = parseYaml(match[1]);
+		assert.equal(fm.title, '¿Qué significa "desplegar" una app?');
 	} finally {
 		rmSync(dir, { recursive: true, force: true });
 	}
