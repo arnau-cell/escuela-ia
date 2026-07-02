@@ -6,7 +6,14 @@
 
 ## Abiertas
 
-(ninguna)
+- [ ] **E3 — texto de `ConceptLink` en español dentro del configurador EN**: en
+  `src/components/SetupBuilder/SetupBuilder.astro` (script cliente), el texto visible de los enlaces a
+  conceptos se genera con `slug.replace(/-/g, ' ')`, y los `conceptSlugs` de `rules.en.json` usan siempre
+  el slug canónico en español (por diseño, comparten `translationKey` con ES). Resultado: en
+  `/en/build/set-up-your-ai/`, el bloque "To understand this:" muestra el texto en español aunque el
+  `href` sí apunta correctamente a la página en inglés. Afecta a 8 de las 13 reglas. Fix sugerido: que
+  `conceptHrefMap` (o un mapa nuevo) lleve también la etiqueta en el idioma correcto, resuelta en el mismo
+  bucle de `getCollection('docs')` que ya construye los hrefs. Detalle: `_privado/auditorias/E3-veredicto.md`.
 
 ## Resueltas
 
