@@ -30,3 +30,7 @@
 2. **Codificación y auditoría**: siempre 1 agente de Claude Code a la vez, nunca subagentes. Construcción y
    auditoría en sesiones separadas. Regla grabada en `CLAUDE.md` (raíz del repo) y memoria persistente.
 3. **F0+F1 (scaffold web bilingüe) en ejecución** como fase E1 del plan total.
+4. **Repo pasado a privado "por ahora"** (contradice temporalmente la decisión #3 del 27-jun de "público desde
+   el primer push"). El repo `arnau-cell/escuela-ia` sigue existiendo con todo el código de E1, solo cambia
+   su visibilidad. Pendiente: decidir cuándo volver a hacerlo público (antes de aceptar PRs externos o de
+   postular a programas que pidan código abierto verificable, ver `_privado/estrategia/aceleradoras.md`).
