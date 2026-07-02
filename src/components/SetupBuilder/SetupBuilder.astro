@@ -65,17 +65,18 @@ const UI = {
 };
 const ui = UI[locale];
 
-// Mapa slug-de-concepto → URL real por idioma, para que el script cliente pueda enlazar a
-// los conceptos transversales sin necesitar acceso server-side a astro:content.
+// Mapa slug-de-concepto → { href, title } real por idioma, para que el script cliente pueda
+// enlazar a los conceptos transversales (con el texto en el idioma correcto, no el slug crudo
+// en español) sin necesitar acceso server-side a astro:content. Ver concept-labels.js.
 const allDocs = await getCollection('docs');
-const conceptHrefMap: Record<string, { es?: string; en?: string }> = {};
+const conceptMap: Record<string, { es?: { href: string; title: string }; en?: { href: string; title: string } }> = {};
 for (const doc of allDocs) {
 	if (!doc.data.translationKey.startsWith('aprende/conceptos/')) continue;
 	if (doc.data.translationKey === 'aprende/conceptos/index') continue;
 	const slug = doc.data.translationKey.replace('aprende/conceptos/', '');
 	const isEn = doc.id.startsWith('en/');
 	const href = `/${doc.id}/`.replace(/\/+/g, '/');
-	conceptHrefMap[slug] = { ...(conceptHrefMap[slug] ?? {}), [isEn ? 'en' : 'es']: href };
+	conceptMap[slug] = { ...(conceptMap[slug] ?? {}), [isEn ? 'en' : 'es']: { href, title: doc.data.title } };
 }
 ---
 
@@ -126,10 +127,11 @@ for (const doc of allDocs) {
 	<div id="setup-result" class="setup-result" aria-live="polite"></div>
 </div>
 
-<script type="application/json" id="setup-concept-map" is:inline set:html={JSON.stringify(conceptHrefMap)} />
+<script type="application/json" id="setup-concept-map" is:inline set:html={JSON.stringify(conceptMap)} />
 
 <script type="module">
 	import { recommend, resolveRoute } from './setup-engine.js';
+	import { resolveConceptLink } from './concept-labels.js';
 	import rulesEs from '../../data/setup/rules.es.json';
 	import rulesEn from '../../data/setup/rules.en.json';
 	import platforms from '../../data/setup/platforms.json';
@@ -137,7 +139,7 @@ for (const doc of allDocs) {
 	const root = document.querySelector('.setup-builder');
 	const locale = root.dataset.locale === 'en' ? 'en' : 'es';
 	const rules = locale === 'en' ? rulesEn : rulesEs;
-	const conceptHrefMap = JSON.parse(document.getElementById('setup-concept-map').textContent);
+	const conceptMap = JSON.parse(document.getElementById('setup-concept-map').textContent);
 
 	const UI = {
 		es: { steps: 'Pasos', alternatives: 'Alternativas', cost: 'Coste', concepts: 'Para entender esto:', resultTitle: 'Tu ruta recomendada', fallbackNote: 'Esta es una recomendación genérica: no encontramos una ruta específica para tu combinación exacta de respuestas.' },
@@ -147,20 +149,14 @@ for (const doc of allDocs) {
 	const form = document.getElementById('setup-form');
 	const resultEl = document.getElementById('setup-result');
 
-	function conceptLink(slug) {
-		const href = conceptHrefMap[slug]?.[locale];
-		if (!href) return '';
-		return href;
-	}
-
 	function renderRoute(route) {
 		const isFallback = route.id === 'fallback-generico';
 		const stepsHtml = route.steps
 			.map((step) => {
 				const concepts = step.conceptSlugs
 					.map((slug) => {
-						const href = conceptLink(slug);
-						return href ? `<a href="${href}">${slug.replace(/-/g, ' ')}</a>` : '';
+						const link = resolveConceptLink(slug, locale, conceptMap);
+						return link ? `<a href="${link.href}">${link.label}</a>` : '';
 					})
 					.filter(Boolean)
 					.join(', ');

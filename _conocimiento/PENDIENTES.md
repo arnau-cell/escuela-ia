@@ -6,17 +6,24 @@
 
 ## Abiertas
 
-- [ ] **E3 — texto de `ConceptLink` en español dentro del configurador EN**: en
-  `src/components/SetupBuilder/SetupBuilder.astro` (script cliente), el texto visible de los enlaces a
-  conceptos se genera con `slug.replace(/-/g, ' ')`, y los `conceptSlugs` de `rules.en.json` usan siempre
-  el slug canónico en español (por diseño, comparten `translationKey` con ES). Resultado: en
-  `/en/build/set-up-your-ai/`, el bloque "To understand this:" muestra el texto en español aunque el
-  `href` sí apunta correctamente a la página en inglés. Afecta a 8 de las 13 reglas. Fix sugerido: que
-  `conceptHrefMap` (o un mapa nuevo) lleve también la etiqueta en el idioma correcto, resuelta en el mismo
-  bucle de `getCollection('docs')` que ya construye los hrefs. Detalle: `_privado/auditorias/E3-veredicto.md`.
+(ninguna)
 
 ## Resueltas
 
+- [x] **E3 — texto de `ConceptLink` en español dentro del configurador EN**: en
+  `src/components/SetupBuilder/SetupBuilder.astro` (script cliente), el texto visible de los enlaces a
+  conceptos se generaba con `slug.replace(/-/g, ' ')`, y los `conceptSlugs` de `rules.en.json` usan siempre
+  el slug canónico en español (por diseño, comparten `translationKey` con ES) — el bloque "To understand
+  this:" en `/en/build/set-up-your-ai/` mostraba texto en español aunque el `href` ya apuntaba bien a la
+  página en inglés. Afectaba a 8 de las 13 reglas. Resuelto 2026-07-02: extraída la lógica de resolución
+  a `src/components/SetupBuilder/concept-labels.js` (función pura `resolveConceptLink`, testeable sin
+  navegador — mismo patrón que `setup-engine.js`), y el mapa server-side (`SetupBuilder.astro`, antes
+  `conceptHrefMap`) ahora guarda `{ href, title }` por idioma en vez de solo el `href`, usando
+  `doc.data.title` real de cada concepto. El script cliente usa el título traducido; si por algún motivo
+  faltara la entrada de un idioma, cae a un href disponible con etiqueta legible en vez de romper.
+  Añadidos 5 tests nuevos, incluida una comprobación de integridad referencial (todo `conceptSlug` usado
+  en las reglas corresponde a un concepto real con `translationKey` existente). 37/37 tests en verde.
+  Detalle: `_privado/auditorias/E3-veredicto.md`.
 - [x] **E1 — licencia "Other" en GitHub** (cosmético, nota de licencia dual movida de `LICENSE` a
   `README.md`). Resuelto 2026-07-02. Detalle: `_privado/auditorias/E1-veredicto.md`.
 - [x] **E2 — `lastVerified` faltante en `local-vs-nube.mdx` / `local-vs-cloud.mdx`**: el texto dice
