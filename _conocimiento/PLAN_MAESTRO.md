@@ -166,8 +166,9 @@ Criterio listo: i18n-check verde, Lighthouse >90, configurador sensato en 5 perf
 - Lighthouse (perf/SEO/accesibilidad) > 90; `hreflang` correcto entre pares.
 - Pipeline: una ejecución de n8n crea un `.md` de noticia válido y dispara rebuild.
 
-## Único paso inmediato (Arnau eligió "solo documentar")
+## Estado (actualizado 2026-07-02)
 
-No se construye nada ahora. Acción pendiente cuando Arnau quiera: **formalizar el mundo nuevo y su
-nombre/dominio definitivos** (vía `/nuevo`), reubicar este plan en la carpeta del nuevo mundo, y
-entonces empezar por **F0+F1**. Este documento queda como el plan de referencia.
+El scaffold F0+F1 (fase **E1** del plan total del proyecto) está en ejecución. El plan técnico de producto
+sigue siendo este documento; el plan de negocio (legal, financiación, aceleradoras, visibilidad, Uruguay y
+Emiratos) vive fuera de este repo público, en `_privado/` (gitignored) — protocolo de construcción/auditoría
+en `_privado/protocolo/PROTOCOLO.md`.

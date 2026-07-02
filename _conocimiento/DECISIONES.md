@@ -21,3 +21,12 @@
 - Ubicación del **vault de conocimiento en Drive** del 4º mundo (los 3 actuales usan G/I/H; el 4º no tiene unidad asignada). Hasta entonces, el conocimiento vive en este repo (se respaldará al crear el remoto público).
 - Crear el repo público y conectar Cloudflare Pages.
 - Política editorial / de neutralidad detallada (irá en `CONTRIBUTING.md` + "Sobre el proyecto").
+
+## Decisiones de Arnau (2026-07-02)
+
+1. **Alcance ampliado**: el proyecto ya no es solo la web — incluye vehículo de startup (legal, financiación,
+   visibilidad, Uruguay + Emiratos). Plan total de fases E0-E11 en `_privado/` (privado, no en este repo público
+   por contener estrategia de negocio, cifras y contactos).
+2. **Codificación y auditoría**: siempre 1 agente de Claude Code a la vez, nunca subagentes. Construcción y
+   auditoría en sesiones separadas. Regla grabada en `CLAUDE.md` (raíz del repo) y memoria persistente.
+3. **F0+F1 (scaffold web bilingüe) en ejecución** como fase E1 del plan total.

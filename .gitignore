@@ -13,6 +13,9 @@ dist/
 _DATOS/
 *.local
 
+# Estrategia privada (legal, pitch, aceleradoras, protocolo) — nunca a GitHub (repo público)
+_privado/
+
 # Scripts efímeros
 .dot_*
 
