@@ -6,6 +6,18 @@
 
 ## Abiertas
 
+- [ ] **E6 — PR #6 abierto, dos checkpoints humanos siguen pendientes**: GitHub Discussions
+  desactivado (`has_discussions: false`, verificado) — Giscus está preparado en
+  `src/components/Giscus.astro` pero no activo, necesita que Arnau active Discussions y pegue
+  `REPO_ID`/`CATEGORY_ID` de giscus.app en el componente. Cloudflare Pages sin conectar
+  (`escuela-ia.pages.dev` no resuelve, verificado con `nslookup`) — el punto de inyección de
+  analítica ya existe en `src/config/analytics.ts` pero necesita el token real del panel de
+  Cloudflare Web Analytics una vez conectado. Lighthouse (100/100/100/100 en las páginas
+  muestreadas) se corrió contra `npm run preview` local, no contra un deploy real — repetir contra
+  el hosting final en cuanto exista. Detalle: `_privado/auditorias/E6-handoff.md`.
+- [ ] **E6 — falta un asset de `og:image` por defecto** (no bloqueante, cosmético): no existe
+  ninguna imagen de diseño para compartir en redes; Open Graph funciona bien sin ella (título,
+  descripción, url) pero sin imagen de portada. Detalle: `_privado/auditorias/E6-handoff.md`.
 - [ ] **E5 — PR real #5 generado, pendiente de revisión/aprobación de Arnau**: primera ejecución de punta
   a punta del pipeline completada de verdad en el n8n del VPS tras crear el PAT
   (`github-escuela-ia-news-bot`, vinculado a los 6 nodos que lo necesitan). Se encontraron y corrigieron

@@ -166,16 +166,23 @@ Criterio listo: i18n-check verde, Lighthouse >90, configurador sensato en 5 perf
 - Lighthouse (perf/SEO/accesibilidad) > 90; `hreflang` correcto entre pares.
 - Pipeline: una ejecución de n8n crea un `.md` de noticia válido y dispara rebuild.
 
-## Estado (actualizado 2026-07-02)
+## Estado (actualizado 2026-07-03)
 
 El plan técnico de producto sigue siendo este documento; el plan de negocio (legal, financiación,
 aceleradoras, visibilidad, Uruguay y Emiratos) vive fuera de este repo público, en `_privado/` (gitignored)
 — protocolo de construcción/auditoría en `_privado/protocolo/PROTOCOLO.md`.
 
-**Fases completadas y auditadas**: E1 (scaffold F0+F1), E2 (contenido núcleo APRENDE), E3 (Monta tu setup) —
-las tres **APROBADAS CON RESERVAS** (menores, no bloqueantes; detalle y estado de cada una en
-`_conocimiento/PENDIENTES.md` y en `_privado/auditorias/EN-veredicto.md`).
+**Fases completadas y auditadas**: E1 (scaffold F0+F1), E2 (contenido núcleo APRENDE), E3 (Monta tu
+setup), E4 (3 sectores semilla + plantilla) — **APROBADAS CON RESERVAS** (menores, no bloqueantes;
+detalle en `_conocimiento/PENDIENTES.md` y en `_privado/auditorias/`). E5 (pipeline de noticias)
+**aprobada en lo construido, fase abierta**: PR #5 real generado por el pipeline corriendo en n8n,
+pendiente de revisión editorial de Arnau antes de fusionar.
 
-**Siguiente sesión**: resolver la última reserva abierta (texto de `ConceptLink` en español dentro del
-configurador EN, ver `PENDIENTES.md`) y a continuación arrancar **E4** (3 sectores semilla + plantilla,
-`_privado/protocolo/prompts/E4-constructor.md`).
+**E6 (blog + legal on-site + pulido, F6) construida, pendiente de auditoría**: PR #6 abierto
+(`f6-blog-legal-pulido`), gates verdes, Lighthouse 100/100/100/100 contra `npm run preview` (sin
+deploy real todavía). Dos checkpoints humanos siguen pendientes desde E1: GitHub Discussions
+(bloquea activar Giscus del todo) y Cloudflare Pages (bloquea analítica real y Lighthouse contra
+producción). Detalle: `_privado/auditorias/E6-handoff.md`.
+
+**Siguiente sesión**: auditoría de E6 (nueva sesión, distinta de la constructora) antes de decidir
+si se pasa a **E7** (QA + lanzamiento v1).

@@ -1,0 +1,61 @@
+---
+// Override de Footer: el footer por defecto de Starlight (edit link, last updated, paginación)
+// + una fila de enlaces legales, visible en TODA página de contenido y en ambos idiomas —
+// cumple el requisito de "enlace visible desde el footer" de _privado/LEGAL.md.
+import Default from '@astrojs/starlight/components/Footer.astro';
+import { t } from '../i18n/ui';
+
+const { starlightRoute } = Astro.locals;
+const locale = starlightRoute.locale === 'en' ? 'en' : 'es';
+
+const links =
+	locale === 'en'
+		? {
+				legalNotice: '/en/resources/legal-notice/',
+				privacy: '/en/resources/privacy/',
+				cookies: '/en/resources/cookies/',
+			}
+		: {
+				legalNotice: '/recursos/aviso-legal/',
+				privacy: '/recursos/privacidad/',
+				cookies: '/recursos/cookies/',
+			};
+---
+
+<Default><slot /></Default>
+<div class="legal-footer sl-flex">
+	<nav aria-label={t(locale, 'footer.legalNotice')}>
+		<a href={links.legalNotice}>{t(locale, 'footer.legalNotice')}</a>
+		<span aria-hidden="true">·</span>
+		<a href={links.privacy}>{t(locale, 'footer.privacy')}</a>
+		<span aria-hidden="true">·</span>
+		<a href={links.cookies}>{t(locale, 'footer.cookies')}</a>
+	</nav>
+	<p class="legal-license">{t(locale, 'footer.license')}</p>
+</div>
+
+<style>
+	.legal-footer {
+		flex-direction: column;
+		gap: 0.5rem;
+		margin-top: 1.5rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--sl-color-gray-6);
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-gray-3);
+	}
+	.legal-footer nav {
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+	.legal-footer a {
+		color: var(--sl-color-gray-2);
+	}
+	.legal-footer a:hover {
+		color: var(--sl-color-white);
+	}
+	.legal-license {
+		margin: 0;
+	}
+</style>

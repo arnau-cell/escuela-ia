@@ -9,6 +9,10 @@ export const ui = {
 		'wip.title': 'Página en construcción',
 		'wip.body': 'La estructura ya es definitiva; el contenido llega en la siguiente fase.',
 		'concept.aria': 'Concepto del glosario: ',
+		'footer.legalNotice': 'Aviso legal',
+		'footer.privacy': 'Privacidad',
+		'footer.cookies': 'Cookies',
+		'footer.license': 'Contenido bajo CC BY-SA 4.0 · código bajo MIT',
 	},
 	en: {
 		'translation.outdated':
@@ -18,6 +22,10 @@ export const ui = {
 		'wip.title': 'Page under construction',
 		'wip.body': 'The structure is final; content lands in the next phase.',
 		'concept.aria': 'Glossary concept: ',
+		'footer.legalNotice': 'Legal notice',
+		'footer.privacy': 'Privacy',
+		'footer.cookies': 'Cookies',
+		'footer.license': 'Content under CC BY-SA 4.0 · code under MIT',
 	},
 } as const;
 

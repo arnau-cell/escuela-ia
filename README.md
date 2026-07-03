@@ -4,7 +4,8 @@
 
 **EN** — The free, neutral reference site for understanding AI from zero to technical level, bilingual (ES/EN). No paid affiliates, always open-source alternatives, and a "set up your AI" guide that tells you exactly what to install based on your computer, budget and goal. Not a business — a project to help.
 
-🌐 [escuela-ia.pages.dev](https://escuela-ia.pages.dev) _(dominio provisional, definitivo pendiente)_
+🌐 `escuela-ia.pages.dev` _(dominio provisional elegido para cuando se conecte Cloudflare Pages —_
+_todavía no hay despliegue real; el enlace no resuelve mientras tanto, comprobado 2026-07-03)_
 
 ## Stack
 
