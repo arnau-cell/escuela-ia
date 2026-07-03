@@ -23,21 +23,19 @@
 - [ ] **E6 — falta un asset de `og:image` por defecto** (no bloqueante, cosmético): no existe
   ninguna imagen de diseño para compartir en redes; Open Graph funciona bien sin ella (título,
   descripción, url) pero sin imagen de portada. Detalle: `_privado/auditorias/E6-handoff.md`.
-- [ ] **E5 — PR real #5 generado, pendiente de revisión/aprobación de Arnau**: primera ejecución de punta
-  a punta del pipeline completada de verdad en el n8n del VPS tras crear el PAT
-  (`github-escuela-ia-news-bot`, vinculado a los 6 nodos que lo necesitan). Se encontraron y corrigieron
-  2 bugs reales durante la ejecución (IF de duplicado sin `fullResponse`, pérdida de datos del
-  normalizador al pasar por la llamada HTTP intermedia, y descripción vacía cuando el feed no trae
-  snippet — los 3 corregidos en `ops/n8n/pipeline-noticias.workflow.json`). Resultado:
-  https://github.com/arnau-cell/escuela-ia/pull/5 — rama `noticias/2026-07-01-e4a02290`, 2 archivos
-  ES+EN, `reviewed: false`, CI verde. **Pendiente de Arnau**: revisar el contenido/traducción del PR y
-  decidir aprobar+mergear (marcando `reviewed: true`) o pedir cambios/cerrar. Detalle completo:
-  `_privado/auditorias/E5-handoff-v2.md` y `_privado/auditorias/E5-handoff-v3.md`.
-  Decisiones que siguen abiertas, no urgentes: (a) empezar solo con los 4 feeds RSS oficiales confirmados
-  (OpenAI, Google AI, Hugging Face, arXiv) o esperar/aceptar mirror no oficial para Anthropic/Mistral;
-  (b) servicio de traducción EN→ES (propuesta: LibreTranslate autoalojado en el mismo VPS, nuevo
-  contenedor, requiere aprobación); (c) proveedor de LLM barato si se quiere la rama de "destacadas"
-  enriquecidas desde el principio.
+- [ ] **E5 — decisiones de producto no urgentes, pendientes de Arnau**: (a) empezar solo con los 4 feeds
+  RSS oficiales confirmados (OpenAI, Google AI, Hugging Face, arXiv) o esperar/aceptar mirror no oficial
+  para Anthropic/Mistral; (b) servicio de traducción EN→ES (propuesta: LibreTranslate autoalojado en el
+  mismo VPS, nuevo contenedor, requiere aprobación); (c) proveedor de LLM barato para el paso de
+  reescritura de tono (ver entrada siguiente) y para la rama de "destacadas" enriquecidas. Ninguna
+  bloquea el pipeline, que ya funciona con el fallback/modo manual actual.
+- [ ] **E5 — automatizar el tono editorial de títulos/resúmenes** (decisión de Arnau, 2026-07-03): tono
+  serio/profesional con gancho comercial que incite a la conversación, aplicado por primera vez a mano
+  en el PR #5 (ver `ops/n8n/README.md`, sección "Tono editorial"). Objetivo declarado: una vez validado
+  con varias rondas de revisión manual, entrenar/promptear un paso de reescritura (LLM barato) para que
+  el pipeline lo aplique de forma autónoma, sin perder el fact-check contra la fuente en cada titular.
+  Pendiente: elegir proveedor de LLM (mismo que el punto (c) de arriba) y diseñar el prompt/paso en
+  `pipeline-noticias.workflow.json` — no urgente, se sigue aplicando a mano mientras tanto.
 - [ ] **E5 — anotado para más adelante, no urgente**: el pipeline de noticias correría en el VPS
   **personal** de Arnau (única instancia n8n self-hosted, sin separación por proyecto, hoy sirve
   Contabilidad/Networking/Inversión UY). Aceptable en fase de prototipo, pero antes de que Escuela IA
@@ -47,6 +45,12 @@
 
 ## Resueltas
 
+- [x] **E5 — PR #5 (primera noticia real) revisado, reescrito con tono editorial y mergeado**: Arnau
+  revisó el contenido, definió el tono (serio/profesional con gancho comercial) y pidió reescribir el
+  título/descripción antes de aprobar. Reescrito en ambos idiomas verificando contra la fuente original
+  (el primer borrador de titular decía "local" incorrectamente — la fuente habla de infraestructura en
+  la nube de Cerebras, no de ejecución local; corregido antes de publicar). `reviewed: true` en ambos
+  archivos, PR mergeado 2026-07-03. Detalle: `ops/n8n/README.md` sección "Tono editorial".
 - [x] **E6 — precio de Ollama Pro Max incorrecto** en `blog/*/reviews/ollama-*.md` (ES+EN): decía "cerca
   de 200 USD/mes" para un plan "Pro Max" que no existe. Resuelto 2026-07-03: verificado de nuevo
   directamente en `ollama.com/pricing` (WebFetch a la página oficial) — los planes reales son "Pro"

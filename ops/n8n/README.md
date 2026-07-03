@@ -46,6 +46,31 @@ Cron diario
   → crear rama + 2 archivos (ES+EN) + Pull Request — NUNCA commit directo a master
 ```
 
+## Tono editorial de títulos y resúmenes (decisión de Arnau, 2026-07-03)
+
+**Tono**: serio, profesional y con conocimiento de causa, pero con gancho comercial — un titular que
+incite a la conversación, no un resumen plano del RSS. Ejemplo real (PR #5, artículo de Hugging
+Face/Cerebras sobre voz en tiempo real con Gemma 4):
+
+- ❌ Literal del feed: *"Hugging Face and Cerebras bring Gemma 4 to real-time voice AI"*
+- ✅ Con gancho: *"Cerebras just solved AI's biggest bottleneck for real-time voice: response speed"*
+  / *"Cerebras acaba de resolver el mayor cuello de botella de la IA conversacional: la velocidad"*
+
+**Regla no negociable al aplicar este tono**: el gancho no puede introducir una imprecisión que la
+fuente no respalde. El primer intento de titular para ese mismo PR decía "Gemma 4, un sistema open
+source **local**" — la fuente real habla de infraestructura **en la nube** de Cerebras (la velocidad
+de esa infraestructura es justo el punto del artículo), no de ejecución local. Se verificó contra el
+artículo original (`sourceUrl`) antes de publicar. Todo titular con gancho se verifica contra la
+fuente igual que cualquier otro dato del sitio — el gancho no exime del fact-check.
+
+**Estado actual (fase de entrenamiento del criterio, no automatizado todavía)**: este tono se aplica
+a mano, durante la revisión humana del modo PR-revisado — no hay ningún paso automático en el
+workflow que lo genere todavía. El objetivo declarado es que, una vez validado con varias rondas de
+revisión manual, se entrene/prompte un paso de reescritura (LLM barato, la misma pieza ya prevista
+para "destacadas", extendida a todos los títulos) para que el pipeline lo aplique de forma autónoma
+sin intervención humana en cada noticia. Hasta que ese paso exista y se valide, sigue aplicándose
+manualmente en cada PR, con el mismo fact-check contra la fuente que cualquier otro dato del sitio.
+
 ## Whitelist de fuentes RSS (verificadas 2026-07-03)
 
 | Lab | URL del feed | Verificado |
