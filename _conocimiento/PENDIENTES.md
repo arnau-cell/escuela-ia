@@ -6,7 +6,14 @@
 
 ## Abiertas
 
-(ninguna)
+- [ ] **E4 — precio de Copy.ai desactualizado** en `por-sector/marketing-ventas.mdx` /
+  `en/by-industry/marketing-sales.mdx` (tabla de herramientas): dice "Nivel gratuito (10 000
+  palabras/mes); planes desde 20 USD/mes", pero las fuentes primarias de Copy.ai (centro de ayuda +
+  páginas de precios actuales) muestran un nivel gratuito de 2.000 palabras/mes (o inexistente en la
+  tabla de precios principal, que se reposicionó hacia planes GTM desde 29 USD/mes, 24 USD/mes en
+  anual). No es problema de neutralidad (la alternativa sigue siendo válida), solo la cifra citada.
+  Fix sugerido: actualizar la fila con las cifras correctas o cambiar de ejemplo. Detalle:
+  `_privado/auditorias/E4-veredicto.md`.
 
 ## Resueltas
 
