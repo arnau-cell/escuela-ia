@@ -1,0 +1,240 @@
+{
+  "name": "Escuela IA - Pipeline de noticias (E5, sin probar en n8n real)",
+  "meta": {
+    "note": "Diseño no verificado por import real en n8n — esta sesión no tuvo acceso al VPS. Revisar cada nodo (nombres/versiones de tipo pueden variar según la versión de n8n instalada) antes de activar. Ver README.md de esta carpeta para el diseño completo y las decisiones pendientes."
+  },
+  "nodes": [
+    {
+      "id": "trigger-cron",
+      "name": "Cron diario",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "parameters": {
+        "rule": { "interval": [{ "field": "cronExpression", "expression": "0 6 * * *" }] }
+      }
+    },
+    {
+      "id": "code-whitelist",
+      "name": "Code: whitelist de feeds",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 0],
+      "notes": "Solo las 4 fuentes con RSS oficial confirmado (ver README). Anthropic y Mistral pendientes de decisión.",
+      "parameters": {
+        "jsCode": "return [\n  { json: { lab: 'openai', url: 'https://openai.com/news/rss.xml' } },\n  { json: { lab: 'google', url: 'https://blog.google/technology/ai/rss/' } },\n  { json: { lab: 'huggingface', url: 'https://huggingface.co/blog/feed.xml' } },\n  { json: { lab: 'otros', url: 'http://export.arxiv.org/rss/cs.AI' } },\n];"
+      }
+    },
+    {
+      "id": "rss-read",
+      "name": "RSS Feed Read",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [440, 0],
+      "parameters": {
+        "url": "={{ $json.url }}"
+      }
+    },
+    {
+      "id": "code-normalize",
+      "name": "Code: normalizar + clasificar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 0],
+      "notes": "Genera slug determinista (fecha + hash del link), extrae campos, clasifica trending con heurística de palabras clave. Sin llamada a ningún modelo.",
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\nconst TRENDING_KEYWORDS = ['GPT-', 'Claude ', 'Gemini ', 'Llama '];\n\nreturn items.map((item) => {\n  const link = item.json.link;\n  const title = item.json.title ?? '';\n  const snippet = (item.json.contentSnippet ?? item.json.summary ?? item.json.description ?? '').replace(/<[^>]+>/g, '');\n  const pubDate = item.json.pubDate ? new Date(item.json.pubDate) : new Date();\n  const dateStr = pubDate.toISOString().slice(0, 10);\n  const hash = crypto.createHash('sha256').update(link).digest('hex').slice(0, 8);\n  const slug = `${dateStr}-${hash}`;\n  const trending = TRENDING_KEYWORDS.some((kw) => title.includes(kw));\n  return {\n    json: {\n      lab: item.json.lab,\n      slug,\n      title,\n      link,\n      snippet,\n      publishedAt: dateStr,\n      trending,\n    },\n  };\n});"
+      }
+    },
+    {
+      "id": "http-check-duplicate",
+      "name": "HTTP: comprobar duplicado en GitHub",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 0],
+      "notes": "GET a la API de GitHub; 404 = noticia nueva, 200 = ya existe (dedup sin base de datos). Usar la credencial GitHub PAT configurada en n8n. Configurar 'continueOnFail'/'neverError' para poder inspeccionar el status 404 en el nodo IF siguiente en vez de que falle el flujo.",
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/arnau-cell/escuela-ia/contents/src/content/news/en/{{ $json.slug }}.md",
+        "options": { "response": { "response": { "neverError": true } } },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi"
+      }
+    },
+    {
+      "id": "if-is-new",
+      "name": "IF: ¿es nueva?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1100, 0],
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            { "leftValue": "={{ $json.statusCode }}", "rightValue": 404, "operator": { "type": "number", "operation": "equals" } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "code-extractive",
+      "name": "Code: resumen extractivo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1320, -80],
+      "notes": "Trunca el snippet del propio RSS a ~280 caracteres respetando fin de frase. Nunca reproduce el artículo completo (ver _privado/LEGAL.md §1.5).",
+      "parameters": {
+        "jsCode": "return items.map((item) => {\n  const MAX = 280;\n  let text = item.json.snippet ?? '';\n  if (text.length > MAX) {\n    const cut = text.slice(0, MAX);\n    const lastPeriod = cut.lastIndexOf('. ');\n    text = (lastPeriod > 100 ? cut.slice(0, lastPeriod + 1) : cut) + '…';\n  }\n  return { json: { ...item.json, descriptionEn: text } };\n});"
+      }
+    },
+    {
+      "id": "http-translate-es",
+      "name": "HTTP: traducir a ES",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1540, -80],
+      "notes": "Servicio de traduccion a decidir (recomendado: LibreTranslate autoalojado, requiere aprobacion de Arnau para anadir el contenedor al VPS). URL de ejemplo, ajustar segun infraestructura real. Con 'continueOnFail' activo para caer al fallback si falla.",
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5000/translate",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "q", "value": "={{ $json.title }}\\n\\n{{ $json.descriptionEn }}" },
+            { "name": "source", "value": "en" },
+            { "name": "target", "value": "es" }
+          ]
+        },
+        "options": { "response": { "response": { "neverError": true } } }
+      }
+    },
+    {
+      "id": "code-build-es-fallback",
+      "name": "Code: ES (traducido o fallback)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1760, -80],
+      "notes": "Si la traduccion fallo (statusCode distinto de 200 o nodo con error), usa el texto en ingles con translationOutdated: true -- la revision humana del PR es donde se pule esto.",
+      "parameters": {
+        "jsCode": "return items.map((item) => {\n  const ok = item.json.statusCode === 200 && item.json.translatedText;\n  return {\n    json: {\n      ...item.json,\n      titleEs: ok ? item.json.translatedText.split('\\n\\n')[0] : item.json.title,\n      descriptionEs: ok ? item.json.translatedText.split('\\n\\n')[1] : item.json.descriptionEn,\n      translationOutdated: !ok,\n    },\n  };\n});"
+      }
+    },
+    {
+      "id": "if-trending",
+      "name": "IF: ¿destacada?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1980, -80],
+      "notes": "Rama opcional de resumen enriquecido via LLM barato -- requiere credencial de un proveedor (a decidir por Arnau). No incluida en este diseno: si trending=true, hoy simplemente sigue con el resumen extractivo igual que las no destacadas.",
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            { "leftValue": "={{ $json.trending }}", "rightValue": true, "operator": { "type": "boolean", "operation": "equals" } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http-create-branch",
+      "name": "HTTP: crear rama",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2200, 0],
+      "notes": "POST /repos/.../git/refs -- crear noticias/{slug} desde el SHA de master. Requiere un paso previo (no incluido aqui) para obtener el SHA actual de master via GET /repos/.../git/ref/heads/master.",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.github.com/repos/arnau-cell/escuela-ia/git/refs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "ref", "value": "=refs/heads/noticias/{{ $json.slug }}" },
+            { "name": "sha", "value": "={{ $json.masterSha }}" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http-create-file-en",
+      "name": "HTTP: crear archivo EN",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2420, -60],
+      "notes": "PUT /repos/.../contents/src/content/news/en/{slug}.md -- contenido en base64, con el frontmatter completo (translationKey=slug, sourceUpdated, publishedAt, sourceUrl=link, lab, trending, reviewed:false, lang:en). Ver README para el formato exacto.",
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/arnau-cell/escuela-ia/contents/src/content/news/en/{{ $json.slug }}.md",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "message", "value": "=noticias: {{ $json.title }} (en)" },
+            { "name": "branch", "value": "=noticias/{{ $json.slug }}" },
+            { "name": "content", "value": "={{ $base64EncodeFrontmatterEn }}" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http-create-file-es",
+      "name": "HTTP: crear archivo ES",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2420, 60],
+      "notes": "Igual que el nodo EN pero en src/content/news/es/{slug}.md, mismo translationKey, lang:es, con titleEs/descriptionEs y translationOutdated si aplica.",
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/arnau-cell/escuela-ia/contents/src/content/news/es/{{ $json.slug }}.md",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "message", "value": "=noticias: {{ $json.title }} (es)" },
+            { "name": "branch", "value": "=noticias/{{ $json.slug }}" },
+            { "name": "content", "value": "={{ $base64EncodeFrontmatterEs }}" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "http-create-pr",
+      "name": "HTTP: crear Pull Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2640, 0],
+      "notes": "POST /repos/.../pulls -- head=noticias/{slug}, base=master. El cuerpo del PR recuerda al revisor comprobar la traduccion ES antes de aprobar.",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.github.com/repos/arnau-cell/escuela-ia/pulls",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "title", "value": "=Noticia: {{ $json.title }}" },
+            { "name": "head", "value": "=noticias/{{ $json.slug }}" },
+            { "name": "base", "value": "master" },
+            { "name": "body", "value": "=Fuente: {{ $json.link }} · Lab: {{ $json.lab }} · Destacada: {{ $json.trending }}\\n\\nRevisar la traduccion ES antes de aprobar. Marcar reviewed: true en ambos archivos al aprobar." }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cron diario": { "main": [[{ "node": "Code: whitelist de feeds", "type": "main", "index": 0 }]] },
+    "Code: whitelist de feeds": { "main": [[{ "node": "RSS Feed Read", "type": "main", "index": 0 }]] },
+    "RSS Feed Read": { "main": [[{ "node": "Code: normalizar + clasificar", "type": "main", "index": 0 }]] },
+    "Code: normalizar + clasificar": { "main": [[{ "node": "HTTP: comprobar duplicado en GitHub", "type": "main", "index": 0 }]] },
+    "HTTP: comprobar duplicado en GitHub": { "main": [[{ "node": "IF: ¿es nueva?", "type": "main", "index": 0 }]] },
+    "IF: ¿es nueva?": { "main": [[{ "node": "Code: resumen extractivo", "type": "main", "index": 0 }], []] },
+    "Code: resumen extractivo": { "main": [[{ "node": "HTTP: traducir a ES", "type": "main", "index": 0 }]] },
+    "HTTP: traducir a ES": { "main": [[{ "node": "Code: ES (traducido o fallback)", "type": "main", "index": 0 }]] },
+    "Code: ES (traducido o fallback)": { "main": [[{ "node": "IF: ¿destacada?", "type": "main", "index": 0 }]] },
+    "IF: ¿destacada?": { "main": [[{ "node": "HTTP: crear rama", "type": "main", "index": 0 }], [{ "node": "HTTP: crear rama", "type": "main", "index": 0 }]] },
+    "HTTP: crear rama": { "main": [[{ "node": "HTTP: crear archivo EN", "type": "main", "index": 0 }, { "node": "HTTP: crear archivo ES", "type": "main", "index": 0 }]] },
+    "HTTP: crear archivo EN": { "main": [[{ "node": "HTTP: crear Pull Request", "type": "main", "index": 0 }]] },
+    "HTTP: crear archivo ES": { "main": [[{ "node": "HTTP: crear Pull Request", "type": "main", "index": 0 }]] }
+  }
+}
