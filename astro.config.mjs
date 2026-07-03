@@ -13,8 +13,9 @@ const isGhostRoute = (page) => GHOST_EN_SECTIONS.some((section) => page.includes
 
 // https://astro.build/config
 export default defineConfig({
-	// Subdominio provisional de Cloudflare Pages; actualizar al dominio definitivo antes de lanzar.
-	site: 'https://escuela-ia.pages.dev',
+	// Subdominio provisional de Cloudflare Workers (arnau-cell.workers.dev, registrado 2026-07-03);
+	// actualizar al dominio definitivo antes de lanzar.
+	site: 'https://escuela-ia.arnau-cell.workers.dev',
 	integrations: [
 		// Declarado explícitamente (en vez de dejar que Starlight añada el suyo) para poder pasarle
 		// `filter` y excluir las rutas fantasma de arriba — Starlight solo añade su propio sitemap
