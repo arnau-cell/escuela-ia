@@ -6,7 +6,20 @@
 
 ## Abiertas
 
-(ninguna)
+- [ ] **E5 — decisiones de Arnau para activar el pipeline de noticias de verdad**: el diseño y la
+  simulación local están hechos y auditados, pero falta importar el workflow en n8n real y decidir:
+  (a) empezar solo con los 4 feeds RSS oficiales confirmados (OpenAI, Google AI, Hugging Face, arXiv) o
+  esperar/aceptar mirror no oficial para Anthropic/Mistral; (b) servicio de traducción EN→ES (propuesta:
+  LibreTranslate autoalojado en el mismo VPS, nuevo contenedor, requiere aprobación); (c) proveedor de
+  LLM barato si se quiere la rama de "destacadas" enriquecidas desde el principio. El acceso SSH al VPS
+  **ya no es un bloqueo** — es `arnau@37.27.3.113` con la clave `~/.ssh/hetzner_n8n` existente, no
+  `root@` (root SSH está deshabilitado a propósito en ese VPS). Detalle: `_privado/auditorias/E5-veredicto.md`.
+- [ ] **E5 — anotado para más adelante, no urgente**: el pipeline de noticias correría en el VPS
+  **personal** de Arnau (única instancia n8n self-hosted, sin separación por proyecto, hoy sirve
+  Contabilidad/Networking/Inversión UY). Aceptable en fase de prototipo, pero antes de que Escuela IA
+  reciba financiación externa, tenga colaboradores con acceso, o pase due diligence de una aceleradora,
+  migrar a infraestructura propia (mismo criterio ya aplicado a ESE, que tiene prohibido usar este VPS
+  por ser una entidad externa). Detalle: `_privado/auditorias/E5-veredicto.md`.
 
 ## Resueltas
 
