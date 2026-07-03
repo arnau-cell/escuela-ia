@@ -11,10 +11,9 @@
   la fase por cerrada del todo. La auditoría confirmó que son coherentes con `_privado/LEGAL.md` y con
   el estado real del sitio, pero eso no sustituye la revisión personal. Detalle:
   `_privado/auditorias/E6-veredicto.md`.
-- [ ] **E6 — un checkpoint humano sigue pendiente**: GitHub Discussions desactivado
-  (`has_discussions: false`, verificado) — Giscus está preparado en `src/components/Giscus.astro` pero
-  no activo, necesita que Arnau active Discussions y pegue `REPO_ID`/`CATEGORY_ID` de giscus.app en el
-  componente. Detalle: `_privado/auditorias/E6-handoff.md`.
+- [ ] **E6 — Giscus, último paso**: repo ya público y Discussions ya activado (2026-07-03) — los dos
+  requisitos previos están resueltos. Solo falta que Arnau pegue el repo en giscus.app, elija categoría,
+  y pase `data-repo-id`/`data-category-id` para completar `src/components/Giscus.astro`.
 - [ ] **E6 — falta un asset de `og:image` por defecto** (no bloqueante, cosmético): no existe
   ninguna imagen de diseño para compartir en redes; Open Graph funciona bien sin ella (título,
   descripción, url) pero sin imagen de portada. Detalle: `_privado/auditorias/E6-handoff.md`.

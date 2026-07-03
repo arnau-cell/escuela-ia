@@ -34,3 +34,13 @@
    el primer push"). El repo `arnau-cell/escuela-ia` sigue existiendo con todo el código de E1, solo cambia
    su visibilidad. Pendiente: decidir cuándo volver a hacerlo público (antes de aceptar PRs externos o de
    postular a programas que pidan código abierto verificable, ver `_privado/estrategia/aceleradoras.md`).
+
+## Decisión de Arnau (2026-07-03) — repo público de nuevo
+
+**`arnau-cell/escuela-ia` vuelve a público**, revirtiendo la decisión temporal del punto 4 anterior.
+Motivo inmediato: Giscus (comentarios del blog, E6) exige que el repo sea público para poder mostrar
+los comentarios de GitHub Discussions a los visitantes — sin eso no funciona bajo ninguna circunstancia.
+Coincide además con el plan original del 27-jun (código abierto desde el principio) y con la
+recomendación ya anotada en la auditoría de E1 sobre aceleradoras que valoran código verificable. Antes
+de este cambio se confirmó (auditorías de E1 a E6) que no hay ningún dato sensible en el repo — `_privado/`
+sigue gitignored y nunca se ha pusheado.
