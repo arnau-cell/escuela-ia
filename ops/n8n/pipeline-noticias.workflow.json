@@ -92,10 +92,11 @@
       "parameters": {
         "method": "GET",
         "url": "=https://api.github.com/repos/arnau-cell/escuela-ia/contents/src/content/news/en/{{ $json.slug }}.md",
-        "options": { "response": { "response": { "neverError": true } } },
+        "options": { "response": { "response": { "neverError": true, "fullResponse": true } } },
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "githubApi"
-      }
+      },
+      "credentials": { "githubApi": { "id": "a24f6262-3103-4f55-b398-f34cd6b97edf", "name": "github-escuela-ia-news-bot" } }
     },
     {
       "id": "if-is-new",
@@ -117,9 +118,9 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [1760, -80],
-      "notes": "Trunca el snippet del propio RSS a ~280 caracteres respetando fin de frase. Nunca reproduce el artículo completo (ver _privado/LEGAL.md §1.5).",
+      "notes": "Trunca el snippet del propio RSS a ~280 caracteres respetando fin de frase. Nunca reproduce el artículo completo (ver _privado/LEGAL.md §1.5). IMPORTANTE (corregido tras probar en n8n real): toma los datos de 'Code: normalizar + clasificar' por nombre de nodo, no de $json -- el nodo anterior en la cadena real es 'HTTP: comprobar duplicado en GitHub' (via el IF), que sobreescribe $json con la respuesta de la API (statusCode/headers/body), perdiendo lab/slug/title/link/snippet/trending. También corregido (mismo hallazgo): si el feed no trae snippet (confirmado con Hugging Face real, que no incluye description/contentSnippet en algunos items), cae al título en vez de dejar la descripción vacía -- mismo fallback que ops/n8n/simulate-pipeline.mjs (`item.description || item.title`).",
       "parameters": {
-        "jsCode": "return items.map((item) => {\n  const MAX = 280;\n  let text = item.json.snippet ?? '';\n  if (text.length > MAX) {\n    const cut = text.slice(0, MAX);\n    const lastPeriod = cut.lastIndexOf('. ');\n    text = (lastPeriod > 100 ? cut.slice(0, lastPeriod + 1) : cut) + '…';\n  }\n  return { json: { ...item.json, descriptionEn: text } };\n});"
+        "jsCode": "const src = $('Code: normalizar + clasificar').item.json;\nconst MAX = 280;\nlet text = src.snippet || src.title || '';\nif (text.length > MAX) {\n  const cut = text.slice(0, MAX);\n  const lastPeriod = cut.lastIndexOf('. ');\n  text = (lastPeriod > 100 ? cut.slice(0, lastPeriod + 1) : cut) + '…';\n}\nreturn [{ json: { ...src, descriptionEn: text } }];"
       }
     },
     {
@@ -160,7 +161,8 @@
         "url": "https://api.github.com/repos/arnau-cell/escuela-ia/git/ref/heads/master",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "githubApi"
-      }
+      },
+      "credentials": { "githubApi": { "id": "a24f6262-3103-4f55-b398-f34cd6b97edf", "name": "github-escuela-ia-news-bot" } }
     },
     {
       "id": "code-build-content",
@@ -192,7 +194,8 @@
             { "name": "sha", "value": "={{ $json.masterSha }}" }
           ]
         }
-      }
+      },
+      "credentials": { "githubApi": { "id": "a24f6262-3103-4f55-b398-f34cd6b97edf", "name": "github-escuela-ia-news-bot" } }
     },
     {
       "id": "http-create-file-en",
@@ -214,7 +217,8 @@
             { "name": "content", "value": "={{ $('Code: construir contenido (frontmatter + base64)').item.json.contentEnBase64 }}" }
           ]
         }
-      }
+      },
+      "credentials": { "githubApi": { "id": "a24f6262-3103-4f55-b398-f34cd6b97edf", "name": "github-escuela-ia-news-bot" } }
     },
     {
       "id": "http-create-file-es",
@@ -236,7 +240,8 @@
             { "name": "content", "value": "={{ $('Code: construir contenido (frontmatter + base64)').item.json.contentEsBase64 }}" }
           ]
         }
-      }
+      },
+      "credentials": { "githubApi": { "id": "a24f6262-3103-4f55-b398-f34cd6b97edf", "name": "github-escuela-ia-news-bot" } }
     },
     {
       "id": "http-create-pr",
@@ -259,7 +264,8 @@
             { "name": "body", "value": "=Fuente: {{ $('Code: construir contenido (frontmatter + base64)').item.json.link }} · Lab: {{ $('Code: construir contenido (frontmatter + base64)').item.json.lab }} · Destacada: {{ $('Code: construir contenido (frontmatter + base64)').item.json.trending }}\n\nRevisar la traducción ES antes de aprobar. Marcar reviewed: true en ambos archivos al aprobar." }
           ]
         }
-      }
+      },
+      "credentials": { "githubApi": { "id": "a24f6262-3103-4f55-b398-f34cd6b97edf", "name": "github-escuela-ia-news-bot" } }
     }
   ],
   "connections": {
