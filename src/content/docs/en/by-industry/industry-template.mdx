@@ -1,0 +1,32 @@
+---
+title: "Industry template"
+description: "Guide for writing a new industry page, with the structure and criteria followed by Information technology, Marketing and sales, and Healthcare."
+translationKey: por-sector/plantilla-sector
+sourceUpdated: 2026-07-03
+sidebar:
+  order: 99
+---
+
+import SectorDisclaimer from '../../../../components/SectorDisclaimer.astro';
+
+This page isn't an industry — it's the guide for writing a new one (Legal, Education, Accounting and finance, Agriculture and livestock are still pending, see [By industry](/en/by-industry/)). Follow this structure so every industry page reads the same and meets the same neutrality and legal-care criteria.
+
+## Required structure
+
+1. **Disclaimer** (`<SectorDisclaimer />`) right after the frontmatter, before any other content. Mandatory on every industry page, no exceptions — even more so for regulated ones (health, legal, finance).
+2. **What AI can do here**: 2-3 paragraphs. What it's good at today in this industry, and what it's NOT good at yet — be honest about the limits, not just the capabilities.
+3. **Real use cases**: list of 4-6 concrete examples, not generic ones ("summarize documents" is generic; "summarize a patient's history so the professional reads less and decides with more context" is concrete).
+4. **Tools**: table with columns *Tool · What it does · Cost · Open alternative*. Every paid tool needs a free or open-source alternative in the same row — no exceptions, it's the whole site's neutrality rule (see `CONTRIBUTING.md`). If the industry is regulated and it isn't safe to recommend specific products (see Healthcare as an example), it's valid to skip the table and explain why.
+5. **Risks specific to this industry**: don't repeat generic AI risks already covered in [Learn](/en/learn/) — what are the risks *specific* to using AI in this particular profession.
+6. If there's volatile data (prices, regulatory deadlines, concrete figures): frontmatter with `lastVerified` at the real verification date, verified with WebSearch, never from memory.
+
+## Neutrality and care criteria (non-negotiable)
+
+- No paid affiliates, ever. Every mention of a paid tool comes with its open alternative.
+- In regulated industries (health, legal, finance, and any other dealing with sensitive data or decisions with legal consequences), the disclaimer isn't decorative: the content itself must be written so no sentence can be read as professional advice directed at a specific person.
+- Link to relevant [cross-cutting concepts](/en/learn/concepts/) with `<ConceptLink slug="...">` instead of re-explaining the concept — the link fails the build if the concept doesn't exist, so it's a free validation.
+- Use `npm run new -- docs --es por-sector/<slug> --en by-industry/<slug-en> ...` to generate the ES+EN pair — never create the file by hand.
+
+## Reference examples
+
+Read [Information technology](/en/by-industry/information-technology/) (standard case), [Marketing and sales](/en/by-industry/marketing-sales/) (standard case with more emphasis on brand risk) and [Healthcare](/en/by-industry/healthcare/) (regulated case, with the tools table deliberately omitted and the disclaimer reinforced in the body text, not just the component).

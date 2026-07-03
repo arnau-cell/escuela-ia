@@ -1,0 +1,31 @@
+---
+// Disclaimer legal para páginas de POR SECTOR — ver _privado/LEGAL.md §1.4. Texto único
+// reutilizado en todas las páginas de sector (obligatorio en Salud por ser sector regulado;
+// recomendado en el resto). No es decorativo: cambia solo aquí si cambia el texto legal.
+const { starlightRoute } = Astro.locals;
+const locale = starlightRoute.locale === 'en' ? 'en' : 'es';
+
+const TEXT = {
+	es: 'Contenido educativo. No sustituye asesoramiento profesional médico, legal o financiero. Verifica con un profesional cualificado antes de tomar decisiones basadas en esta página.',
+	en: 'Educational content. Does not replace professional medical, legal or financial advice. Check with a qualified professional before making decisions based on this page.',
+};
+---
+
+<aside role="note" class="sector-disclaimer">
+	<p>{TEXT[locale]}</p>
+</aside>
+
+<style>
+	.sector-disclaimer {
+		border: 1px solid var(--sl-color-orange);
+		background-color: var(--sl-color-orange-low);
+		padding: 0.75rem 1rem;
+		border-radius: 0.25rem;
+		margin-block: 1rem;
+	}
+	.sector-disclaimer p {
+		margin: 0;
+		font-weight: 600;
+		font-size: var(--sl-text-sm);
+	}
+</style>

@@ -1,0 +1,42 @@
+---
+title: "Information technology"
+description: "What AI can do in software development today: real use cases, neutral tools, and the specific risks of coding with a model's help."
+translationKey: por-sector/informatica
+sourceUpdated: 2026-07-03
+lastVerified: 2026-07-03
+---
+
+import SectorDisclaimer from '../../../../components/SectorDisclaimer.astro';
+import ConceptLink from '../../../../components/ConceptLink.astro';
+
+<SectorDisclaimer />
+
+## What AI can do here
+
+In software development, AI is no longer just "autocomplete the next line": today it covers everything from writing code from a description, to reviewing a full pull request looking for bugs, to generating the tests that are missing. The area where it helps most is exactly the one no developer enjoys: repetitive work (tests, documentation, mechanical refactors, style review).
+
+What it still doesn't do reliably: understanding the business intent behind a change, deciding long-term architecture, or catching subtle concurrency and state bugs — human judgment is still needed there.
+
+## Real use cases
+
+- **Code completion and chat** inside the editor — see <ConceptLink slug="que-es-un-modelo">model</ConceptLink> and the [Set up your AI](/en/build/set-up-your-ai/) guide to configure it, local or cloud.
+- **Automatic pull request review**: tools that read the full diff (not just the changed lines, also the repository context) and comment directly on GitHub/GitLab before a human reviews it.
+- **Test generation**: from a function, generating the test cases that cover it, including edge cases that are easy to forget.
+- **AI-powered static analysis**: detecting vulnerabilities and code smells by combining fixed rules with a model that understands context.
+- **Documentation**: generating or keeping a README, changelog, or code comments up to date based on the actual changes.
+
+## Tools
+
+| Tool | What it does | Cost | Open alternative |
+|---|---|---|---|
+| GitHub Copilot | Code completion and chat in the editor | Free with limits; Pro $10 USD/month (verified Jul 2026) | [Continue](https://continue.dev), connected to a local model |
+| CodeRabbit | Full pull request review, comments on GitHub/GitLab/Bitbucket | Paid, with a free tier for open source repos | SonarQube Community Edition (see next row) |
+| SonarQube | Static analysis + AI (CodeFix, since its 2026.2 release) to catch bugs and vulnerabilities | **Community Edition: free and open source**; paid higher tiers | It is itself the open option |
+| Snyk | Dependency security scanning and, more recently, autonomous coding agent security | Freemium | [OWASP Dependency-Check](https://owasp.org/www-project-dependency-check/) (free, open source) |
+
+## Risks specific to this sector
+
+- **Trusting without reviewing**: AI-generated code can compile and work in the happy path, and still have security or edge-case bugs that only show up in production. Human review is still necessary, not optional.
+- **Invented packages ("slopsquatting")**: models sometimes suggest installing a library that doesn't exist, or one with a name similar to a real one but malicious. Always verify the exact package name before installing it.
+- **Intellectual property**: suggested code may resemble fragments the model was trained on; check your project's license and your company's policies before reusing large suggestions unchanged.
+- **Vendor lock-in**: if your entire workflow depends on a single paid tool, a pricing or policy change affects you directly — that's why every tool on this page comes with its open alternative.
