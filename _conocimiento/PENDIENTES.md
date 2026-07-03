@@ -6,13 +6,17 @@
 
 ## Abiertas
 
-- [ ] **E5 — falta solo el PAT de GitHub para completar una ejecución real end-to-end**: el workflow ya
-  está importado y probado de verdad en el n8n del VPS (`escuela-ia-pipeline-noticias`), validado en vivo
-  hasta el último nodo posible sin credencial (feed real de Hugging Face leído, slug generado, resumen
-  extractivo, fallback ES — todo correcto). Falta únicamente crear la credencial GitHub PAT
-  (`github-escuela-ia-news-bot`) — **crear el PAT es una acción exclusiva de Arnau** (GitHub no permite
-  crearlo por API/CLI). Detalle y pasos exactos para retomar: `_privado/auditorias/E5-handoff-v2.md`.
-  Decisiones que siguen abiertas además de esa: (a) empezar solo con los 4 feeds RSS oficiales confirmados
+- [ ] **E5 — PR real #5 generado, pendiente de revisión/aprobación de Arnau**: primera ejecución de punta
+  a punta del pipeline completada de verdad en el n8n del VPS tras crear el PAT
+  (`github-escuela-ia-news-bot`, vinculado a los 6 nodos que lo necesitan). Se encontraron y corrigieron
+  2 bugs reales durante la ejecución (IF de duplicado sin `fullResponse`, pérdida de datos del
+  normalizador al pasar por la llamada HTTP intermedia, y descripción vacía cuando el feed no trae
+  snippet — los 3 corregidos en `ops/n8n/pipeline-noticias.workflow.json`). Resultado:
+  https://github.com/arnau-cell/escuela-ia/pull/5 — rama `noticias/2026-07-01-e4a02290`, 2 archivos
+  ES+EN, `reviewed: false`, CI verde. **Pendiente de Arnau**: revisar el contenido/traducción del PR y
+  decidir aprobar+mergear (marcando `reviewed: true`) o pedir cambios/cerrar. Detalle completo:
+  `_privado/auditorias/E5-handoff-v2.md` y `_privado/auditorias/E5-handoff-v3.md`.
+  Decisiones que siguen abiertas, no urgentes: (a) empezar solo con los 4 feeds RSS oficiales confirmados
   (OpenAI, Google AI, Hugging Face, arXiv) o esperar/aceptar mirror no oficial para Anthropic/Mistral;
   (b) servicio de traducción EN→ES (propuesta: LibreTranslate autoalojado en el mismo VPS, nuevo
   contenedor, requiere aprobación); (c) proveedor de LLM barato si se quiere la rama de "destacadas"
