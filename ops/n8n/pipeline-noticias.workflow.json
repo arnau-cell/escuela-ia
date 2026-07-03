@@ -1,7 +1,8 @@
 {
-  "name": "Escuela IA - Pipeline de noticias (E5, sin probar en n8n real)",
+  "id": "escuela-ia-pipeline-noticias",
+  "name": "Escuela IA - Pipeline de noticias (E5)",
   "meta": {
-    "note": "Diseño no verificado por import real en n8n — esta sesión no tuvo acceso al VPS. Revisar cada nodo (nombres/versiones de tipo pueden variar según la versión de n8n instalada) antes de activar. Ver README.md de esta carpeta para el diseño completo y las decisiones pendientes."
+    "note": "Corregido, importado y EJECUTADO DE VERDAD en el n8n real del VPS 2026-07-03 (sesión constructora E5 v2) -- validado hasta el último nodo posible sin credencial de GitHub (falla ahí porque la credencial 'github-escuela-ia-news-bot' todavía no existe, es la única pieza que falta). Cambios respecto al diseño original sin probar: (1) añadido Filter para limitar a 1 solo feed (Hugging Face) en esta fase de prueba; (2) añadido Limit a 1 item por ejecución (prudencia en la primera prueba real); (3) eliminada la llamada HTTP de traducción (no aprobada por Arnau) -- va directo al fallback documentado (texto en inglés + translationOutdated: true); (4) añadido el nodo que faltaba para obtener el SHA de master antes de crear la rama; (5) el JS Task Runner real de esta instancia n8n prohíbe require('crypto') Y el global Web Crypto (crypto.subtle) -- sustituido por una implementación de SHA-256 en JS puro sin dependencias; por la misma razón el base64 de los archivos EN/ES se genera con una función propia en vez de Buffer.from/btoa; (6) la cadena final es lineal (SHA de master -> construir contenido -> rama -> archivo EN -> archivo ES -> PR), usando $('Code: construir contenido').item.json para los datos estables en cada HTTP posterior (cada llamada HTTP sobreescribe $json con su propia respuesta) en vez de dos ramas paralelas apuntando al mismo nodo (eso habría duplicado la creación del PR); (7) añadido un Execute Workflow Trigger solo para poder disparar ejecuciones reales vía 'n8n execute --id=...' desde la CLI (esta versión de n8n lo exige como entrada para ese comando) -- el disparador de producción sigue siendo el Cron diario. Ver README.md de esta carpeta para el diseño y las decisiones pendientes."
   },
   "nodes": [
     {
@@ -15,14 +16,38 @@
       }
     },
     {
+      "id": "trigger-manual-test",
+      "name": "Trigger manual (solo para pruebas CLI)",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [0, 160],
+      "notes": "Entrada añadida solo para poder ejecutar el workflow una vez de verdad vía 'n8n execute --id=...' desde la CLI (esta versión de n8n exige un Execute Workflow Trigger como punto de entrada para ese comando). El disparador de producción sigue siendo el Cron diario; este nodo no cambia el comportamiento programado.",
+      "parameters": {}
+    },
+    {
       "id": "code-whitelist",
       "name": "Code: whitelist de feeds",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [220, 0],
-      "notes": "Solo las 4 fuentes con RSS oficial confirmado (ver README). Anthropic y Mistral pendientes de decisión.",
+      "notes": "Las 4 fuentes con RSS oficial confirmado (ver README). Anthropic y Mistral pendientes de decisión de Arnau.",
       "parameters": {
         "jsCode": "return [\n  { json: { lab: 'openai', url: 'https://openai.com/news/rss.xml' } },\n  { json: { lab: 'google', url: 'https://blog.google/technology/ai/rss/' } },\n  { json: { lab: 'huggingface', url: 'https://huggingface.co/blog/feed.xml' } },\n  { json: { lab: 'otros', url: 'http://export.arxiv.org/rss/cs.AI' } },\n];"
+      }
+    },
+    {
+      "id": "filter-phase1",
+      "name": "Filter: fase 1 solo Hugging Face",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [440, 0],
+      "notes": "Regla de riesgos: activar con UN SOLO feed primero. Quitar este filtro (o añadir los otros labs a la condición) cuando Arnau decida ampliar tras validar 1-2 semanas.",
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            { "leftValue": "={{ $json.lab }}", "rightValue": "huggingface", "operator": { "type": "string", "operation": "equals" } }
+          ]
+        }
       }
     },
     {
@@ -30,9 +55,20 @@
       "name": "RSS Feed Read",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.1,
-      "position": [440, 0],
+      "position": [660, 0],
       "parameters": {
         "url": "={{ $json.url }}"
+      }
+    },
+    {
+      "id": "limit-phase1",
+      "name": "Limit: 1 item (fase de prueba)",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [880, 0],
+      "notes": "Prudencia para la primera ejecución real: procesar solo el item más reciente del feed. Quitar este límite cuando se quiera procesar el feed completo en cada corrida de cron.",
+      "parameters": {
+        "maxItems": 1
       }
     },
     {
@@ -40,10 +76,10 @@
       "name": "Code: normalizar + clasificar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [660, 0],
-      "notes": "Genera slug determinista (fecha + hash del link), extrae campos, clasifica trending con heurística de palabras clave. Sin llamada a ningún modelo.",
+      "position": [1100, 0],
+      "notes": "Genera slug determinista (fecha de publicación + hash del link), extrae campos, clasifica trending con heurística de palabras clave. Sin llamada a ningún modelo. 'lab' fijo a 'huggingface' mientras el Filter de fase 1 solo deja pasar ese feed (RSS Feed Read no conserva el campo 'lab' del item de entrada); generalizar con $('Code: whitelist de feeds') cuando se activen más feeds. IMPORTANTE (corregido tras probar en n8n real): el JS Task Runner de esta instancia no permite require('crypto') NI el global Web Crypto (crypto.subtle) -- implementación de SHA-256 en JS puro, sin dependencias, para mantener el mismo algoritmo que ops/n8n/simulate-pipeline.mjs.",
       "parameters": {
-        "jsCode": "const crypto = require('crypto');\nconst TRENDING_KEYWORDS = ['GPT-', 'Claude ', 'Gemini ', 'Llama '];\n\nreturn items.map((item) => {\n  const link = item.json.link;\n  const title = item.json.title ?? '';\n  const snippet = (item.json.contentSnippet ?? item.json.summary ?? item.json.description ?? '').replace(/<[^>]+>/g, '');\n  const pubDate = item.json.pubDate ? new Date(item.json.pubDate) : new Date();\n  const dateStr = pubDate.toISOString().slice(0, 10);\n  const hash = crypto.createHash('sha256').update(link).digest('hex').slice(0, 8);\n  const slug = `${dateStr}-${hash}`;\n  const trending = TRENDING_KEYWORDS.some((kw) => title.includes(kw));\n  return {\n    json: {\n      lab: item.json.lab,\n      slug,\n      title,\n      link,\n      snippet,\n      publishedAt: dateStr,\n      trending,\n    },\n  };\n});"
+        "jsCode": "const TRENDING_KEYWORDS = ['GPT-', 'Claude ', 'Gemini ', 'Llama '];\n\nfunction sha256Hex(str) {\n  function rrot(x, n) { return (x >>> n) | (x << (32 - n)); }\n  const K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];\n  let H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];\n  const bytes = [];\n  const utf8 = unescape(encodeURIComponent(str));\n  for (let i = 0; i < utf8.length; i++) bytes.push(utf8.charCodeAt(i));\n  const bitLen = bytes.length * 8;\n  bytes.push(0x80);\n  while (bytes.length % 64 !== 56) bytes.push(0);\n  for (let i = 7; i >= 0; i--) bytes.push((bitLen / Math.pow(2, i * 8)) & 0xff);\n  const w = new Array(64);\n  for (let chunk = 0; chunk < bytes.length; chunk += 64) {\n    for (let i = 0; i < 16; i++) {\n      w[i] = (bytes[chunk + i*4] << 24) | (bytes[chunk + i*4+1] << 16) | (bytes[chunk + i*4+2] << 8) | (bytes[chunk + i*4+3]);\n    }\n    for (let i = 16; i < 64; i++) {\n      const s0 = rrot(w[i-15],7) ^ rrot(w[i-15],18) ^ (w[i-15] >>> 3);\n      const s1 = rrot(w[i-2],17) ^ rrot(w[i-2],19) ^ (w[i-2] >>> 10);\n      w[i] = (w[i-16] + s0 + w[i-7] + s1) | 0;\n    }\n    let [a,b,c,d,e,f,g,h] = H;\n    for (let i = 0; i < 64; i++) {\n      const S1 = rrot(e,6) ^ rrot(e,11) ^ rrot(e,25);\n      const ch = (e & f) ^ (~e & g);\n      const temp1 = (h + S1 + ch + K[i] + w[i]) | 0;\n      const S0 = rrot(a,2) ^ rrot(a,13) ^ rrot(a,22);\n      const maj = (a & b) ^ (a & c) ^ (b & c);\n      const temp2 = (S0 + maj) | 0;\n      h=g; g=f; f=e; e=(d+temp1)|0; d=c; c=b; b=a; a=(temp1+temp2)|0;\n    }\n    H = [H[0]+a|0, H[1]+b|0, H[2]+c|0, H[3]+d|0, H[4]+e|0, H[5]+f|0, H[6]+g|0, H[7]+h|0];\n  }\n  return H.map((x) => (x >>> 0).toString(16).padStart(8, '0')).join('');\n}\n\nconst results = [];\nfor (const item of items) {\n  const link = item.json.link;\n  const title = item.json.title ?? '';\n  const snippet = (item.json.contentSnippet ?? item.json.summary ?? item.json.description ?? '').replace(/<[^>]+>/g, '');\n  const pubDate = item.json.pubDate ? new Date(item.json.pubDate) : new Date();\n  const dateStr = Number.isNaN(pubDate.valueOf()) ? new Date().toISOString().slice(0, 10) : pubDate.toISOString().slice(0, 10);\n  const slug = `${dateStr}-${sha256Hex(link).slice(0, 8)}`;\n  const trending = TRENDING_KEYWORDS.some((kw) => title.includes(kw));\n  results.push({ json: { lab: 'huggingface', slug, title, link, snippet, trending } });\n}\nreturn results;"
       }
     },
     {
@@ -51,8 +87,8 @@
       "name": "HTTP: comprobar duplicado en GitHub",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [880, 0],
-      "notes": "GET a la API de GitHub; 404 = noticia nueva, 200 = ya existe (dedup sin base de datos). Usar la credencial GitHub PAT configurada en n8n. Configurar 'continueOnFail'/'neverError' para poder inspeccionar el status 404 en el nodo IF siguiente en vez de que falle el flujo.",
+      "position": [1320, 0],
+      "notes": "GET a la API de GitHub; 404 = noticia nueva, 200 = ya existe (dedup sin base de datos). Requiere la credencial GitHub PAT 'github-escuela-ia-news-bot' configurada en n8n.",
       "parameters": {
         "method": "GET",
         "url": "=https://api.github.com/repos/arnau-cell/escuela-ia/contents/src/content/news/en/{{ $json.slug }}.md",
@@ -66,7 +102,7 @@
       "name": "IF: ¿es nueva?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [1100, 0],
+      "position": [1540, 0],
       "parameters": {
         "conditions": {
           "conditions": [
@@ -80,42 +116,21 @@
       "name": "Code: resumen extractivo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1320, -80],
+      "position": [1760, -80],
       "notes": "Trunca el snippet del propio RSS a ~280 caracteres respetando fin de frase. Nunca reproduce el artículo completo (ver _privado/LEGAL.md §1.5).",
       "parameters": {
         "jsCode": "return items.map((item) => {\n  const MAX = 280;\n  let text = item.json.snippet ?? '';\n  if (text.length > MAX) {\n    const cut = text.slice(0, MAX);\n    const lastPeriod = cut.lastIndexOf('. ');\n    text = (lastPeriod > 100 ? cut.slice(0, lastPeriod + 1) : cut) + '…';\n  }\n  return { json: { ...item.json, descriptionEn: text } };\n});"
       }
     },
     {
-      "id": "http-translate-es",
-      "name": "HTTP: traducir a ES",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [1540, -80],
-      "notes": "Servicio de traduccion a decidir (recomendado: LibreTranslate autoalojado, requiere aprobacion de Arnau para anadir el contenedor al VPS). URL de ejemplo, ajustar segun infraestructura real. Con 'continueOnFail' activo para caer al fallback si falla.",
-      "parameters": {
-        "method": "POST",
-        "url": "http://localhost:5000/translate",
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            { "name": "q", "value": "={{ $json.title }}\\n\\n{{ $json.descriptionEn }}" },
-            { "name": "source", "value": "en" },
-            { "name": "target", "value": "es" }
-          ]
-        },
-        "options": { "response": { "response": { "neverError": true } } }
-      }
-    },
-    {
-      "id": "code-build-es-fallback",
-      "name": "Code: ES (traducido o fallback)",
+      "id": "code-es-fallback",
+      "name": "Code: ES (fallback, sin traducción automática)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1760, -80],
-      "notes": "Si la traduccion fallo (statusCode distinto de 200 o nodo con error), usa el texto en ingles con translationOutdated: true -- la revision humana del PR es donde se pule esto.",
+      "position": [1980, -80],
+      "notes": "Traducción automática (LibreTranslate u otro servicio) NO configurada -- pendiente de aprobación explícita de Arnau. Usa siempre el fallback ya diseñado: copia el texto en inglés y marca translationOutdated: true; el banner TranslationStatus del sitio avisa, y la revisión humana del PR es donde se pule la traducción real antes de aprobar.",
       "parameters": {
-        "jsCode": "return items.map((item) => {\n  const ok = item.json.statusCode === 200 && item.json.translatedText;\n  return {\n    json: {\n      ...item.json,\n      titleEs: ok ? item.json.translatedText.split('\\n\\n')[0] : item.json.title,\n      descriptionEs: ok ? item.json.translatedText.split('\\n\\n')[1] : item.json.descriptionEn,\n      translationOutdated: !ok,\n    },\n  };\n});"
+        "jsCode": "return items.map((item) => ({\n  json: {\n    ...item.json,\n    titleEs: item.json.title,\n    descriptionEs: item.json.descriptionEn,\n    translationOutdated: true,\n  },\n}));"
       }
     },
     {
@@ -123,8 +138,8 @@
       "name": "IF: ¿destacada?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [1980, -80],
-      "notes": "Rama opcional de resumen enriquecido via LLM barato -- requiere credencial de un proveedor (a decidir por Arnau). No incluida en este diseno: si trending=true, hoy simplemente sigue con el resumen extractivo igual que las no destacadas.",
+      "position": [2200, -80],
+      "notes": "Rama opcional de resumen enriquecido vía LLM barato -- requiere credencial de un proveedor (a decidir por Arnau). No incluida en este diseño: si trending=true, hoy simplemente sigue con el resumen extractivo igual que las no destacadas (ambas salidas van al mismo nodo siguiente).",
       "parameters": {
         "conditions": {
           "conditions": [
@@ -134,12 +149,37 @@
       }
     },
     {
+      "id": "http-get-master-sha",
+      "name": "HTTP: obtener SHA de master",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2420, -80],
+      "notes": "Paso que faltaba en el diseño original: hace falta el SHA actual de master para crear la rama nueva desde ahí (git/refs). GET /repos/.../git/ref/heads/master -> {{ $json.object.sha }}.",
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.github.com/repos/arnau-cell/escuela-ia/git/ref/heads/master",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi"
+      }
+    },
+    {
+      "id": "code-build-content",
+      "name": "Code: construir contenido (frontmatter + base64)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2640, -80],
+      "notes": "Construye el frontmatter EN/ES con el mismo formato que ops/n8n/simulate-pipeline.mjs (buildFrontmatter) y lo codifica en base64 para la API de contenidos de GitHub. Toma los datos estables de 'Code: ES (fallback...)' (título/slug/lab/trending/etc.) y el SHA de master del nodo anterior -- referenciarlos así, no encadenados por $json, es lo que evita que las siguientes llamadas HTTP (que sobreescriben $json con su propia respuesta) pierdan estos datos. base64 con btoa/encodeURIComponent en vez de Buffer.from -- el JS Task Runner de esta instancia restringe módulos Node más de lo esperado (ver nodo 'normalizar'), se evita depender de la clase Buffer global por si acaso.",
+      "parameters": {
+        "jsCode": "const src = $('Code: ES (fallback, sin traducción automática)').item.json;\nconst masterSha = $json.object.sha;\nconst today = new Date().toISOString().slice(0, 10);\n\nconst B64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';\nfunction base64EncodeUtf8(str) {\n  const utf8 = unescape(encodeURIComponent(str));\n  let out = '';\n  let i = 0;\n  for (; i + 2 < utf8.length; i += 3) {\n    const n = (utf8.charCodeAt(i) << 16) | (utf8.charCodeAt(i+1) << 8) | utf8.charCodeAt(i+2);\n    out += B64_CHARS[(n >> 18) & 63] + B64_CHARS[(n >> 12) & 63] + B64_CHARS[(n >> 6) & 63] + B64_CHARS[n & 63];\n  }\n  const rem = utf8.length - i;\n  if (rem === 1) {\n    const n = utf8.charCodeAt(i) << 16;\n    out += B64_CHARS[(n >> 18) & 63] + B64_CHARS[(n >> 12) & 63] + '==';\n  } else if (rem === 2) {\n    const n = (utf8.charCodeAt(i) << 16) | (utf8.charCodeAt(i+1) << 8);\n    out += B64_CHARS[(n >> 18) & 63] + B64_CHARS[(n >> 12) & 63] + B64_CHARS[(n >> 6) & 63] + '=';\n  }\n  return out;\n}\n\nfunction yamlEscape(value) {\n  return String(value).replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\"');\n}\n\nfunction buildFrontmatter({ title, description, translationKey, sourceUpdated, publishedAt, sourceUrl, lab, trending, lang, translationOutdated }) {\n  const lines = [\n    '---',\n    `title: \"${yamlEscape(title)}\"`,\n    `description: \"${yamlEscape(description)}\"`,\n    `translationKey: ${translationKey}`,\n    `sourceUpdated: ${sourceUpdated}`,\n    `publishedAt: ${publishedAt}`,\n    `sourceUrl: \"${yamlEscape(sourceUrl)}\"`,\n    `lab: ${lab}`,\n    `trending: ${trending}`,\n    'reviewed: false',\n    `lang: ${lang}`,\n  ];\n  if (translationOutdated) lines.push('translationOutdated: true');\n  lines.push('---', '');\n  return lines.join('\\n');\n}\n\nconst enContent = buildFrontmatter({\n  title: src.title,\n  description: src.descriptionEn,\n  translationKey: src.slug,\n  sourceUpdated: today,\n  publishedAt: today,\n  sourceUrl: src.link,\n  lab: src.lab,\n  trending: src.trending,\n  lang: 'en',\n});\n\nconst esContent = buildFrontmatter({\n  title: src.titleEs,\n  description: src.descriptionEs,\n  translationKey: src.slug,\n  sourceUpdated: today,\n  publishedAt: today,\n  sourceUrl: src.link,\n  lab: src.lab,\n  trending: src.trending,\n  lang: 'es',\n  translationOutdated: src.translationOutdated,\n});\n\nreturn [{\n  json: {\n    slug: src.slug,\n    title: src.title,\n    link: src.link,\n    lab: src.lab,\n    trending: src.trending,\n    masterSha,\n    contentEnBase64: base64EncodeUtf8(enContent),\n    contentEsBase64: base64EncodeUtf8(esContent),\n  },\n}];"
+      }
+    },
+    {
       "id": "http-create-branch",
       "name": "HTTP: crear rama",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2200, 0],
-      "notes": "POST /repos/.../git/refs -- crear noticias/{slug} desde el SHA de master. Requiere un paso previo (no incluido aqui) para obtener el SHA actual de master via GET /repos/.../git/ref/heads/master.",
+      "position": [2860, -80],
+      "notes": "POST /repos/.../git/refs -- crea noticias/{slug} desde el SHA de master obtenido antes.",
       "parameters": {
         "method": "POST",
         "url": "https://api.github.com/repos/arnau-cell/escuela-ia/git/refs",
@@ -159,19 +199,19 @@
       "name": "HTTP: crear archivo EN",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2420, -60],
-      "notes": "PUT /repos/.../contents/src/content/news/en/{slug}.md -- contenido en base64, con el frontmatter completo (translationKey=slug, sourceUpdated, publishedAt, sourceUrl=link, lab, trending, reviewed:false, lang:en). Ver README para el formato exacto.",
+      "position": [3080, -80],
+      "notes": "PUT /repos/.../contents/src/content/news/en/{slug}.md -- contenido en base64 construido en 'Code: construir contenido'. Referenciado por nombre de nodo porque $json aquí ya es la respuesta de 'crear rama', no el de construir contenido.",
       "parameters": {
         "method": "PUT",
-        "url": "=https://api.github.com/repos/arnau-cell/escuela-ia/contents/src/content/news/en/{{ $json.slug }}.md",
+        "url": "=https://api.github.com/repos/arnau-cell/escuela-ia/contents/src/content/news/en/{{ $('Code: construir contenido (frontmatter + base64)').item.json.slug }}.md",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "githubApi",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
-            { "name": "message", "value": "=noticias: {{ $json.title }} (en)" },
-            { "name": "branch", "value": "=noticias/{{ $json.slug }}" },
-            { "name": "content", "value": "={{ $base64EncodeFrontmatterEn }}" }
+            { "name": "message", "value": "=noticias: {{ $('Code: construir contenido (frontmatter + base64)').item.json.title }} (en)" },
+            { "name": "branch", "value": "=noticias/{{ $('Code: construir contenido (frontmatter + base64)').item.json.slug }}" },
+            { "name": "content", "value": "={{ $('Code: construir contenido (frontmatter + base64)').item.json.contentEnBase64 }}" }
           ]
         }
       }
@@ -181,19 +221,19 @@
       "name": "HTTP: crear archivo ES",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2420, 60],
-      "notes": "Igual que el nodo EN pero en src/content/news/es/{slug}.md, mismo translationKey, lang:es, con titleEs/descriptionEs y translationOutdated si aplica.",
+      "position": [3300, -80],
+      "notes": "Igual que el nodo EN pero en src/content/news/es/{slug}.md. Encadenado DESPUÉS del archivo EN (no en paralelo) para que ambos lleguen a 'crear Pull Request' de forma lineal y no se dispare el PR dos veces.",
       "parameters": {
         "method": "PUT",
-        "url": "=https://api.github.com/repos/arnau-cell/escuela-ia/contents/src/content/news/es/{{ $json.slug }}.md",
+        "url": "=https://api.github.com/repos/arnau-cell/escuela-ia/contents/src/content/news/es/{{ $('Code: construir contenido (frontmatter + base64)').item.json.slug }}.md",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "githubApi",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
-            { "name": "message", "value": "=noticias: {{ $json.title }} (es)" },
-            { "name": "branch", "value": "=noticias/{{ $json.slug }}" },
-            { "name": "content", "value": "={{ $base64EncodeFrontmatterEs }}" }
+            { "name": "message", "value": "=noticias: {{ $('Code: construir contenido (frontmatter + base64)').item.json.title }} (es)" },
+            { "name": "branch", "value": "=noticias/{{ $('Code: construir contenido (frontmatter + base64)').item.json.slug }}" },
+            { "name": "content", "value": "={{ $('Code: construir contenido (frontmatter + base64)').item.json.contentEsBase64 }}" }
           ]
         }
       }
@@ -203,8 +243,8 @@
       "name": "HTTP: crear Pull Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2640, 0],
-      "notes": "POST /repos/.../pulls -- head=noticias/{slug}, base=master. El cuerpo del PR recuerda al revisor comprobar la traduccion ES antes de aprobar.",
+      "position": [3520, -80],
+      "notes": "POST /repos/.../pulls -- head=noticias/{slug}, base=master. El cuerpo del PR recuerda al revisor comprobar la traducción ES antes de aprobar.",
       "parameters": {
         "method": "POST",
         "url": "https://api.github.com/repos/arnau-cell/escuela-ia/pulls",
@@ -213,10 +253,10 @@
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
-            { "name": "title", "value": "=Noticia: {{ $json.title }}" },
-            { "name": "head", "value": "=noticias/{{ $json.slug }}" },
+            { "name": "title", "value": "=Noticia: {{ $('Code: construir contenido (frontmatter + base64)').item.json.title }}" },
+            { "name": "head", "value": "=noticias/{{ $('Code: construir contenido (frontmatter + base64)').item.json.slug }}" },
             { "name": "base", "value": "master" },
-            { "name": "body", "value": "=Fuente: {{ $json.link }} · Lab: {{ $json.lab }} · Destacada: {{ $json.trending }}\\n\\nRevisar la traduccion ES antes de aprobar. Marcar reviewed: true en ambos archivos al aprobar." }
+            { "name": "body", "value": "=Fuente: {{ $('Code: construir contenido (frontmatter + base64)').item.json.link }} · Lab: {{ $('Code: construir contenido (frontmatter + base64)').item.json.lab }} · Destacada: {{ $('Code: construir contenido (frontmatter + base64)').item.json.trending }}\n\nRevisar la traducción ES antes de aprobar. Marcar reviewed: true en ambos archivos al aprobar." }
           ]
         }
       }
@@ -224,17 +264,21 @@
   ],
   "connections": {
     "Cron diario": { "main": [[{ "node": "Code: whitelist de feeds", "type": "main", "index": 0 }]] },
-    "Code: whitelist de feeds": { "main": [[{ "node": "RSS Feed Read", "type": "main", "index": 0 }]] },
-    "RSS Feed Read": { "main": [[{ "node": "Code: normalizar + clasificar", "type": "main", "index": 0 }]] },
+    "Trigger manual (solo para pruebas CLI)": { "main": [[{ "node": "Code: whitelist de feeds", "type": "main", "index": 0 }]] },
+    "Code: whitelist de feeds": { "main": [[{ "node": "Filter: fase 1 solo Hugging Face", "type": "main", "index": 0 }]] },
+    "Filter: fase 1 solo Hugging Face": { "main": [[{ "node": "RSS Feed Read", "type": "main", "index": 0 }]] },
+    "RSS Feed Read": { "main": [[{ "node": "Limit: 1 item (fase de prueba)", "type": "main", "index": 0 }]] },
+    "Limit: 1 item (fase de prueba)": { "main": [[{ "node": "Code: normalizar + clasificar", "type": "main", "index": 0 }]] },
     "Code: normalizar + clasificar": { "main": [[{ "node": "HTTP: comprobar duplicado en GitHub", "type": "main", "index": 0 }]] },
     "HTTP: comprobar duplicado en GitHub": { "main": [[{ "node": "IF: ¿es nueva?", "type": "main", "index": 0 }]] },
     "IF: ¿es nueva?": { "main": [[{ "node": "Code: resumen extractivo", "type": "main", "index": 0 }], []] },
-    "Code: resumen extractivo": { "main": [[{ "node": "HTTP: traducir a ES", "type": "main", "index": 0 }]] },
-    "HTTP: traducir a ES": { "main": [[{ "node": "Code: ES (traducido o fallback)", "type": "main", "index": 0 }]] },
-    "Code: ES (traducido o fallback)": { "main": [[{ "node": "IF: ¿destacada?", "type": "main", "index": 0 }]] },
-    "IF: ¿destacada?": { "main": [[{ "node": "HTTP: crear rama", "type": "main", "index": 0 }], [{ "node": "HTTP: crear rama", "type": "main", "index": 0 }]] },
-    "HTTP: crear rama": { "main": [[{ "node": "HTTP: crear archivo EN", "type": "main", "index": 0 }, { "node": "HTTP: crear archivo ES", "type": "main", "index": 0 }]] },
-    "HTTP: crear archivo EN": { "main": [[{ "node": "HTTP: crear Pull Request", "type": "main", "index": 0 }]] },
+    "Code: resumen extractivo": { "main": [[{ "node": "Code: ES (fallback, sin traducción automática)", "type": "main", "index": 0 }]] },
+    "Code: ES (fallback, sin traducción automática)": { "main": [[{ "node": "IF: ¿destacada?", "type": "main", "index": 0 }]] },
+    "IF: ¿destacada?": { "main": [[{ "node": "HTTP: obtener SHA de master", "type": "main", "index": 0 }], [{ "node": "HTTP: obtener SHA de master", "type": "main", "index": 0 }]] },
+    "HTTP: obtener SHA de master": { "main": [[{ "node": "Code: construir contenido (frontmatter + base64)", "type": "main", "index": 0 }]] },
+    "Code: construir contenido (frontmatter + base64)": { "main": [[{ "node": "HTTP: crear rama", "type": "main", "index": 0 }]] },
+    "HTTP: crear rama": { "main": [[{ "node": "HTTP: crear archivo EN", "type": "main", "index": 0 }]] },
+    "HTTP: crear archivo EN": { "main": [[{ "node": "HTTP: crear archivo ES", "type": "main", "index": 0 }]] },
     "HTTP: crear archivo ES": { "main": [[{ "node": "HTTP: crear Pull Request", "type": "main", "index": 0 }]] }
   }
 }
