@@ -1,7 +1,7 @@
 ---
 title: "Por qué existe Escuela IA"
 description: "Un sitio gratuito y neutral para entender la IA de cero a técnico, porque los referentes que existen son o directorios, o solo noticias, o de pago."
-translationKey: reviews/bienvenida
+translationKey: aprendizajes/bienvenida
 sourceUpdated: 2026-07-03
 publishedAt: 2026-07-02
 category: aprendizajes

@@ -11,14 +11,6 @@
   la fase por cerrada del todo. La auditoría confirmó que son coherentes con `_privado/LEGAL.md` y con
   el estado real del sitio, pero eso no sustituye la revisión personal. Detalle:
   `_privado/auditorias/E6-veredicto.md`.
-- [ ] **E6 — precio de Ollama Pro Max incorrecto** en `blog/*/reviews/ollama-*.md` (ES+EN): dice "cerca
-  de 200 USD/mes", pero la fuente primaria (`ollama.com/pricing`) confirma que el plan superior se llama
-  "Max" (no "Pro Max") y cuesta 100 USD/mes. El plan "Pro" (20 USD/mes) sí está bien. Detalle:
-  `_privado/auditorias/E6-veredicto.md`.
-- [ ] **E6 — categoría inconsistente con la ruta** en `blog/*/reviews/bienvenida.md` /`welcome.md`
-  (ES+EN): viven en la carpeta `reviews/` (URL `/comparte/reviews/bienvenida/`) pero
-  `category: aprendizajes` en el frontmatter — el badge visible no coincide con la URL. Decisión
-  editorial menor: mover el archivo o cambiar la categoría. Detalle: `_privado/auditorias/E6-veredicto.md`.
 - [ ] **E6 — PR #6 mergeado, dos checkpoints humanos siguen pendientes**: GitHub Discussions
   desactivado (`has_discussions: false`, verificado) — Giscus está preparado en
   `src/components/Giscus.astro` pero no activo, necesita que Arnau active Discussions y pegue
@@ -55,6 +47,18 @@
 
 ## Resueltas
 
+- [x] **E6 — precio de Ollama Pro Max incorrecto** en `blog/*/reviews/ollama-*.md` (ES+EN): decía "cerca
+  de 200 USD/mes" para un plan "Pro Max" que no existe. Resuelto 2026-07-03: verificado de nuevo
+  directamente en `ollama.com/pricing` (WebFetch a la página oficial) — los planes reales son "Pro"
+  (20 USD/mes, sin cambios) y "Max" (100 USD/mes, no ~200). Corregido en ambos idiomas. Detalle:
+  `_privado/auditorias/E6-veredicto.md`.
+- [x] **E6 — categoría inconsistente con la ruta** en `blog/*/reviews/bienvenida.md`/`welcome.md`
+  (ES+EN): vivían en `reviews/` con `category: aprendizajes` — badge y URL no coincidían. Resuelto
+  2026-07-03: movidos a `blog/es/aprendizajes/bienvenida.md` y `blog/en/lessons-learned/welcome.md`
+  (mismo nombre de carpeta EN que usa la otra entrada de esta categoría), `translationKey` actualizado
+  a `aprendizajes/bienvenida` para que siga apuntando a la ruta real del archivo. Nuevas URLs:
+  `/comparte/aprendizajes/bienvenida/` y `/en/share/lessons-learned/welcome/`. Sin enlaces internos
+  rotos (verificado, nadie más referenciaba la ruta antigua). Detalle: `_privado/auditorias/E6-veredicto.md`.
 - [x] **E4 — precio de Copy.ai desactualizado** en `por-sector/marketing-ventas.mdx` /
   `en/by-industry/marketing-sales.mdx` (tabla de herramientas): decía "Nivel gratuito (10 000
   palabras/mes); planes desde 20 USD/mes". Resuelto 2026-07-03: verificado directamente en

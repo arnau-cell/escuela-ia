@@ -34,8 +34,8 @@ running on your machine."
 ## What's missing or costs money
 
 - The local software is free and stays that way (that's its core pitch), but **Ollama Cloud** — its
-  cloud inference service, for when your hardware can't handle large models — is paid: the Pro plan is
-  around 20 USD/month and Pro Max is close to 200 USD/month (verified at
+  cloud inference service, for when your hardware can't handle large models — is paid: the Pro plan
+  costs 20 USD/month and the Max plan, 100 USD/month (verified at
   [ollama.com/pricing](https://ollama.com/pricing), 2026-07-03). You don't need it for the basics — it
   only comes into play if you want models your own computer can't run.
 - You need *some* comfort with a terminal — there's no official native GUI (though third-party projects

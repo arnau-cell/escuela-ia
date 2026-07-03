@@ -35,7 +35,7 @@ un chatbot en el navegador" a "tener un modelo corriendo en tu máquina".
 
 - El software local es gratis y así seguirá (es su propuesta central), pero **Ollama Cloud** —su servicio
   de inferencia en la nube, para cuando tu hardware no da para modelos grandes— es de pago: el plan Pro
-  ronda los 20 USD/mes y el Pro Max se acerca a los 200 USD/mes (verificado en
+  cuesta 20 USD/mes y el plan Max, 100 USD/mes (verificado en
   [ollama.com/pricing](https://ollama.com/pricing), 2026-07-03). No hace falta para lo básico: solo entra
   en juego si quieres modelos que tu propio ordenador no puede mover.
 - Necesitas *algo* de conocimiento de terminal — no hay una interfaz gráfica oficial nativa (aunque

@@ -1,7 +1,7 @@
 ---
 title: "Why Escuela IA exists"
 description: "A free, neutral site to understand AI from zero to technical, because the resources that already exist are either directories, news-only, or paid."
-translationKey: reviews/bienvenida
+translationKey: aprendizajes/bienvenida
 sourceUpdated: 2026-07-03
 publishedAt: 2026-07-02
 category: aprendizajes
