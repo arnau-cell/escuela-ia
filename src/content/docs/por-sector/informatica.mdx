@@ -1,0 +1,42 @@
+---
+title: "Informática"
+description: "Qué puede hacer la IA en desarrollo de software hoy: casos de uso reales, herramientas neutrales y los riesgos específicos de programar con ayuda de un modelo."
+translationKey: por-sector/informatica
+sourceUpdated: 2026-07-03
+lastVerified: 2026-07-03
+---
+
+import SectorDisclaimer from '../../../components/SectorDisclaimer.astro';
+import ConceptLink from '../../../components/ConceptLink.astro';
+
+<SectorDisclaimer />
+
+## Qué puede hacer la IA aquí
+
+En desarrollo de software la IA ya no es solo "autocompletar la siguiente línea": hoy cubre desde escribir código a partir de una descripción, hasta revisar un *pull request* completo buscando bugs, hasta generar los tests que faltan. La franja donde más aporta es la que menos le gusta a cualquier programador: el trabajo repetitivo (tests, documentación, refactors mecánicos, revisión de estilo).
+
+Lo que todavía no hace bien de forma fiable: entender la intención de negocio detrás de un cambio, decidir arquitectura a largo plazo, o detectar bugs sutiles de concurrencia y estado — ahí sigue haciendo falta criterio humano.
+
+## Casos de uso reales
+
+- **Autocompletado y chat de código** dentro del editor — ver <ConceptLink slug="que-es-un-modelo">modelo</ConceptLink> y la guía de [Monta tu setup](/hazlo/monta-tu-setup/) para configurarlo, local o en la nube.
+- **Revisión automática de *pull requests***: herramientas que leen el diff completo (no solo las líneas cambiadas, también el contexto del repositorio) y comentan directamente en GitHub/GitLab antes de que un humano lo revise.
+- **Generación de tests**: a partir de una función, generar los casos de prueba que la cubren, incluidos casos límite que se olvidan fácilmente.
+- **Análisis estático potenciado por IA**: detección de vulnerabilidades y *code smells* combinando reglas fijas con un modelo que entiende el contexto.
+- **Documentación**: generar o mantener al día un README, un changelog o comentarios de código a partir de los cambios reales.
+
+## Herramientas
+
+| Herramienta | Qué hace | Coste | Alternativa abierta |
+|---|---|---|---|
+| GitHub Copilot | Autocompletado y chat en el editor | Gratis con límite; Pro 10 USD/mes (verificado jul-2026) | [Continue](https://continue.dev), conectado a un modelo local |
+| CodeRabbit | Revisión de *pull requests* completa, comenta en GitHub/GitLab/Bitbucket | De pago, con nivel gratuito para repos open source | SonarQube Community Edition (ver siguiente fila) |
+| SonarQube | Análisis estático + IA (CodeFix, desde su versión 2026.2) para detectar bugs y vulnerabilidades | **Community Edition: gratis y de código abierto**; niveles superiores de pago | Es en sí mismo la opción abierta |
+| Snyk | Escaneo de seguridad de dependencias y, más reciente, de agentes de código autónomos | Freemium | [OWASP Dependency-Check](https://owasp.org/www-project-dependency-check/) (gratis, código abierto) |
+
+## Riesgos específicos de este sector
+
+- **Confiar sin revisar**: el código generado por IA puede compilar y funcionar en el caso feliz, y aun así tener bugs de seguridad o de borde que solo aparecen en producción. La revisión humana sigue siendo necesaria, no opcional.
+- **Paquetes inventados ("slopsquatting")**: los modelos a veces sugieren instalar una librería que no existe o que tiene un nombre parecido a una real pero maliciosa. Verifica siempre el nombre exacto del paquete antes de instalarlo.
+- **Propiedad intelectual**: el código sugerido puede parecerse a fragmentos con los que el modelo fue entrenado; revisa la licencia del proyecto y las políticas de tu empresa antes de reutilizar sugerencias extensas sin cambios.
+- **Dependencia de un proveedor**: si todo tu flujo de trabajo depende de una sola herramienta de pago, un cambio de precio o de política te afecta directamente — por eso cada herramienta de esta página lleva su alternativa abierta.

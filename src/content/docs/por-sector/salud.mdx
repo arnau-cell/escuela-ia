@@ -1,0 +1,42 @@
+---
+title: "Salud"
+description: "Qué puede hacer la IA en salud de forma responsable: apoyo administrativo y de documentación para profesionales, y los límites claros que no debe cruzar."
+translationKey: por-sector/salud
+sourceUpdated: 2026-07-03
+lastVerified: 2026-07-03
+---
+
+import SectorDisclaimer from '../../../components/SectorDisclaimer.astro';
+import ConceptLink from '../../../components/ConceptLink.astro';
+
+<SectorDisclaimer />
+
+Esta página trata la IA en salud con más cautela que el resto del sitio, a propósito: los errores aquí tienen consecuencias reales sobre personas, no solo sobre un texto o una imagen. Todo lo que sigue es información educativa general, no una recomendación de producto ni una guía clínica.
+
+## Qué puede hacer la IA aquí (y qué no)
+
+Donde la IA aporta hoy de forma razonable, **siempre con un profesional revisando el resultado**: reducir la carga administrativa (transcribir y estructurar notas de consulta, redactar informes a partir de esas notas, resumir bibliografía médica o el historial de un paciente para que el profesional lea menos y decida con más contexto).
+
+Donde NO debe usarse sin supervisión clínica directa: diagnóstico, decisiones de tratamiento, o cualquier uso que sustituya el juicio de un profesional sanitario cualificado. Un modelo de lenguaje puede describir síntomas de forma convincente y estar completamente equivocado — no distingue entre "es probable" y "estoy seguro" de la misma forma que lo hace un profesional entrenado para reconocer sus propios límites.
+
+## Casos de uso reales (con supervisión profesional)
+
+- **Documentación clínica**: transcribir una consulta y estructurarla en notas, para que el profesional revise y firme, no para que sustituya su registro.
+- **Resumen de bibliografía e historiales**: sintetizar artículos o el historial de un paciente para ahorrar tiempo de lectura — el profesional sigue siendo quien interpreta y decide.
+- **Materiales educativos para pacientes**: explicar en lenguaje sencillo una condición o un tratamiento ya indicado por un profesional, nunca sugerir un diagnóstico nuevo.
+- **Gestión administrativa**: programación de citas, recordatorios, triaje administrativo (no clínico) de la urgencia de una solicitud.
+
+## Sobre las herramientas
+
+Deliberadamente no recomendamos productos concretos de documentación clínica o apoyo diagnóstico en esta página: son herramientas que, si se usan en la práctica clínica real, deben estar homologadas por tu institución o colegio profesional y cumplir la normativa aplicable (ver más abajo) — una recomendación genérica de un sitio educativo no sustituye esa validación. Para tareas de apoyo no clínico (resumir un artículo público, redactar una comunicación administrativa), un asistente general en la nube (ver [Monta tu setup](/hazlo/monta-tu-setup/)) es un punto de partida razonable, siempre sin subir datos de pacientes identificables a un servicio que no tenga las garantías de privacidad adecuadas — ver <ConceptLink slug="local-vs-nube">local vs. nube</ConceptLink>.
+
+## Riesgos específicos de este sector
+
+- **El sesgo "estoy seguro" del modelo**: un modelo de lenguaje presenta una alucinación con la misma confianza que un dato correcto. En salud, esa confiada equivocación puede llevar a una decisión errónea si no se contrasta.
+- **Datos de pacientes son datos especialmente sensibles**: bajo el RGPD, los datos de salud son una categoría especial que exige garantías reforzadas. Nunca pegues datos identificables de un paciente en una herramienta de IA en la nube sin confirmar antes que cumple esas garantías (contrato de encargado de tratamiento, ubicación de los servidores, etc.).
+- **Marco regulatorio en marcha ahora mismo**: el Reglamento europeo de IA (AI Act) clasifica como **alto riesgo** los sistemas de IA usados para diagnóstico, apoyo a decisiones clínicas, triaje de pacientes y monitorización — con obligaciones plenas (evaluación de conformidad, documentación técnica, supervisión humana) exigibles desde **agosto de 2026**. Si tu organización usa o evalúa herramientas de IA en estas categorías, esto no es un detalle técnico lejano: aplica ya.
+- **Autodiagnóstico por parte de pacientes**: si estás leyendo esto como paciente y no como profesional, el límite es el mismo que el del disclaimer de arriba — usa la IA para entender mejor lo que un profesional ya te explicó, no para reemplazar la consulta.
+
+## Fuentes de esta página (verificadas 2026-07-03)
+
+- Clasificación de alto riesgo y calendario del AI Act para sistemas clínicos: European Commission, "Artificial Intelligence in healthcare"; análisis sectoriales sobre el plazo de agosto de 2026 para obligaciones plenas de sistemas de alto riesgo.

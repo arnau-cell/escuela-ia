@@ -1,0 +1,42 @@
+---
+title: "Healthcare"
+description: "What AI can responsibly do in healthcare: administrative and documentation support for professionals, and the clear limits it must not cross."
+translationKey: por-sector/salud
+sourceUpdated: 2026-07-03
+lastVerified: 2026-07-03
+---
+
+import SectorDisclaimer from '../../../../components/SectorDisclaimer.astro';
+import ConceptLink from '../../../../components/ConceptLink.astro';
+
+<SectorDisclaimer />
+
+This page treats AI in healthcare with more caution than the rest of the site, deliberately: mistakes here have real consequences for people, not just for a piece of text or an image. Everything below is general educational information, not a product recommendation or clinical guidance.
+
+## What AI can do here (and what it can't)
+
+Where AI reasonably helps today, **always with a professional reviewing the result**: reducing administrative burden (transcribing and structuring consultation notes, drafting reports from those notes, summarizing medical literature or a patient's history so the professional reads less and decides with more context).
+
+Where it must NOT be used without direct clinical supervision: diagnosis, treatment decisions, or any use that replaces the judgment of a qualified healthcare professional. A language model can describe symptoms convincingly and be completely wrong — it doesn't distinguish between "this is likely" and "I'm certain" the way a professional trained to recognize their own limits does.
+
+## Real use cases (with professional supervision)
+
+- **Clinical documentation**: transcribing a consultation and structuring it into notes, for the professional to review and sign off, not to replace their record.
+- **Literature and history summarization**: synthesizing articles or a patient's history to save reading time — the professional still interprets and decides.
+- **Patient education materials**: explaining in plain language a condition or treatment already indicated by a professional, never suggesting a new diagnosis.
+- **Administrative management**: appointment scheduling, reminders, administrative (not clinical) triage of how urgent a request is.
+
+## About tools
+
+We deliberately don't recommend specific clinical documentation or diagnostic-support products on this page: these are tools that, if used in real clinical practice, must be approved by your institution or professional body and comply with applicable regulation (see below) — a generic recommendation from an educational site doesn't replace that validation. For non-clinical support tasks (summarizing a public article, drafting an administrative communication), a general cloud assistant (see [Set up your AI](/en/build/set-up-your-ai/)) is a reasonable starting point, always without uploading identifiable patient data to a service that doesn't have adequate privacy guarantees — see <ConceptLink slug="local-vs-nube">local vs. cloud</ConceptLink>.
+
+## Risks specific to this sector
+
+- **The model's "I'm certain" bias**: a language model presents a hallucination with the same confidence as a correct fact. In healthcare, that confidently wrong answer can lead to a bad decision if it isn't cross-checked.
+- **Patient data is especially sensitive data**: under GDPR, health data is a special category requiring reinforced safeguards. Never paste identifiable patient data into a cloud AI tool without first confirming it meets those safeguards (data processing agreement, server location, etc.).
+- **A regulatory framework taking effect right now**: the EU AI Act classifies AI systems used for diagnosis, clinical decision support, patient triage and monitoring as **high-risk** — with full obligations (conformity assessment, technical documentation, human oversight) enforceable from **August 2026**. If your organization uses or is evaluating AI tools in these categories, this isn't a distant technicality — it applies now.
+- **Patient self-diagnosis**: if you're reading this as a patient rather than a professional, the limit is the same as the disclaimer above — use AI to better understand what a professional already explained to you, not to replace the consultation.
+
+## Sources for this page (verified 2026-07-03)
+
+- High-risk classification and AI Act timeline for clinical systems: European Commission, "Artificial Intelligence in healthcare"; sector analyses on the August 2026 deadline for full high-risk system obligations.

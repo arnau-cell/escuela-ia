@@ -1,0 +1,32 @@
+---
+title: "Plantilla de sector"
+description: "Guía para escribir una nueva página de sector, con la estructura y los criterios que siguen Informática, Marketing y ventas, y Salud."
+translationKey: por-sector/plantilla-sector
+sourceUpdated: 2026-07-03
+sidebar:
+  order: 99
+---
+
+import SectorDisclaimer from '../../../components/SectorDisclaimer.astro';
+
+Esta página no es un sector — es la guía para escribir uno nuevo (Legal, Educación, Contabilidad y finanzas, Agricultura y ganadería siguen pendientes, ver [Por sector](/por-sector/)). Sigue esta estructura para que todas las páginas de sector se lean igual y cumplan los mismos criterios de neutralidad y cuidado legal.
+
+## Estructura obligatoria
+
+1. **Disclaimer** (`<SectorDisclaimer />`) justo después del frontmatter, antes de cualquier otro contenido. Es obligatorio en todos los sectores, sin excepción — más aún en los regulados (salud, legal, finanzas).
+2. **Qué puede hacer la IA aquí**: 2-3 párrafos. Qué hace bien hoy en este sector, y qué NO hace bien todavía — sé honesto sobre los límites, no solo sobre las capacidades.
+3. **Casos de uso reales**: lista de 4-6 ejemplos concretos, no genéricos ("resume documentos" es genérico; "resume el historial de un paciente para que el profesional lea menos y decida con más contexto" es concreto).
+4. **Herramientas**: tabla con columnas *Herramienta · Qué hace · Coste · Alternativa abierta*. Toda herramienta de pago necesita una alternativa gratuita o de código abierto en la misma fila — sin excepción, es la regla de neutralidad de todo el sitio (ver `CONTRIBUTING.md`). Si el sector es regulado y no es seguro recomendar productos concretos (ver Salud como ejemplo), es válido no dar tabla y explicar por qué.
+5. **Riesgos específicos de este sector**: no repitas riesgos genéricos de IA ya cubiertos en [Aprende](/aprende/) — cuáles son los riesgos *específicos* de usar IA en esta profesión concreta.
+6. Si hay datos volátiles (precios, plazos regulatorios, cifras concretas): frontmatter con `lastVerified` en la fecha real de verificación, y verificado con WebSearch, nunca de memoria.
+
+## Criterios de neutralidad y cuidado (no negociables)
+
+- Sin afiliados de pago, nunca. Cada mención de una herramienta de pago lleva su alternativa abierta.
+- En sectores regulados (salud, legal, finanzas, y cualquier otro que trate datos sensibles o decisiones con consecuencias legales), el disclaimer no es decorativo: el contenido en sí debe estar redactado para que ninguna frase pueda leerse como asesoramiento profesional directo a una persona concreta.
+- Enlaza a los [conceptos transversales](/aprende/conceptos/) relevantes con `<ConceptLink slug="...">` en vez de reexplicar el concepto — el enlace falla el build si el concepto no existe, así que es una validación gratuita.
+- Usa `npm run new -- docs --es por-sector/<slug> --en by-industry/<slug-en> ...` para generar el par ES+EN — nunca crear el archivo a mano.
+
+## Ejemplos de referencia
+
+Lee [Informática](/por-sector/informatica/) (caso estándar), [Marketing y ventas](/por-sector/marketing-ventas/) (caso estándar con más énfasis en riesgo de marca) y [Salud](/por-sector/salud/) (caso regulado, con la tabla de herramientas omitida a propósito y el disclaimer reforzado en el cuerpo del texto, no solo en el componente).
