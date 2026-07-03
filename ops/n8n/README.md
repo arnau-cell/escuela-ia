@@ -1,11 +1,22 @@
 # Pipeline de noticias · diseño para n8n (E5)
 
-> **Estado: diseñado, NO ejecutado en el VPS real.** Esta sesión no tuvo acceso SSH/n8n al VPS
-> (`root@37.27.3.113` con la clave `~/.ssh/hetzner_n8n` rechazada — probablemente porque Escuela IA,
-> al ser un mundo nuevo, nunca recibió acceso). Todo lo de aquí es el diseño completo, verificado en
-> las partes que se podían verificar sin el VPS (URLs de RSS reales, formato de contenido, gates del
-> sitio), listo para importar/configurar en cuanto haya acceso. Ver `_privado/auditorias/E5-handoff.md`
-> para el detalle de qué falta y qué decisión le toca a Arnau.
+> **Estado: diseñado, todavía NO ejecutado dentro de n8n real** (sí probado fuera de n8n, ver
+> `simulate-pipeline.mjs` y el resultado real en `src/content/news/*/2026-06-30-068c9bc4.md`).
+> Todo lo de aquí es el diseño completo, verificado en las partes que se podían verificar sin escribir
+> en el VPS (URLs de RSS reales, formato de contenido, gates del sitio), listo para importar/configurar.
+>
+> **Corrección (auditoría E5, 2026-07-03)**: la sesión constructora original reportó el VPS como
+> inaccesible (`root@37.27.3.113` → `Permission denied`) y asumió que era por no tener autorización.
+> Era un diagnóstico equivocado: el root SSH está deshabilitado a propósito en ese VPS; el usuario
+> correcto es **`arnau@37.27.3.113`** con la misma clave `~/.ssh/hetzner_n8n` — verificado y funcional.
+> No hay ningún bloqueo de acceso real. Ver `_privado/auditorias/E5-veredicto.md` para el detalle.
+>
+> **Este VPS es la infraestructura personal de Arnau** (una única instancia n8n self-hosted, sin
+> separación por proyecto, que hoy también sirve automatizaciones de Contabilidad/Networking/Inversión
+> UY). Es un VPS **distinto** de la n8n de Estudio ESE (instancia local/Docker, sin relación alguna con
+> este servidor) — no confundir ni mezclar las dos. Aceptable usar el VPS personal para esta fase de
+> prototipo; migrar a infraestructura propia de Escuela IA está anotado como pendiente en
+> `_conocimiento/PENDIENTES.md` antes de financiación externa o due diligence.
 
 ## Resumen del flujo
 
