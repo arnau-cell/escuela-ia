@@ -6,17 +6,19 @@
 
 ## Abiertas
 
-- [ ] **E4 — precio de Copy.ai desactualizado** en `por-sector/marketing-ventas.mdx` /
-  `en/by-industry/marketing-sales.mdx` (tabla de herramientas): dice "Nivel gratuito (10 000
-  palabras/mes); planes desde 20 USD/mes", pero las fuentes primarias de Copy.ai (centro de ayuda +
-  páginas de precios actuales) muestran un nivel gratuito de 2.000 palabras/mes (o inexistente en la
-  tabla de precios principal, que se reposicionó hacia planes GTM desde 29 USD/mes, 24 USD/mes en
-  anual). No es problema de neutralidad (la alternativa sigue siendo válida), solo la cifra citada.
-  Fix sugerido: actualizar la fila con las cifras correctas o cambiar de ejemplo. Detalle:
-  `_privado/auditorias/E4-veredicto.md`.
+(ninguna)
 
 ## Resueltas
 
+- [x] **E4 — precio de Copy.ai desactualizado** en `por-sector/marketing-ventas.mdx` /
+  `en/by-industry/marketing-sales.mdx` (tabla de herramientas): decía "Nivel gratuito (10 000
+  palabras/mes); planes desde 20 USD/mes". Resuelto 2026-07-03: verificado directamente en
+  `copy.ai/prices` (WebFetch a la página oficial, no un agregador de terceros) — Copy.ai **ya no
+  tiene nivel gratuito permanente**; el plan más barato (Chat) es 29 USD/mes, o 24 USD/mes con
+  facturación anual. Corregida la fila en ambos idiomas. Refuerza el argumento de neutralidad de la
+  página: sin nivel gratuito en la herramienta especializada, la alternativa abierta (asistente
+  general gratuito) pasa a ser la opción real de entrada, no solo la "de repuesto". Detalle:
+  `_privado/auditorias/E4-veredicto.md`.
 - [x] **E3 — texto de `ConceptLink` en español dentro del configurador EN**: en
   `src/components/SetupBuilder/SetupBuilder.astro` (script cliente), el texto visible de los enlaces a
   conceptos se generaba con `slug.replace(/-/g, ' ')`, y los `conceptSlugs` de `rules.en.json` usan siempre
