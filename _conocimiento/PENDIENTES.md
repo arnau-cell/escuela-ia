@@ -11,15 +11,10 @@
   la fase por cerrada del todo. La auditoría confirmó que son coherentes con `_privado/LEGAL.md` y con
   el estado real del sitio, pero eso no sustituye la revisión personal. Detalle:
   `_privado/auditorias/E6-veredicto.md`.
-- [ ] **E6 — PR #6 mergeado, dos checkpoints humanos siguen pendientes**: GitHub Discussions
-  desactivado (`has_discussions: false`, verificado) — Giscus está preparado en
-  `src/components/Giscus.astro` pero no activo, necesita que Arnau active Discussions y pegue
-  `REPO_ID`/`CATEGORY_ID` de giscus.app en el componente. Cloudflare Pages sin conectar
-  (`escuela-ia.pages.dev` no resuelve, verificado con `nslookup`) — el punto de inyección de
-  analítica ya existe en `src/config/analytics.ts` pero necesita el token real del panel de
-  Cloudflare Web Analytics una vez conectado. Lighthouse (100/100/100/100 en las páginas
-  muestreadas) se corrió contra `npm run preview` local, no contra un deploy real — repetir contra
-  el hosting final en cuanto exista. Detalle: `_privado/auditorias/E6-handoff.md`.
+- [ ] **E6 — un checkpoint humano sigue pendiente**: GitHub Discussions desactivado
+  (`has_discussions: false`, verificado) — Giscus está preparado en `src/components/Giscus.astro` pero
+  no activo, necesita que Arnau active Discussions y pegue `REPO_ID`/`CATEGORY_ID` de giscus.app en el
+  componente. Detalle: `_privado/auditorias/E6-handoff.md`.
 - [ ] **E6 — falta un asset de `og:image` por defecto** (no bloqueante, cosmético): no existe
   ninguna imagen de diseño para compartir en redes; Open Graph funciona bien sin ella (título,
   descripción, url) pero sin imagen de portada. Detalle: `_privado/auditorias/E6-handoff.md`.
@@ -45,6 +40,17 @@
 
 ## Resueltas
 
+- [x] **E6/E1 — Cloudflare conectado y sitio real en producción**: Cloudflare Workers Builds conectado
+  al repo (proyecto `escuela-ia`), con `wrangler.toml` añadido (necesario para este producto, no
+  clásico "Pages"). El deploy fallaba al final (`You need to register a workers.dev subdomain`) porque
+  la cuenta no tenía subdominio reservado — registrado vía API
+  (`PUT /accounts/.../workers/subdomain`, subdominio `arnau-cell`) con un token de Arnau usado una sola
+  vez y no guardado en ningún archivo (verificado con grep). Sitio real:
+  `https://escuela-ia.arnau-cell.workers.dev` — confirmado con `curl` (200 en home ES/EN y
+  configurador) y con Lighthouse real: 100/100/100/100, igual que en local. `astro.config.mjs`
+  actualizado con esta URL (sigue provisional hasta el dominio definitivo). Analítica
+  (`src/config/analytics.ts`) sigue sin token — pendiente de que Arnau lo genere en el panel de
+  Cloudflare Web Analytics ahora que ya hay sitio real donde activarla.
 - [x] **E5 — PR #5 (primera noticia real) revisado, reescrito con tono editorial y mergeado**: Arnau
   revisó el contenido, definió el tono (serio/profesional con gancho comercial) y pidió reescribir el
   título/descripción antes de aprobar. Reescrito en ambos idiomas verificando contra la fuente original
