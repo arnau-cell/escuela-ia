@@ -1,0 +1,87 @@
+---
+// Listado del blog, contra la collection `blog` (schema en E1/content.config.ts). Solo muestra
+// entradas con draft: false. Enlaza a la página de detalle real (src/pages/comparte|share),
+// no a un placeholder. Mismo patrón que NewsFeed.astro.
+import { getCollection } from 'astro:content';
+
+const { starlightRoute } = Astro.locals;
+const locale = starlightRoute.locale === 'en' ? 'en' : 'es';
+const base = locale === 'en' ? '/en/share' : '/comparte';
+
+const allPosts = await getCollection(
+	'blog',
+	(entry) => entry.data.lang === locale && entry.data.draft === false,
+);
+const sorted = allPosts.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const CATEGORY_LABELS: Record<string, Record<string, string>> = {
+	es: { reviews: 'Reviews', 'como-lo-hice': 'Cómo lo hice', aprendizajes: 'Aprendizajes' },
+	en: { reviews: 'Reviews', 'como-lo-hice': 'How I built it', aprendizajes: 'Lessons learned' },
+};
+
+const UI = {
+	es: { empty: 'Todavía no hay entradas publicadas — vuelve pronto.' },
+	en: { empty: 'No posts published yet — check back soon.' },
+}[locale];
+
+const dateFormatter = new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-ES', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+	timeZone: 'UTC',
+});
+---
+
+{
+	sorted.length === 0 ? (
+		<p class="blog-empty">{UI.empty}</p>
+	) : (
+		<ul class="blog-feed">
+			{sorted.map((entry) => {
+				const slug = entry.id.replace(/^(es|en)\//, '');
+				return (
+					<li class="blog-item">
+						<div class="blog-meta">
+							<span class="blog-category">{CATEGORY_LABELS[locale][entry.data.category] ?? entry.data.category}</span>
+							<time datetime={entry.data.publishedAt.toISOString()}>{dateFormatter.format(entry.data.publishedAt)}</time>
+						</div>
+						<h3><a href={`${base}/${slug}/`}>{entry.data.title}</a></h3>
+						<p>{entry.data.description}</p>
+					</li>
+				);
+			})}
+		</ul>
+	)
+}
+
+<style>
+	.blog-empty {
+		font-style: italic;
+		color: var(--sl-color-gray-3);
+	}
+	.blog-feed {
+		list-style: none;
+		padding: 0;
+		display: grid;
+		gap: 1.5rem;
+	}
+	.blog-item {
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		padding: 1rem 1.25rem;
+	}
+	.blog-item h3 {
+		margin: 0.25rem 0;
+	}
+	.blog-meta {
+		display: flex;
+		gap: 0.75rem;
+		align-items: center;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+	.blog-category {
+		font-weight: 600;
+		color: var(--sl-color-text-accent);
+	}
+</style>

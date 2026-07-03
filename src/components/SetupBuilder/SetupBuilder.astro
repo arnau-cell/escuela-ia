@@ -243,7 +243,11 @@ for (const doc of allDocs) {
 		border-radius: 0.25rem;
 		border: none;
 		background: var(--sl-color-accent);
-		color: var(--sl-color-white);
+		/* --sl-color-white NO es "blanco" en modo claro (Starlight lo redefine a casi-negro,
+		   pensado para texto sobre fondos oscuros) -- el token correcto para texto legible sobre
+		   un fondo de acento en ambos modos es --sl-color-text-invert (falló Lighthouse con
+		   contraste 3.09, exige 4.5 — corregido y reverificado). */
+		color: var(--sl-color-text-invert);
 		font-weight: 600;
 		cursor: pointer;
 	}

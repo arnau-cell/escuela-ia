@@ -1,0 +1,50 @@
+---
+// Override de Head: Starlight genera hreflang asumiendo slugs espejo entre locales (solo
+// intercambia el prefijo /en/ en la misma ruta), pero este proyecto usa slugs traducidos por
+// translationKey (aprende/nivel-0 ↔ en/learn/level-0) — así que el hreflang por defecto de
+// Starlight apunta a la ruta fantasma (/en/aprende/nivel-0/, fallback sin traducir), no a la
+// página real. Se sustituyen esos <link rel="alternate" hreflang="..."> por los correctos,
+// calculados igual que LanguageSelect/TranslationStatus (ver src/lib/counterpart.ts).
+import { findCounterpartHref } from '../lib/counterpart';
+import { CF_BEACON_TOKEN } from '../config/analytics';
+
+const { starlightRoute } = Astro.locals;
+const { head, locale, entry } = starlightRoute;
+const currentLang = locale === 'en' ? 'en' : 'es';
+
+const filteredHead = head.filter(
+	({ tag, attrs }) => !(tag === 'link' && attrs?.rel === 'alternate' && 'hreflang' in (attrs ?? {})),
+);
+
+const site = Astro.site;
+const toAbsolute = (path: string) => (site ? new URL(path, site).href : path);
+
+const selfHref = toAbsolute(Astro.url.pathname);
+const otherLang = currentLang === 'en' ? 'es' : 'en';
+const counterpartHref = await findCounterpartHref(entry.data.translationKey, otherLang);
+
+const alternates: { hreflang: string; href: string }[] = [
+	{ hreflang: currentLang, href: selfHref },
+];
+if (counterpartHref) {
+	alternates.push({ hreflang: otherLang, href: toAbsolute(counterpartHref) });
+}
+// x-default siempre apunta a la versión en español (defaultLocale: 'root' en astro.config.mjs).
+alternates.push({
+	hreflang: 'x-default',
+	href: currentLang === 'es' ? selfHref : (counterpartHref ? toAbsolute(counterpartHref) : selfHref),
+});
+---
+
+{filteredHead.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
+{alternates.map(({ hreflang, href }) => <link rel="alternate" hreflang={hreflang} href={href} />)}
+{
+	CF_BEACON_TOKEN !== '' && (
+		<script
+			is:inline
+			defer
+			src="https://static.cloudflareinsights.com/beacon.min.js"
+			data-cf-beacon={`{"token": "${CF_BEACON_TOKEN}"}`}
+		/>
+	)
+}
