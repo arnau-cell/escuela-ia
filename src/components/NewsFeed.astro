@@ -1,0 +1,117 @@
+---
+// Feed de noticias real, contra la collection `news` (schema definido en E1). Solo muestra
+// entradas con reviewed: true — el pipeline n8n (E5) las genera con reviewed: false por
+// defecto ("modo PR-revisado"), así que hasta que alguien las revise y las marque, esta
+// lista queda vacía a propósito (no es un bug).
+import { getCollection } from 'astro:content';
+
+const { starlightRoute } = Astro.locals;
+const locale = starlightRoute.locale === 'en' ? 'en' : 'es';
+
+const allNews = await getCollection(
+	'news',
+	(entry) => entry.data.lang === locale && entry.data.reviewed === true,
+);
+const sorted = allNews.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const LAB_LABELS: Record<string, string> = {
+	openai: 'OpenAI',
+	anthropic: 'Anthropic',
+	google: 'Google',
+	meta: 'Meta',
+	mistral: 'Mistral',
+	huggingface: 'Hugging Face',
+	otros: locale === 'en' ? 'Other' : 'Otros',
+};
+
+const UI = {
+	es: {
+		empty: 'Todavía no hay noticias publicadas — el pipeline automático está en preparación (ver el plan del proyecto). Vuelve pronto.',
+		trending: 'Destacada',
+		source: 'Ver fuente original',
+		outdated: 'Traducción automática pendiente de revisión',
+	},
+	en: {
+		empty: "No news published yet — the automated pipeline is in preparation (see the project's plan). Check back soon.",
+		trending: 'Trending',
+		source: 'View original source',
+		outdated: 'Automated translation pending review',
+	},
+}[locale];
+
+// timeZone: 'UTC' es necesario: publishedAt se parsea como medianoche UTC a partir de un
+// YYYY-MM-DD en el frontmatter; sin fijar el huso, Intl la formatea en el huso del servidor
+// de build y una fecha como 2026-07-02 puede mostrarse como "1 de julio" en husos negativos.
+const dateFormatter = new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-ES', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+	timeZone: 'UTC',
+});
+---
+
+{
+	sorted.length === 0 ? (
+		<p class="news-empty">{UI.empty}</p>
+	) : (
+		<ul class="news-feed">
+			{sorted.map((entry) => (
+				<li class="news-item">
+					<div class="news-meta">
+						<span class="news-lab">{LAB_LABELS[entry.data.lab] ?? entry.data.lab}</span>
+						<time datetime={entry.data.publishedAt.toISOString()}>{dateFormatter.format(entry.data.publishedAt)}</time>
+						{entry.data.trending && <span class="news-trending">{UI.trending}</span>}
+						{entry.data.translationOutdated && <span class="news-outdated">{UI.outdated}</span>}
+					</div>
+					<h3>{entry.data.title}</h3>
+					<p>{entry.data.description}</p>
+					<a href={entry.data.sourceUrl} target="_blank" rel="noopener">
+						{UI.source}
+					</a>
+				</li>
+			))}
+		</ul>
+	)
+}
+
+<style>
+	.news-empty {
+		font-style: italic;
+		color: var(--sl-color-gray-3);
+	}
+	.news-feed {
+		list-style: none;
+		padding: 0;
+		display: grid;
+		gap: 1.5rem;
+	}
+	.news-item {
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		padding: 1rem 1.25rem;
+	}
+	.news-item h3 {
+		margin: 0.25rem 0;
+	}
+	.news-meta {
+		display: flex;
+		gap: 0.75rem;
+		align-items: center;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+	.news-lab {
+		font-weight: 600;
+		color: var(--sl-color-text-accent);
+	}
+	.news-trending {
+		background: var(--sl-color-orange-low);
+		border: 1px solid var(--sl-color-orange);
+		border-radius: 0.25rem;
+		padding: 0 0.4rem;
+		font-size: 0.75rem;
+	}
+	.news-outdated {
+		font-style: italic;
+	}
+</style>

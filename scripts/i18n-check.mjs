@@ -73,9 +73,18 @@ export function checkRoot(dir, localeOf, label) {
 		} else if (!pair.es) {
 			errors.push(`huérfana EN sin ES: "${key}" (${pair.en.loc})`);
 		} else if (pair.en.updated < pair.es.updated && !pair.en.ack) {
+			// Caso habitual en docs: ES es la fuente, EN es la traducción que puede quedarse atrás.
 			errors.push(
 				`desactualizada: "${key}" — EN ${iso(pair.en.updated)} < ES ${iso(pair.es.updated)}. ` +
 					`Traduce y actualiza sourceUpdated, o marca translationOutdated: true en la página EN.`,
+			);
+		} else if (pair.es.updated < pair.en.updated && !pair.es.ack) {
+			// Caso habitual en news: la fuente suele ser un feed en inglés, ES es la traducción
+			// que puede quedarse atrás. Sin este chequeo bidireccional, esta dirección pasaba
+			// desapercibida en silencio (encontrado al generar la primera noticia real en E5).
+			errors.push(
+				`desactualizada: "${key}" — ES ${iso(pair.es.updated)} < EN ${iso(pair.en.updated)}. ` +
+					`Traduce y actualiza sourceUpdated, o marca translationOutdated: true en la página ES.`,
 			);
 		}
 	}
