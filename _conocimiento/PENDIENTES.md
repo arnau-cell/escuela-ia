@@ -6,7 +6,20 @@
 
 ## Abiertas
 
-- [ ] **E6 — PR #6 abierto, dos checkpoints humanos siguen pendientes**: GitHub Discussions
+- [ ] **E6 — checkpoint humano sin sustituir**: Arnau (responsable legal declarado en el aviso legal)
+  debe revisar personalmente los 3 textos legales (aviso legal, privacidad, cookies, ES+EN) antes de dar
+  la fase por cerrada del todo. La auditoría confirmó que son coherentes con `_privado/LEGAL.md` y con
+  el estado real del sitio, pero eso no sustituye la revisión personal. Detalle:
+  `_privado/auditorias/E6-veredicto.md`.
+- [ ] **E6 — precio de Ollama Pro Max incorrecto** en `blog/*/reviews/ollama-*.md` (ES+EN): dice "cerca
+  de 200 USD/mes", pero la fuente primaria (`ollama.com/pricing`) confirma que el plan superior se llama
+  "Max" (no "Pro Max") y cuesta 100 USD/mes. El plan "Pro" (20 USD/mes) sí está bien. Detalle:
+  `_privado/auditorias/E6-veredicto.md`.
+- [ ] **E6 — categoría inconsistente con la ruta** en `blog/*/reviews/bienvenida.md` /`welcome.md`
+  (ES+EN): viven en la carpeta `reviews/` (URL `/comparte/reviews/bienvenida/`) pero
+  `category: aprendizajes` en el frontmatter — el badge visible no coincide con la URL. Decisión
+  editorial menor: mover el archivo o cambiar la categoría. Detalle: `_privado/auditorias/E6-veredicto.md`.
+- [ ] **E6 — PR #6 mergeado, dos checkpoints humanos siguen pendientes**: GitHub Discussions
   desactivado (`has_discussions: false`, verificado) — Giscus está preparado en
   `src/components/Giscus.astro` pero no activo, necesita que Arnau active Discussions y pegue
   `REPO_ID`/`CATEGORY_ID` de giscus.app en el componente. Cloudflare Pages sin conectar
