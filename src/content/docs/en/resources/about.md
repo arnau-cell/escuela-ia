@@ -2,7 +2,7 @@
 title: "About the project"
 description: "Escuela IA's mission, neutrality policy, and licenses — what this site is and why it exists."
 translationKey: recursos/sobre-el-proyecto
-sourceUpdated: 2026-07-03
+sourceUpdated: 2026-07-04
 sidebar:
   order: 3
 ---
@@ -57,5 +57,5 @@ or open an [Issue](https://github.com/arnau-cell/escuela-ia/issues).
 
 ## Who's behind it
 
-Idea and development: [Arnau Muset](https://github.com/arnau-cell). See also the
+Idea and development: [arnau-cell](https://github.com/arnau-cell). See also the
 [legal notice](/en/resources/legal-notice/) for contact and ownership details.

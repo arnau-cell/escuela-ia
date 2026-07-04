@@ -2,7 +2,7 @@
 title: "Política de privacidad"
 description: "Qué datos trata este sitio (hoy: prácticamente ninguno), con qué base legal, y qué hace Giscus con los comentarios."
 translationKey: recursos/privacidad
-sourceUpdated: 2026-07-03
+sourceUpdated: 2026-07-04
 sidebar:
   order: 5
 ---
@@ -24,8 +24,8 @@ de datos es, por diseño, mínimo.
 
 ## Quién es el responsable del tratamiento
 
-Arnau Muset — ver [aviso legal](/recursos/aviso-legal/) para los datos de contacto. Para cualquier
-consulta sobre privacidad, usa el mismo canal de contacto.
+El titular del proyecto — ver [aviso legal](/recursos/aviso-legal/) para los datos de contacto y
+titularidad. Para cualquier consulta sobre privacidad, usa el mismo canal de contacto.
 
 ## Tus derechos
 

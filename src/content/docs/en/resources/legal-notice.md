@@ -2,7 +2,7 @@
 title: "Legal notice"
 description: "Site owner identity, contact, purpose of the site, and licenses for the code and the content."
 translationKey: recursos/aviso-legal
-sourceUpdated: 2026-07-03
+sourceUpdated: 2026-07-04
 sidebar:
   order: 4
 ---
@@ -21,9 +21,10 @@ regardless of where the operator is based.
 ## Purpose of the site
 
 "Escuela de la IA / AI School" is an educational, free, neutral project whose goal is for anyone to
-understand artificial intelligence from zero to a technical level. It is not a commercial activity: it
-does not sell its own products or services, carries no paid affiliates, and requires no user account to
-browse.
+understand artificial intelligence from zero to a technical level. As of today it is not a commercial
+activity: it does not sell its own products or services, carries no paid affiliates, and requires no
+user account to browse. This section will be updated if the project introduces a monetization model in
+the future (for example, affiliates, its own products, or paid services).
 
 ## Licenses
 

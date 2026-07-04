@@ -2,7 +2,7 @@
 title: "Sobre el proyecto"
 description: "Misión, política de neutralidad y licencias de Escuela IA — qué es este sitio y por qué existe."
 translationKey: recursos/sobre-el-proyecto
-sourceUpdated: 2026-07-03
+sourceUpdated: 2026-07-04
 sidebar:
   order: 3
 ---
@@ -59,5 +59,5 @@ o abre un [Issue](https://github.com/arnau-cell/escuela-ia/issues).
 
 ## Quién lo hace
 
-Idea y desarrollo: [Arnau Muset](https://github.com/arnau-cell). Ver también el
+Idea y desarrollo: [arnau-cell](https://github.com/arnau-cell). Ver también el
 [aviso legal](/recursos/aviso-legal/) para los datos de contacto y titularidad.

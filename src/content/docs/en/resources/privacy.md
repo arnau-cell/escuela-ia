@@ -2,7 +2,7 @@
 title: "Privacy policy"
 description: "What data this site processes (today: practically none), on what legal basis, and what Giscus does with comments."
 translationKey: recursos/privacidad
-sourceUpdated: 2026-07-03
+sourceUpdated: 2026-07-04
 sidebar:
   order: 5
 ---
@@ -23,7 +23,8 @@ This site is static (no application server or database of its own), requires no 
 
 ## Who is the data controller
 
-Arnau Muset — see the [legal notice](/en/resources/legal-notice/) for contact details. For any privacy
+The project's owner — see the [legal notice](/en/resources/legal-notice/) for contact and ownership
+details. For any privacy
 question, use the same contact channel.
 
 ## Your rights
