@@ -6,16 +6,28 @@
 
 ## Abiertas
 
-- [ ] **E7 — pendiente de auditoría antes del checkpoint humano de lanzamiento**: gates verdes,
-  checklist MVP completo, defecto real de rutas fantasma en producción (paginación de Starlight
-  enlazando a `/en/hazlo/plataformas/` con contenido en español) encontrado y corregido. No se
-  autodeclara lista para el go/no-go de Arnau sin veredicto de auditoría independiente primero.
-  Detalle: `_privado/auditorias/E7-handoff.md`.
-- [ ] **E6 — checkpoint humano sin sustituir**: Arnau (responsable legal declarado en el aviso legal)
-  debe revisar personalmente los 3 textos legales (aviso legal, privacidad, cookies, ES+EN) antes de dar
-  la fase por cerrada del todo. La auditoría confirmó que son coherentes con `_privado/LEGAL.md` y con
-  el estado real del sitio, pero eso no sustituye la revisión personal. Detalle:
-  `_privado/auditorias/E6-veredicto.md`.
+- [ ] **E7 — RECHAZADO en la auditoría, no proponer go/no-go todavía**: el fix de esta fase (marcar 20
+  páginas fuera de alcance como `draft: true`) resolvió un síntoma puntual, no la causa. Las rutas
+  fantasma de Starlight (en español, bajo URLs `/en/...`) se siguen generando en el build para
+  cualquier página con slug traducido y contaminan dos piezas del MVP: (a) la **paginación**
+  Previous/Next en casi todas las transiciones entre secciones EN (ej. `/en/learn/start-here/` →
+  "prev" lleva a `/en/hazlo/monta-tu-setup/`, contenido en español, 200 no 404); (b) el **índice de
+  búsqueda de Pagefind**, que indexa 53 páginas como "en" cuando solo 29 son inglés real — las otras
+  24 son fantasmas en español mal etiquetados como inglés (confirmado: `dist/en` real=29 + fantasma=24
+  = 53, exacto). Necesita una sesión constructora que arregle la causa (excluir las rutas fantasma del
+  build, o sobrescribir paginación + exclusión de Pagefind igual que ya se hizo con el sidebar en
+  `routeData.ts`), verificada de nuevo contrastando `page_count` de Pagefind contra el conteo real de
+  páginas por idioma. Detalle completo: `_privado/auditorias/E7-veredicto.md`.
+- [ ] **E6 — checkpoint humano sin sustituir, reconfirmado bloqueante en la auditoría de E7**: Arnau
+  (responsable legal declarado en el aviso legal) debe revisar personalmente los 3 textos legales
+  (aviso legal, privacidad, cookies, ES+EN) antes del go/no-go de lanzamiento. La auditoría de E7 buscó
+  explícitamente evidencia de que esto ya se hizo y no la encontró en ningún registro — si ya está
+  hecho, basta con confirmarlo aquí y mover esta entrada a "Resueltas". Detalle:
+  `_privado/auditorias/E7-veredicto.md`.
+- [ ] **E7 — reserva menor, no bloqueante**: Lighthouse "Best Practices" en 96/100 (no 100) por un
+  error de CORS en consola contra `cloudflareinsights.com/cdn-cgi/rum` (función de RUM del beacon de
+  Web Analytics, no la métrica principal de pageviews) — probablemente por vivir en `workers.dev` en
+  vez de una zona propia de Cloudflare. Revisar si se resuelve solo al conectar dominio propio.
 - [ ] **E6 — falta un asset de `og:image` por defecto** (no bloqueante, cosmético): no existe
   ninguna imagen de diseño para compartir en redes; Open Graph funciona bien sin ella (título,
   descripción, url) pero sin imagen de portada. Detalle: `_privado/auditorias/E6-handoff.md`.
