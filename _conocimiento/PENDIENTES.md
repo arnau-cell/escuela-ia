@@ -11,9 +11,6 @@
   la fase por cerrada del todo. La auditoría confirmó que son coherentes con `_privado/LEGAL.md` y con
   el estado real del sitio, pero eso no sustituye la revisión personal. Detalle:
   `_privado/auditorias/E6-veredicto.md`.
-- [ ] **E6 — Giscus, último paso**: repo ya público y Discussions ya activado (2026-07-03) — los dos
-  requisitos previos están resueltos. Solo falta que Arnau pegue el repo en giscus.app, elija categoría,
-  y pase `data-repo-id`/`data-category-id` para completar `src/components/Giscus.astro`.
 - [ ] **E6 — falta un asset de `og:image` por defecto** (no bloqueante, cosmético): no existe
   ninguna imagen de diseño para compartir en redes; Open Graph funciona bien sin ella (título,
   descripción, url) pero sin imagen de portada. Detalle: `_privado/auditorias/E6-handoff.md`.
@@ -39,6 +36,16 @@
 
 ## Resueltas
 
+- [x] **E6 — Giscus activo en producción**: resuelto en cadena el 2026-07-03 — repo puesto público de
+  nuevo (requisito duro de Giscus, documentado en `_conocimiento/DECISIONES.md`), app de giscus
+  instalada, categoría de Discussions "Announcements" elegida (recomendación estándar para blogs).
+  IDs (`data-repo-id`, `data-category-id`) verificados contra la API de GitHub
+  (`discussionCategories`) antes de pegarlos, no copiados a ciegas de giscus.app. Confirmado en
+  producción real: el script de `giscus.app/client.js` carga con el `repo-id` correcto en
+  `/comparte/aprendizajes/bienvenida/`. De paso, se tipó explícitamente `REPO_ID`/`CATEGORY_ID`/
+  `CF_BEACON_TOKEN` como `string` — con valores no vacíos, TypeScript infería el literal exacto y
+  `astro check` marcaba la comparación `!== ''` como error (comportamiento en runtime correcto,
+  solo un falso positivo de tipos).
 - [x] **E6/E1 — Cloudflare conectado y sitio real en producción**: Cloudflare Workers Builds conectado
   al repo (proyecto `escuela-ia`), con `wrangler.toml` añadido (necesario para este producto, no
   clásico "Pages"). El deploy fallaba al final (`You need to register a workers.dev subdomain`) porque
