@@ -34,7 +34,7 @@ en `_privado/protocolo/` (privado, no en el repo público).
 
 ## Stack (decidido)
 
-Astro + Starlight · Cloudflare Pages · Pagefind · Giscus · analítica Cloudflare/Umami.
+Astro + Starlight · Cloudflare Workers (`escuela-ia.arnau-cell.workers.dev`, conectado 2026-07-03) · Pagefind · Giscus (activo) · Cloudflare Web Analytics.
 Pipeline noticias: RSS → n8n (VPS) → resumen → commit → rebuild.
 
 ## Punteros

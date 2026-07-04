@@ -26,6 +26,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
 	const sidebar = GROUPS.map(({ key, es, en }) => {
 		const entries = currentLocaleDocs
 			.filter((entry) => entry.data.translationKey.startsWith(`${key}/`))
+			.filter((entry) => !entry.data.draft)
 			.sort((a, b) => {
 				const orderA = a.data.sidebar?.order ?? 99;
 				const orderB = b.data.sidebar?.order ?? 99;

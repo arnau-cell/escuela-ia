@@ -3,6 +3,7 @@ title: "Glosario"
 description: "Página en preparación."
 translationKey: recursos/glosario
 sourceUpdated: 2026-07-02
+draft: true
 sidebar:
   order: 1
 ---

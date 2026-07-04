@@ -14,7 +14,10 @@ const i18nFields = z.object({
 export const collections = {
 	docs: defineCollection({
 		loader: docsLoader(),
-		schema: docsSchema({ extend: i18nFields }),
+		// `draft` es solo de docs (no de i18nFields compartido): oculta del sidebar los stubs
+		// "🚧 en construcción" generados por scripts/new-content.mjs para secciones fuera del
+		// alcance de v1 (ver routeData.ts) sin dejar de compilarlos si alguien tiene el enlace directo.
+		schema: docsSchema({ extend: i18nFields.extend({ draft: z.boolean().default(false) }) }),
 	}),
 	news: defineCollection({
 		loader: glob({ base: './src/content/news', pattern: '**/*.md' }),

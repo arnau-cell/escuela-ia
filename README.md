@@ -4,12 +4,12 @@
 
 **EN** — The free, neutral reference site for understanding AI from zero to technical level, bilingual (ES/EN). No paid affiliates, always open-source alternatives, and a "set up your AI" guide that tells you exactly what to install based on your computer, budget and goal. Not a business — a project to help.
 
-🌐 `escuela-ia.pages.dev` _(dominio provisional elegido para cuando se conecte Cloudflare Pages —_
-_todavía no hay despliegue real; el enlace no resuelve mientras tanto, comprobado 2026-07-03)_
+🌐 [escuela-ia.arnau-cell.workers.dev](https://escuela-ia.arnau-cell.workers.dev) _(subdominio provisional de_
+_Cloudflare Workers; dominio propio definitivo pendiente de decidir)_
 
 ## Stack
 
-[Astro](https://astro.build) + [Starlight](https://starlight.astro.build) · [Cloudflare Pages](https://pages.cloudflare.com) · [Pagefind](https://pagefind.app) (buscador) · [Giscus](https://giscus.app) (comentarios del blog) · analítica Cloudflare/Umami (sin cookies de rastreo).
+[Astro](https://astro.build) + [Starlight](https://starlight.astro.build) · [Cloudflare Workers](https://workers.cloudflare.com) (hosting) · [Pagefind](https://pagefind.app) (buscador) · [Giscus](https://giscus.app) (comentarios del blog, activo sobre GitHub Discussions) · [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) (sin cookies de rastreo).
 
 ## Desarrollo local
 

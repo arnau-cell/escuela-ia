@@ -3,6 +3,7 @@ title: "Mapa de la IA"
 description: "Página en preparación."
 translationKey: recursos/mapa-ia
 sourceUpdated: 2026-07-02
+draft: true
 sidebar:
   order: 2
 ---

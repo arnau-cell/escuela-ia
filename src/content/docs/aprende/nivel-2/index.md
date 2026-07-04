@@ -3,6 +3,7 @@ title: "Nivel 2 · Constructor"
 description: "Página en preparación."
 translationKey: aprende/nivel-2/index
 sourceUpdated: 2026-07-02
+draft: true
 sidebar:
   order: 4
 ---
