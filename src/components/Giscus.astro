@@ -1,16 +1,13 @@
 ---
-// Comentarios del blog vía Giscus (sobre GitHub Discussions) — ver _privado/LEGAL.md §1.2 y
-// _privado/protocolo/prompts/E6-constructor.md. PREPARADO, NO ACTIVO: GitHub Discussions sigue
-// desactivado en arnau-cell/escuela-ia (`gh api repos/arnau-cell/escuela-ia --jq '.has_discussions'`
-// → false, comprobado 2026-07-03). Activarlo es checkpoint humano — requiere ir a GitHub → Settings
-// del repo → "Discussions" (casilla), y luego generar repoId/categoryId reales en https://giscus.app
-// (pegando el repo y eligiendo la categoría de Discussions a usar, recomendado "Announcements" o una
-// categoría nueva "Comentarios blog"). Mientras REPO_ID/CATEGORY_ID estén vacíos, este componente no
-// renderiza nada (no se manda ningún script roto a producción).
+// Comentarios del blog vía Giscus (sobre GitHub Discussions) — ver _privado/LEGAL.md §1.2.
+// Activo desde 2026-07-03: repo público, Discussions activo, app de giscus instalada,
+// categoría "Announcements" (recomendación estándar de Giscus para blogs — solo mantenedores
+// pueden crear discusiones nuevas, los visitantes solo responden/reaccionan). IDs confirmados
+// contra la API de GitHub (discussionCategories), no solo copiados de giscus.app a ciegas.
 const REPO = 'arnau-cell/escuela-ia';
-const REPO_ID = ''; // TODO(Arnau): pegar aquí el "data-repo-id" que da giscus.app tras activar Discussions
-const CATEGORY = 'Comments'; // Ajustar si se crea una categoría de Discussions específica para el blog
-const CATEGORY_ID = ''; // TODO(Arnau): pegar aquí el "data-category-id" que da giscus.app
+const REPO_ID: string = 'R_kgDOTL-UpQ';
+const CATEGORY = 'Announcements';
+const CATEGORY_ID: string = 'DIC_kwDOTL-Upc4DAcY_';
 
 const { starlightRoute } = Astro.locals;
 const locale = starlightRoute.locale === 'en' ? 'en' : 'es';

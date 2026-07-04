@@ -5,4 +5,4 @@
  * No es un secreto: se incrusta en el HTML público de cada página para que el beacon funcione
  * en el navegador del visitante (visible en "Ver código fuente" de cualquiera).
  */
-export const CF_BEACON_TOKEN = 'd5ad9db3391146b6a5dbeacdda90607c';
+export const CF_BEACON_TOKEN: string = 'd5ad9db3391146b6a5dbeacdda90607c';
