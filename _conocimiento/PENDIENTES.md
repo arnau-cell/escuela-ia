@@ -6,18 +6,17 @@
 
 ## Abiertas
 
-- [ ] **E7 — RECHAZADO en la auditoría, no proponer go/no-go todavía**: el fix de esta fase (marcar 20
-  páginas fuera de alcance como `draft: true`) resolvió un síntoma puntual, no la causa. Las rutas
-  fantasma de Starlight (en español, bajo URLs `/en/...`) se siguen generando en el build para
-  cualquier página con slug traducido y contaminan dos piezas del MVP: (a) la **paginación**
-  Previous/Next en casi todas las transiciones entre secciones EN (ej. `/en/learn/start-here/` →
-  "prev" lleva a `/en/hazlo/monta-tu-setup/`, contenido en español, 200 no 404); (b) el **índice de
-  búsqueda de Pagefind**, que indexa 53 páginas como "en" cuando solo 29 son inglés real — las otras
-  24 son fantasmas en español mal etiquetados como inglés (confirmado: `dist/en` real=29 + fantasma=24
-  = 53, exacto). Necesita una sesión constructora que arregle la causa (excluir las rutas fantasma del
-  build, o sobrescribir paginación + exclusión de Pagefind igual que ya se hizo con el sidebar en
-  `routeData.ts`), verificada de nuevo contrastando `page_count` de Pagefind contra el conteo real de
-  páginas por idioma. Detalle completo: `_privado/auditorias/E7-veredicto.md`.
+- [ ] **E7 — fix de fondo aplicado tras el RECHAZO, pendiente de re-auditoría**: la causa (no un
+  síntoma puntual) era que Starlight genera una página de fallback en español bajo `/en/...` para
+  cualquier doc sin par de slug idéntico — sin config para desactivarlo. Corregido con paginación
+  propia en `routeData.ts` (mismo dato real que ya usaba el sidebar) y una integración propia
+  (`clean-ghost-fallback-routes` en `astro.config.mjs`) que borra las carpetas fantasma de
+  `dist/en/` antes de que Pagefind indexe. Verificado en producción real tras el redeploy:
+  `page_count` de Pagefind exacto (EN 29 = EN 29 real, ES 29 = ES 29 real; antes EN mostraba 53
+  con 24 fantasmas), las 4 transiciones de paginación que la auditoría marcó como rotas ahora
+  apuntan a páginas reales, ruta fantasma citada (`/en/hazlo/monta-tu-setup/`) → 404. Pendiente:
+  sesión auditora nueva que confirme esto antes del go/no-go. Detalle:
+  `_privado/auditorias/E7-handoff-v2.md`.
 - [ ] **E6 — checkpoint humano sin sustituir, reconfirmado bloqueante en la auditoría de E7**: Arnau
   (responsable legal declarado en el aviso legal) debe revisar personalmente los 3 textos legales
   (aviso legal, privacidad, cookies, ES+EN) antes del go/no-go de lanzamiento. La auditoría de E7 buscó
