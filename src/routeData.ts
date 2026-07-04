@@ -52,4 +52,20 @@ export const onRequest = defineRouteMiddleware(async (context) => {
 	}).filter((group) => group.entries.length > 0);
 
 	context.locals.starlightRoute.sidebar = sidebar;
+
+	// Paginación (Previous/Next) propia, por el mismo motivo que el sidebar: la de Starlight se
+	// calcula sobre SU árbol de rutas interno, que incluye las páginas fantasma de fallback
+	// (contenido ES bajo /en/...) para cualquier slug traducido sin par exacto -- eso contamina
+	// casi cada transición entre secciones en inglés (ver auditoría de E7,
+	// _privado/auditorias/E7-veredicto.md). Se reconstruye aquí a partir del MISMO sidebar ya
+	// filtrado (real, sin fantasmas) en vez de confiar en el mecanismo por defecto.
+	const flatEntries = sidebar.flatMap((group) => group.entries);
+	const currentIndex = flatEntries.findIndex((entry) => entry.isCurrent);
+	context.locals.starlightRoute.pagination = {
+		prev: currentIndex > 0 ? flatEntries[currentIndex - 1] : undefined,
+		next:
+			currentIndex >= 0 && currentIndex < flatEntries.length - 1
+				? flatEntries[currentIndex + 1]
+				: undefined,
+	};
 });
