@@ -172,17 +172,24 @@ El plan técnico de producto sigue siendo este documento; el plan de negocio (le
 aceleradoras, visibilidad, Uruguay y Emiratos) vive fuera de este repo público, en `_privado/` (gitignored)
 — protocolo de construcción/auditoría en `_privado/protocolo/PROTOCOLO.md`.
 
-**Fases completadas y auditadas**: E1 (scaffold F0+F1), E2 (contenido núcleo APRENDE), E3 (Monta tu
-setup), E4 (3 sectores semilla + plantilla) — **APROBADAS CON RESERVAS** (menores, no bloqueantes;
-detalle en `_conocimiento/PENDIENTES.md` y en `_privado/auditorias/`). E5 (pipeline de noticias)
-**aprobada en lo construido, fase abierta**: PR #5 real generado por el pipeline corriendo en n8n,
-pendiente de revisión editorial de Arnau antes de fusionar.
+**Fases completadas y auditadas, todas las reservas resueltas**: E1 (scaffold F0+F1), E2 (contenido
+núcleo APRENDE), E3 (Monta tu setup), E4 (3 sectores semilla + plantilla), E5 (pipeline de noticias
+— PR #5 real revisado, reescrito con tono editorial y mergeado), E6 (blog + legal on-site + pulido
+— PR #6 mergeado, Giscus activo, sitio real desplegado en Cloudflare Workers). Detalle de cada una en
+`_conocimiento/PENDIENTES.md` (sección "Resueltas") y `_privado/auditorias/`.
 
-**E6 (blog + legal on-site + pulido, F6) construida, pendiente de auditoría**: PR #6 abierto
-(`f6-blog-legal-pulido`), gates verdes, Lighthouse 100/100/100/100 contra `npm run preview` (sin
-deploy real todavía). Dos checkpoints humanos siguen pendientes desde E1: GitHub Discussions
-(bloquea activar Giscus del todo) y Cloudflare Pages (bloquea analítica real y Lighthouse contra
-producción). Detalle: `_privado/auditorias/E6-handoff.md`.
+**Sitio real en producción**: `https://escuela-ia.arnau-cell.workers.dev` (Cloudflare Workers, no
+Cloudflare Pages — `wrangler.toml`), dominio propio definitivo pendiente de decidir.
 
-**Siguiente sesión**: auditoría de E6 (nueva sesión, distinta de la constructora) antes de decidir
-si se pasa a **E7** (QA + lanzamiento v1).
+**E7 (QA + lanzamiento v1, F7) construida, pendiente de auditoría**: checklist MVP completo
+(configurador con 12 reglas, 8 conceptos transversales, 3 sectores a fondo + plantilla, 4 entradas
+de blog, "Sobre el proyecto" con contenido real). Recorrido manual contra producción real encontró
+un defecto (rutas fantasma de fallback de Starlight enlazadas desde su paginación automática,
+mostrando contenido en español bajo URLs `/en/`) — corregido marcando `draft: true` en las 20
+páginas fuera del alcance de v1 (Niveles 2-3, catálogo de plataformas, recetas, 4 sectores extra,
+glosario, mapa de la IA), que Starlight excluye del build igual que ya hacía con `blog`. Commit
+final `e4bc272` directo a `master`, redeploy confirmado en producción. Detalle:
+`_privado/auditorias/E7-handoff.md`.
+
+**Siguiente sesión**: auditoría de E7 (nueva sesión, distinta de la constructora) antes del
+checkpoint humano de Arnau (go/no-go de lanzamiento) y de pasar a **E8** (visibilidad).

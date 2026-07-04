@@ -6,6 +6,11 @@
 
 ## Abiertas
 
+- [ ] **E7 — pendiente de auditoría antes del checkpoint humano de lanzamiento**: gates verdes,
+  checklist MVP completo, defecto real de rutas fantasma en producción (paginación de Starlight
+  enlazando a `/en/hazlo/plataformas/` con contenido en español) encontrado y corregido. No se
+  autodeclara lista para el go/no-go de Arnau sin veredicto de auditoría independiente primero.
+  Detalle: `_privado/auditorias/E7-handoff.md`.
 - [ ] **E6 — checkpoint humano sin sustituir**: Arnau (responsable legal declarado en el aviso legal)
   debe revisar personalmente los 3 textos legales (aviso legal, privacidad, cookies, ES+EN) antes de dar
   la fase por cerrada del todo. La auditoría confirmó que son coherentes con `_privado/LEGAL.md` y con
