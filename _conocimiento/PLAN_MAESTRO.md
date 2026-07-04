@@ -166,7 +166,7 @@ Criterio listo: i18n-check verde, Lighthouse >90, configurador sensato en 5 perf
 - Lighthouse (perf/SEO/accesibilidad) > 90; `hreflang` correcto entre pares.
 - Pipeline: una ejecución de n8n crea un `.md` de noticia válido y dispara rebuild.
 
-## Estado (actualizado 2026-07-03)
+## Estado (actualizado 2026-07-04)
 
 El plan técnico de producto sigue siendo este documento; el plan de negocio (legal, financiación,
 aceleradoras, visibilidad, Uruguay y Emiratos) vive fuera de este repo público, en `_privado/` (gitignored)
@@ -181,15 +181,34 @@ núcleo APRENDE), E3 (Monta tu setup), E4 (3 sectores semilla + plantilla), E5 (
 **Sitio real en producción**: `https://escuela-ia.arnau-cell.workers.dev` (Cloudflare Workers, no
 Cloudflare Pages — `wrangler.toml`), dominio propio definitivo pendiente de decidir.
 
-**E7 (QA + lanzamiento v1, F7) construida, pendiente de auditoría**: checklist MVP completo
-(configurador con 12 reglas, 8 conceptos transversales, 3 sectores a fondo + plantilla, 4 entradas
-de blog, "Sobre el proyecto" con contenido real). Recorrido manual contra producción real encontró
-un defecto (rutas fantasma de fallback de Starlight enlazadas desde su paginación automática,
-mostrando contenido en español bajo URLs `/en/`) — corregido marcando `draft: true` en las 20
-páginas fuera del alcance de v1 (Niveles 2-3, catálogo de plataformas, recetas, 4 sectores extra,
-glosario, mapa de la IA), que Starlight excluye del build igual que ya hacía con `blog`. Commit
-final `e4bc272` directo a `master`, redeploy confirmado en producción. Detalle:
-`_privado/auditorias/E7-handoff.md`.
+**E7 (QA + lanzamiento v1, F7) — ciclo completo, AUDITADA Y APROBADA técnicamente**:
+
+1. *Constructora v1*: checklist MVP completo (configurador 12 reglas, 8 conceptos, 3 sectores a
+   fondo + plantilla, 4 entradas de blog, "Sobre el proyecto" con contenido real). Encontró y
+   "corrigió" un defecto de rutas fantasma marcando `draft: true` en 20 páginas fuera de alcance
+   de v1 — commit `e4bc272`.
+2. *Auditora*: **RECHAZÓ** ese fix por tapar un síntoma, no la causa — las rutas fantasma de
+   Starlight (contenido ES bajo URLs `/en/...`) se generan para CUALQUIER página con slug
+   traducido (no solo las 20 marcadas draft) y contaminaban la paginación Previous/Next y el
+   índice de Pagefind (53 páginas "en" indexadas, solo 29 reales). Veredicto:
+   `_privado/auditorias/E7-veredicto.md`.
+3. *Constructora v2*: arregló la causa de raíz — paginación propia en `src/routeData.ts` (mismo
+   dato real que ya usaba el sidebar) + integración propia `clean-ghost-fallback-routes` en
+   `astro.config.mjs` que borra las carpetas fantasma de `dist/en/` antes de que Pagefind indexe.
+   Verificado con el mismo método exigente que usó la auditoría, en local y en producción real:
+   `page_count` de Pagefind exacto (29 EN = 29 reales, 29 ES = 29 reales), las 4 transiciones de
+   paginación marcadas como rotas ahora reales. Commits `ba9eae7`/`23753fb` directos a `master`.
+   Detalle: `_privado/auditorias/E7-handoff-v2.md`.
+4. *Auditora v2*: **APROBADO técnicamente** — reprodujo el mismo contraste de forma independiente
+   (local y producción real, anti-caché confirmado con `CF-Cache-Status: MISS`), revisó el código
+   del fix, y comprobó vectores adicionales no pedidos explícitamente (canonical, breadcrumbs,
+   robots.txt) sin encontrar huecos. Veredicto: `_privado/auditorias/E7-veredicto-v2.md`.
+
+**Lo único que falta para el go/no-go de lanzamiento**: que Arnau confirme explícitamente (con
+reflejo en `PENDIENTES.md`) que ya revisó personalmente los 3 textos legales — checkpoint humano
+pendiente desde E6, ninguna auditoría ha encontrado registro de que se haya hecho. Ningún otro
+punto, técnico o de contenido, sigue abierto para esta fase. Siguiente paso tras el go/no-go:
+**E8** (visibilidad).
 
 **Siguiente sesión**: auditoría de E7 (nueva sesión, distinta de la constructora) antes del
 checkpoint humano de Arnau (go/no-go de lanzamiento) y de pasar a **E8** (visibilidad).
