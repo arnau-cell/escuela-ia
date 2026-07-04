@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import sitemap from '@astrojs/sitemap';
+import cloudflare from '@astrojs/cloudflare';
 import { existsSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
@@ -15,7 +16,7 @@ import { join } from 'node:path';
 // desde el sidebar real en vez de confiar en la de Starlight) y el índice de Pagefind, que indexa
 // TODO `dist/` sin exclusión configurable (ver integrations/pagefind.ts: `index.addDirectory`).
 // Detalle completo del hallazgo: _privado/auditorias/E7-veredicto.md.
-const GHOST_EN_SECTIONS = ['aprende', 'hazlo', 'comparte', 'noticias', 'por-sector', 'recursos'];
+const GHOST_EN_SECTIONS = ['aprende', 'hazlo', 'wiki-ia', 'comparte', 'noticias', 'por-sector', 'recursos'];
 /** @param {string} page */
 const isGhostRoute = (page) => GHOST_EN_SECTIONS.some((section) => page.includes(`/en/${section}/`) || page.endsWith(`/en/${section}`));
 
@@ -50,6 +51,11 @@ export default defineConfig({
 	// Subdominio provisional de Cloudflare Workers (arnau-cell.workers.dev, registrado 2026-07-03);
 	// actualizar al dominio definitivo antes de lanzar.
 	site: 'https://escuela-ia.arnau-cell.workers.dev',
+	// `output: 'static'` (por defecto, no se declara) + adapter: el sitio sigue prerenderizado por
+	// completo salvo las rutas que declaren explícitamente `export const prerender = false`
+	// (el núcleo conversacional y las preguntas de la Wiki de la IA, pivote 2026-07-04) — cero
+	// riesgo de convertir en SSR las 83 páginas Starlight ya construidas y auditadas.
+	adapter: cloudflare(),
 	integrations: [
 		// PRIMERO en la lista: su astro:build:done debe correr antes que el de starlight() (que hace
 		// el indexado de Pagefind), para borrar las carpetas fantasma antes de que se escaneen.

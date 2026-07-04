@@ -18,7 +18,7 @@ cuesta, y cómo montarte tu propio setup según tu ordenador y presupuesto.
 
 Que cualquier persona —sin importar su nivel de partida— pueda entender la IA de verdad, no solo usarla
 a ciegas. La sección [Aprende](/aprende/empieza-aqui/) va de cero conocimiento a nivel técnico por
-niveles; [Monta tu setup](/hazlo/monta-tu-setup/) traduce eso en una recomendación concreta para tu caso;
+niveles; el [núcleo de Easy AI](/) traduce eso en un plan concreto para tu caso;
 [Por sector](/por-sector/) conecta la teoría con casos reales de tu profesión.
 
 No es un negocio: es un proyecto para ayudar, a coste mínimo. La monetización no es el foco.

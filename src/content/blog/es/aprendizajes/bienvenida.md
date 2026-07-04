@@ -35,9 +35,8 @@ práctica:
   `lastVerified` para que sepas cuándo se comprobó por última vez.
 - **De verdad bilingüe.** No es una traducción automática de escaparate: cada página en español tiene su
   par real en inglés, y un sistema propio (`i18n-check`) impide publicar un par desincronizado sin avisar.
-- **Con una ruta personalizada.** La sección [Monta tu setup](/hazlo/monta-tu-setup/) te recomienda qué
-  instalar según tu objetivo, tu hardware y tu presupuesto — sin IA de por medio en esa recomendación,
-  solo reglas claras y auditables.
+- **Con una ruta personalizada.** El [núcleo de Easy AI](/) te va preguntando lo justo y arma
+  contigo un plan concreto según lo que quieres construir, explicando cada pieza según aparece.
 
 ## Cómo se construye
 

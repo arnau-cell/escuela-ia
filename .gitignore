@@ -3,11 +3,13 @@ node_modules/
 .astro/
 dist/
 .cache/
+.wrangler/
 
 # Entorno y secretos (NUNCA subir)
 .env
 .env.*
 !.env.example
+.dev.vars
 
 # Datos / PII (nunca a GitHub)
 _DATOS/

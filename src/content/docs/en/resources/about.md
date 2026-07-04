@@ -18,7 +18,7 @@ costs, and how to set up your own AI setup based on your computer and budget.
 
 That anyone — regardless of their starting level — can genuinely understand AI, not just use it blindly.
 The [Learn](/en/learn/start-here/) section goes from zero knowledge to technical level by levels;
-[Set up your AI](/en/build/set-up-your-ai/) turns that into a concrete recommendation for your case;
+the [Easy AI core](/en/) turns that into a concrete plan for your case;
 [By industry](/en/by-industry/) connects the theory to real cases in your profession.
 
 It's not a business — it's a project meant to help, at minimal cost. Monetization is not the focus.

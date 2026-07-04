@@ -36,9 +36,8 @@ means:
   `lastVerified` field so you know when it was last checked.
 - **Genuinely bilingual.** Not a showcase machine translation — every Spanish page has a real English
   counterpart, and our own system (`i18n-check`) blocks publishing an out-of-sync pair without a warning.
-- **With a personalized path.** The [Build your setup](/en/build/set-up-your-ai/) section recommends what
-  to install based on your goal, your hardware, and your budget — with no AI involved in that
-  recommendation, just clear, auditable rules.
+- **With a personalized path.** The [Easy AI core](/en/) asks what it needs to know and builds a
+  concrete plan with you based on what you want to build, explaining each piece as it comes up.
 
 ## How it's built
 

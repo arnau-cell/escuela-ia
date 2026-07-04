@@ -1,0 +1,114 @@
+---
+// Catálogo navegable de la Wiki de la IA — misma fuente de datos que el núcleo conversacional
+// (src/data/setup/platforms.json), agrupado por categoría de uso. Sin ranking de comunidad
+// todavía (decisión de Arnau, 2026-07-04: "wiki sí, ranking más adelante") — nota visible en vez
+// de estrellas inventadas.
+import platforms from '../../data/setup/platforms.json';
+
+interface Props {
+	locale: 'es' | 'en';
+}
+const { locale } = Astro.props;
+
+const CATEGORY_LABELS: Record<string, { es: string; en: string }> = {
+	chat: { es: 'Chat / asistente general', en: 'Chat / general assistant' },
+	documentos: { es: 'Documentos', en: 'Documents' },
+	construccion: { es: 'Construcción', en: 'Building' },
+	imagenes: { es: 'Imágenes', en: 'Images' },
+	automatizacion: { es: 'Automatización', en: 'Automation' },
+	razonamiento: { es: 'Razonamiento', en: 'Reasoning' },
+	'hojas-de-calculo': { es: 'Hojas de cálculo', en: 'Spreadsheets' },
+};
+
+const UI = {
+	es: {
+		noRanking: 'Ranking de la comunidad: próximamente. Este orden es solo alfabético, no una recomendación.',
+		free: 'Gratis',
+		openSource: 'Open source',
+		alternative: 'Alternativa open-source/gratuita',
+	},
+	en: {
+		noRanking: 'Community ranking: coming soon. This order is alphabetical only, not a recommendation.',
+		free: 'Free',
+		openSource: 'Open source',
+		alternative: 'Open-source/free alternative',
+	},
+};
+const t = UI[locale];
+
+const byId = new Map(platforms.map((p) => [p.id, p]));
+const categoryOrder = Object.keys(CATEGORY_LABELS);
+const groups = categoryOrder
+	.map((cat) => ({
+		key: cat,
+		label: CATEGORY_LABELS[cat][locale],
+		items: platforms
+			.filter((p) => p.categories.includes(cat))
+			.slice()
+			.sort((a, b) => a.name.localeCompare(b.name)),
+	}))
+	.filter((g) => g.items.length > 0);
+---
+
+<p class="wiki-tools-note">{t.noRanking}</p>
+
+{groups.map((group) => (
+	<section class="wiki-tools-group">
+		<h3>{group.label}</h3>
+		<ul class="wiki-tools-list">
+			{group.items.map((p) => {
+				const alt = p.alternativeId ? byId.get(p.alternativeId) : null;
+				return (
+					<li>
+						<a href={p.url} target="_blank" rel="noopener"><strong>{p.name}</strong></a>
+						{p.openSource && <span class="badge">{t.openSource}</span>}
+						<p class="wiki-tools-cost">{p.costDetail[locale] ?? p.costDetail.es}</p>
+						{alt && (
+							<p class="wiki-tools-alt">
+								{t.alternative}: <a href={alt.url} target="_blank" rel="noopener">{alt.name}</a>
+							</p>
+						)}
+					</li>
+				);
+			})}
+		</ul>
+	</section>
+))}
+
+<style>
+	.wiki-tools-note {
+		font-style: italic;
+		color: var(--sl-color-gray-3);
+		border-inline-start: 2px solid var(--sl-color-gray-5);
+		padding-inline-start: 1rem;
+	}
+	.wiki-tools-group {
+		margin-block: 2rem;
+	}
+	.wiki-tools-list {
+		list-style: none;
+		padding: 0;
+		display: grid;
+		gap: 1rem;
+	}
+	.wiki-tools-list li {
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		padding: 1rem;
+	}
+	.badge {
+		display: inline-block;
+		margin-inline-start: 0.5rem;
+		font-size: var(--sl-text-xs);
+		border: 1px solid var(--sl-color-green);
+		color: var(--sl-color-green);
+		border-radius: 0.25rem;
+		padding: 0.1rem 0.4rem;
+	}
+	.wiki-tools-cost,
+	.wiki-tools-alt {
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+		margin: 0.35rem 0 0;
+	}
+</style>

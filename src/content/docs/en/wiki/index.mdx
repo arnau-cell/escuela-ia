@@ -1,0 +1,42 @@
+---
+title: "AI Wiki"
+description: "Everything that exists today in artificial intelligence, explained for anyone: from the most basic concepts to concrete tools."
+translationKey: wiki-ia/index
+sourceUpdated: 2026-07-04
+sidebar:
+  order: 1
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import WikiAsk from '../../../../components/WikiIA/WikiAsk.astro';
+
+A common place to understand today's AI, taking nothing for granted: what each thing is, what it's
+for, and when to use it — and, where it applies, which concrete tool to find it in. If you're
+coming from [Learn](/en/learn/start-here/) you already know several of these concepts by level;
+here they're all together in one place, next to the tool catalog.
+
+<CardGrid stagger>
+	<Card title="New concepts" icon="open-book">
+		What almost nobody explains: agent vs. MCP, what a sandbox is, what a token actually costs, and
+		where you're already using AI without knowing it. See [Concepts](/en/wiki/concepts/).
+	</Card>
+	<Card title="Tool catalog" icon="rocket">
+		Everything that exists today, grouped by what it's for — building, images, spreadsheets,
+		reasoning, and more. See [Tools](/en/wiki/tools/).
+	</Card>
+</CardGrid>
+
+## If you already know the fundamentals
+
+The usual cross-cutting concepts (what's a model, a database, local vs. cloud, an AI agent...)
+still live in [Learn → Concepts](/en/learn/concepts/) — we don't duplicate them here. This Wiki adds
+what was missing and brings the tool catalog together in one browsable place.
+
+## Ask anything
+
+<WikiAsk locale="en" />
+
+## About tool ranking
+
+There's no real community voting yet — it's noted as this section's next step. The tool list order
+is alphabetical only, not a recommendation.

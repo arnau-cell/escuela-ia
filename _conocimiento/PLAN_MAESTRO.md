@@ -212,3 +212,149 @@ punto, técnico o de contenido, sigue abierto para esta fase. Siguiente paso tra
 
 **Siguiente sesión**: auditoría de E7 (nueva sesión, distinta de la constructora) antes del
 checkpoint humano de Arnau (go/no-go de lanzamiento) y de pasar a **E8** (visibilidad).
+
+## PIVOTE (2026-07-04): el v1 construido no es lo que Arnau tenía en mente — no lanzar tal cual
+
+E7 quedó técnicamente aprobado y con la revisión legal ya confirmada por Arnau (ver
+`_privado/auditorias/E7-veredicto-v2.md`), pero al ver el sitio real, Arnau lo rechazó de fondo: no es
+un problema de defectos, es que **el "core" que describió originalmente nunca quedó capturado en este
+documento**, y por tanto ninguna sesión de construcción (aunque siguió el plan al pie de la letra) lo
+construyó. Diagnóstico de la brecha, verificado sesión a sesión (`git log --all`, sin indicios de
+paralelismo — se descarta el fallo de "subagentes"; el problema es de especificación, no de ejecución):
+
+1. **Núcleo (antes "Monta tu setup")**: el plan documentaba explícitamente un motor de reglas
+   determinista, "sin IA en tiempo real... gratis, instantáneo, offline, auditable" (ver sección de
+   arriba). Lo que Arnau quiere de verdad: el cliente **describe su caso en texto libre**, y una **IA
+   generativa en tiempo real** le arma un plan (opciones, costes, cómo hacerlo) y un **prompt maestro**
+   redactado para que lo use en su asistente de IA favorito. Esto es una IA generativa, no una tabla de
+   reglas — cambio de arquitectura, no de contenido.
+2. **Estética**: referencia explícita — [blueprint.am](https://blueprint.am) (herramienta de diseño de
+   hardware por IA; **la referencia es de formato, no de contenido** — Blueprint diseña hardware, Escuela
+   IA arma planes de proyecto). Capturado por screenshot el 2026-07-04
+   (`_privado/protocolo/blueprint-am-referencia.png`, ver también scratchpad de la sesión). Patrón exacto
+   a imitar en el núcleo de Escuela IA:
+   - Cabecera mínima: logo a la izquierda, 2-3 enlaces de navegación, un botón de acción arriba a la
+     derecha (estilo píldora, alto contraste).
+   - Tipografía **monospace en mayúsculas** para titulares grandes y etiquetas — look técnico/terminal,
+     no el tema de documentación de Starlight.
+   - **Hero a pantalla completa con degradado vibrante** (azul cielo → blanco → verde menta → amarillo →
+     naranja/rojo, tipo aurora) — nada de fondo blanco/gris de docs.
+   - **Una única caja de texto libre como interacción principal** ("Ask blueprint to build robot..."),
+     con placeholder rotativo de ejemplos, un botón "¿necesitas una idea?", selector de modo y botón de
+     enviar — sin formulario de varios pasos con desplegables (eso es justo lo que tiene hoy "Monta tu
+     setup" y hay que sustituirlo).
+   - Debajo del pliegue: una sección de **casos/proyectos de la comunidad** (equivalente: planes reales
+     generados, anonimizados, o entradas del blog) con un enlace "ver más".
+   - Esto es **incompatible con el tema Starlight actual** (sidebar de documentación) al menos para la
+     home y el núcleo — implica una landing propia para esas páginas, mantiene Starlight para
+     Aprende/Por sector/Recursos donde sí encaja un formato de documentación.
+3. **Wikipedia de herramientas**: nueva sección de nivel 1 (o expansión fuerte de Recursos), catálogo
+   **universal** de herramientas de IA (no filtrado por sector), reutilizando y ampliando el schema ya
+   real de `src/data/setup/platforms.json` (hoy 12 herramientas: id, url, dónde corre, cómo se accede,
+   coste, alternativa open-source, `lastVerified`) — hay que ampliar la cobertura y exponerlo como
+   catálogo navegable/buscable propio, no solo como datos internos del configurador.
+   **Ranking/voto de usuarios**: confirmado que se deja para más adelante (requiere sistema de identidad
+   que hoy no existe — se agrupa con "comunidad/foro propio" ya reservado para v3).
+4. **Noticias**: referencia noticias.ai (portal con tarjetas por categoría, sección de referencia
+   educativa conectada a la actualidad) — confirma el rol ya documentado de Noticias como alimentador del
+   resto del sitio; sin cambio de alcance aquí, seguir el pipeline ya construido en E5.
+
+### Implicaciones de arquitectura (antes de construir, decisiones pendientes de Arnau)
+
+- **El sitio deja de ser 100% estático** en el núcleo: una IA generativa en tiempo real requiere una
+  función de servidor (Cloudflare Pages Functions / Worker) que llame a un LLM — ya no es "gratis e
+  instantáneo sin backend" como en el resto del sitio.
+- **Proveedor de LLM y coste por uso**: pendiente de que Arnau elija proveedor/modelo y presupuesto
+  (coherente con la guía global de usar modelos Claude actuales por defecto en apps de IA). Clave de API
+  siempre en `.env.local`, nunca hardcodeada (regla global).
+- **Abuso/coste**: al ser gratis y público, hace falta algún límite de uso (por IP/sesión) para no dejar
+  el endpoint abierto a coste ilimitado — a diseñar en la sesión constructora, no a improvisar en
+  producción.
+- **AI Act (Reglamento UE 2024/1689) — reevaluar, no asumir que sigue sin aplicar**: `_privado/LEGAL.md`
+  §1.8 concluyó "no aplica" en v1 precisamente *porque* el configurador era determinista sin IA en
+  runtime, y dejó escrito explícitamente: "si en v2 se añade IA en runtime, reevaluar categoría de
+  riesgo". Este pivote es exactamente ese escenario — no se puede dar por bueno el análisis anterior.
+  Reevaluar categoría de riesgo antes de activar el endpoint en producción (probablemente "riesgo
+  limitado" con obligación de transparencia — informar al usuario que interactúa con IA generativa —
+  pero confirmarlo, no asumirlo).
+
+### Planning: proveedor de LLM (decisión de Arnau, 2026-07-04) y qué implica construir esto
+
+**Decisión**: fase de pruebas con **Claude Haiku 4.5** (`claude-haiku-4-5`, vía API de Anthropic). En un
+futuro no lejano, migrar a un **LLM local potente** (autoalojado). El motor debe diseñarse con una capa
+de abstracción (una función `generatePlan(input) → {plan, promptMaestro}` con el proveedor como
+parámetro/config) para que ese cambio futuro sea una sustitución de proveedor, no una reescritura.
+
+**Coste de Haiku 4.5, cifras reales (no estimación)** — contexto 200K, **$1.00/millón de tokens de
+entrada, $5.00/millón de salida**:
+
+| Escenario por generación | Input | Output | Coste/generación |
+|---|---|---|---|
+| Típico (1,5k in / 1,5k out) | $0,0015 | $0,0075 | **≈ $0,009** (menos de 1 céntimo) |
+| Máximo esperado (2k in / 2k out) | $0,002 | $0,01 | **≈ $0,012** |
+
+Proyección a volumen (usando el escenario típico, ≈$0,009/generación):
+
+| Planes generados/mes | Coste/mes estimado |
+|---|---|
+| 500 | ≈ $4,50 |
+| 5.000 | ≈ $45 |
+| 50.000 | ≈ $450 |
+
+Prácticamente gratis en fase de pruebas y lanzamiento inicial. Recomendación adicional de coste: si el
+prompt del sistema (instrucciones fijas de cómo generar el plan) es estable y solo cambia la descripción
+libre del cliente, usar **prompt caching** (bloque de sistema con `cache_control`) — lecturas de caché
+cuestan ~0,1× el precio normal, así que en volumen esto reduce further el coste de la parte de instrucciones
+fijas. Diseñar el prompt con las instrucciones fijas primero y la descripción del cliente al final, para
+que el prefijo cacheable sea estable.
+
+**Cuándo migrar a un LLM local potente (no ahora, más adelante)**: un LLM local requiere hardware de GPU
+(propio o alquilado en la nube — RunPod, Vast.ai, etc.), con un coste fijo por hora (~$0,50-2/hora según
+GPU) independientemente de si se usa o no, a diferencia de Haiku que es 100% variable por uso. Solo
+compensa migrar cuando el volumen sostenido sea alto (la GPU necesita estar ocupada para que el coste
+fijo por hora resulte más barato que pagar por token) o cuando haya una razón no económica (privacidad de
+los datos de los clientes que describen su negocio, control total sin depender de un proveedor externo,
+o el VPS/hardware ya está pagado por otro motivo). Con el volumen esperado de un sitio educativo gratuito
+en sus primeras fases, Haiku sigue siendo la opción más barata y simple durante bastante tiempo — no
+hay prisa por migrar. Cuando llegue el momento, elegir el modelo open-weight concreto (familias como
+Llama, Qwen, DeepSeek, Mistral) **en el momento de decidir**, no ahora — el panorama de modelos abiertos
+cambia rápido y cualquier recomendación fijada hoy quedaría desactualizada (mismo criterio de "coste con
+fecha de verificación" que ya se aplica al resto del sitio).
+
+**Qué implica construir el pivote completo, en fases** (para dimensionar el esfuerzo, no como plan de
+sesiones rígido — cada sesión constructora decide su propio alcance dentro de esto):
+
+| Bloque | Qué incluye | Complejidad relativa |
+|---|---|---|
+| Núcleo generativo (Haiku) | Función `generatePlan`, endpoint serverless (Cloudflare Pages Function), límite de uso por IP/sesión, mensaje de transparencia (IA generativa), reevaluación AI Act | Media — primer cambio de arquitectura del sitio (dejar de ser 100% estático) |
+| Rediseño visual del núcleo | Home + página núcleo con la estética tipo blueprint.am (monospace, degradado, caja de texto libre), sin tocar Starlight en el resto del sitio | Media — trabajo de frontend, sin lógica nueva compleja |
+| Wiki de herramientas | Ampliar `platforms.json` (hoy 12 entradas) a catálogo universal navegable, página de listado/búsqueda | Baja-media — mayormente contenido y una vista nueva sobre datos ya existentes |
+| Migración a LLM local (futuro) | Aprovisionar GPU, autoalojar modelo, sustituir el proveedor detrás de `generatePlan` | Alta, pero diferida — no bloquea el lanzamiento del pivote |
+
+Ninguno de estos bloques se construye en esta sesión (auditora) — quedan para la sesión constructora de
+`PIVOTE-NUCLEO` (prompt en `_privado/protocolo/prompts/PIVOTE-NUCLEO-constructor.md`).
+- **Numeración de fase**: este pivote no encaja en el E0-E11 ya asignado (E8 sigue siendo visibilidad).
+  Se trata como ciclo propio **PIVOTE-NUCLEO** (constructor/auditor dedicados en
+  `_privado/protocolo/prompts/`), independiente de la numeración de negocio.
+
+### Estado del go/no-go de lanzamiento
+
+**Queda en pausa.** El v1 ya construido y auditado (E1-E7) sigue técnicamente sano (gates verdes,
+producción real funcionando, revisión legal confirmada), pero Arnau decidió no lanzarlo así — se
+mantiene desplegado en `escuela-ia.arnau-cell.workers.dev` como referencia de trabajo, no como versión
+final. El siguiente ciclo constructor/auditor es sobre el núcleo (ver arriba), no sobre visibilidad (E8).
+
+### PIVOTE-NUCLEO — construido (2026-07-04), pendiente de auditoría
+
+Mismo día, misma sesión (validación del mockup → aprobación → construcción de la V1 real, sin
+subagentes en ningún momento): rebautizado **Easy AI**, núcleo conversacional real sobre Claude
+Haiku 4.5 (ya no el motor de reglas determinista, retirado sin dejar enlaces rotos) + Wiki de la IA
+completa (conceptos + catálogo de herramientas + preguntas). El sitio deja de ser 100% estático:
+adapter `@astrojs/cloudflare` añadido, solo las rutas `/api/**` son bajo demanda. Detalle completo,
+decisiones de arquitectura y lo pendiente exclusivo de Arnau (crear el KV real, la clave de
+Anthropic, reevaluar el AI Act por escrito) en
+`_privado/auditorias/PIVOTE-NUCLEO-handoff.md`. Gates en verde (build, i18n-check, 31 tests, astro
+check 0 errores); no probado con una clave de Anthropic real todavía. **Nada comiteado.**
+
+Siguiente paso: sesión auditora nueva y distinta (protocolo de siempre) antes de cualquier decisión
+de lanzamiento.
