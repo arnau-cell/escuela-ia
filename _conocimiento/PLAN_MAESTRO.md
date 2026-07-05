@@ -478,4 +478,14 @@ para que Arnau confirme o pida el cambio). Pendiente de Arnau: re-lectura de leg
 "nombre provisional" se retira de `sobre-el-proyecto.md`/`about.md`, búsqueda de disponibilidad de
 marca (EUIPO/OEPM/DNPI) + dominio antes del go/no-go de lanzamiento (LEGAL.md §1.7).
 
-Siguiente paso: sesión auditora nueva y distinta (protocolo de siempre) antes de fusionar.
+**Auditado el 2026-07-05: APROBADO, sin reservas técnicas**
+(`_privado/auditorias/REBRAND-EASYAI-veredicto.md`). Gates reproducidos; legales verificados
+palabra a palabra (solo nombre + fecha); tokens idénticos valor a valor al `:root` original;
+capturas propias en Chrome (desktop y móvil): coherencia total home↔docs con el H1 arreglado a la
+vista; favicon 200; Lighthouse accessibility 100 reproducido; marca vieja a cero. La decisión de
+alcance del constructor (no duplicar los enlaces de la home en la cabecera de docs) se valida
+como coherente con "re-skin, no reconstrucción" — queda como decisión de producto de Arnau.
+
+Siguiente paso: **checkpoint humano de Arnau** (re-leer los 4 legales renombrados + decidir sobre
+la cláusula "nombre provisional" + confirmar lo de los enlaces) y, con su visto bueno, fusionar
+PR #11 y desplegar.
