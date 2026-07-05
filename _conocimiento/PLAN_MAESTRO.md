@@ -424,5 +424,12 @@ claude-ai: 1` desde los votos de R1) llega al texto del prompt sin romper el cha
 completo en `_privado/auditorias/RANKING-CIERRE-handoff.md`.
 
 Con esto, R1 + R2 completos. R3 (ampliar catálogo, puntuación editorial) queda para una sesión de
-contenido futura, sin fecha fijada. Siguiente paso: auditoría de este PR, luego ciclo
-REBRAND-EASYAI.
+contenido futura, sin fecha fijada.
+
+**Auditado el 2026-07-05: APROBADO, sin reservas nuevas**
+(`_privado/auditorias/RANKING-CIERRE-veredicto.md`). Gates reproducidos (59/59), guard de
+`VOTE_SALT` verificado en vivo (arrancando sin el secret: mensaje claro en el log), el
+`communityScore` verificado sobre la función real del prompt (ES y EN, retrocompatible) y
+regresión e2e del voto en workerd limpia. Siguiente paso: fusionar PR #10 (decisión de Arnau) y
+arrancar el ciclo **REBRAND-EASYAI** (prompt constructor listo en
+`_privado/protocolo/prompts/REBRAND-EASYAI-constructor.md`).
