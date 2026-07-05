@@ -18,3 +18,11 @@ directory = "./dist"
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
 id = "937199fe2ecb4d93bf070a93a3d36b13"
+
+# El adapter @astrojs/cloudflare habilita "sessions" por defecto (no lo usamos en este proyecto)
+# y necesita un KV propio para eso. Sin declararlo aquí, `wrangler deploy`/Workers Builds intenta
+# auto-crearlo en cada despliegue y falla si ya existe uno con el mismo nombre de un intento
+# anterior (id real listado con `wrangler kv namespace list`, 2026-07-05).
+[[kv_namespaces]]
+binding = "SESSION"
+id = "c5c80ae0525f49ef8d3795d5d6bf7303"
