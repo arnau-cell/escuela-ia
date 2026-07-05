@@ -344,17 +344,21 @@ producción real funcionando, revisión legal confirmada), pero Arnau decidió n
 mantiene desplegado en `escuela-ia.arnau-cell.workers.dev` como referencia de trabajo, no como versión
 final. El siguiente ciclo constructor/auditor es sobre el núcleo (ver arriba), no sobre visibilidad (E8).
 
-### PIVOTE-NUCLEO — construido (2026-07-04), pendiente de auditoría
+### PIVOTE-NUCLEO — construido y auditado (2026-07-04/05), en PR sin fusionar
 
-Mismo día, misma sesión (validación del mockup → aprobación → construcción de la V1 real, sin
-subagentes en ningún momento): rebautizado **Easy AI**, núcleo conversacional real sobre Claude
-Haiku 4.5 (ya no el motor de reglas determinista, retirado sin dejar enlaces rotos) + Wiki de la IA
-completa (conceptos + catálogo de herramientas + preguntas). El sitio deja de ser 100% estático:
-adapter `@astrojs/cloudflare` añadido, solo las rutas `/api/**` son bajo demanda. Detalle completo,
-decisiones de arquitectura y lo pendiente exclusivo de Arnau (crear el KV real, la clave de
-Anthropic, reevaluar el AI Act por escrito) en
-`_privado/auditorias/PIVOTE-NUCLEO-handoff.md`. Gates en verde (build, i18n-check, 31 tests, astro
-check 0 errores); no probado con una clave de Anthropic real todavía. **Nada comiteado.**
+Rebautizado **Easy AI**, núcleo conversacional real sobre Claude Haiku 4.5 (ya no el motor de
+reglas determinista, retirado sin dejar enlaces rotos) + Wiki de la IA completa (conceptos +
+catálogo de herramientas + preguntas). El sitio deja de ser 100% estático: adapter
+`@astrojs/cloudflare` añadido, solo las rutas `/api/**` son bajo demanda.
 
-Siguiente paso: sesión auditora nueva y distinta (protocolo de siempre) antes de cualquier decisión
-de lanzamiento.
+**Ciclo completo**: construcción (2026-07-04) → auditoría independiente, **APROBADO CON
+RESERVAS** (`_privado/auditorias/PIVOTE-NUCLEO-veredicto.md`) → sesión de cierre (2026-07-05):
+reservas 1/2/4 resueltas (AI Act reevaluado en `_privado/LEGAL.md` §1.8, `.gitignore` con
+`.dev.vars`, todo en PR) + **primera conversación real con clave de Anthropic válida**, que
+encontró y arregló un bug real (`astro:content` no viable en rutas bajo demanda de Cloudflare
+Workers — contexto de la Wiki ahora se genera en build, no en la petición). Detalle completo en
+`_privado/auditorias/PIVOTE-NUCLEO-handoff.md` (con su addendum).
+
+**PR #8** (`pivote-nucleo` → `master`) abierto, sin fusionar — decisión de Arnau. Pendiente antes
+del go/no-go: `wrangler secret put ANTHROPIC_API_KEY` en producción, Lighthouse tras el primer
+deploy real con SSR, y fusionar el PR cuando Arnau lo decida.
