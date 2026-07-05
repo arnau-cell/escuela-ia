@@ -56,6 +56,10 @@ export async function POST(context: APIContext) {
 			return jsonError(t.invalidTool, 400);
 		}
 
+		if (!env.VOTE_SALT) {
+			throw new Error('VOTE_SALT no está configurada (ver .dev.vars / wrangler secret).');
+		}
+
 		const ip = getClientIp(request);
 		const ipHash = await hashIp(env.VOTE_SALT, ip);
 

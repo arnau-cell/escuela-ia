@@ -407,3 +407,22 @@ headless real** (score descendente + desempate alfabético correctos, contadores
 3 reservas leves agendadas (guard explícito de `VOTE_SALT`, anotar la carrera de voto doble,
 comparador duplicado documentado); ninguna bloquea fusionar. Fusión y acciones de infra
 (D1 real, `VOTE_SALT`, migración remota) = decisión/manos de Arnau.
+
+#### PR #9 fusionado (2026-07-05) — construido: RANKING-CIERRE+R2, en PR sin fusionar
+
+Arnau autorizó fusionar el PR #9 directamente para poder construir encima (mismo patrón de checks
+que el PR #8: `build`/`i18n` verdes, `Workers Builds` en rojo por el id placeholder de D1/KV real
+— no bloquea, ya visto en el pivote). Sesión siguiente cerró las 3 reservas leves del veredicto
+(guard explícito de `VOTE_SALT` en `vote.ts`, carrera de voto doble documentada en
+`vote-dedup.js`, comparador duplicado sin tocar — no aplicaba, no se tocó ese script) y completó
+el resto de R2: `chat.ts` ahora lee los agregados reales de D1 (`getToolScoreMap`, con
+degradación a `communityScore: 0` si D1 falla) y `buildSystemPrompt` añade `communityScore` a
+cada herramienta del catálogo embebido, con instrucción explícita de que el score **desempata**
+pero el encaje real con la necesidad manda siempre y la alternativa open-source se menciona
+siempre. Verificado end-to-end en `wrangler dev` que el score real (`jan: 4, ollama: 1,
+claude-ai: 1` desde los votos de R1) llega al texto del prompt sin romper el chat. Detalle
+completo en `_privado/auditorias/RANKING-CIERRE-handoff.md`.
+
+Con esto, R1 + R2 completos. R3 (ampliar catálogo, puntuación editorial) queda para una sesión de
+contenido futura, sin fecha fijada. Siguiente paso: auditoría de este PR, luego ciclo
+REBRAND-EASYAI.

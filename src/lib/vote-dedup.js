@@ -2,6 +2,13 @@
 // cada 30 días. Separado en check/mark (en vez de un solo incremento como rate-limit.js) porque
 // el voto solo debe marcarse como emitido si D1 confirmó el incremento — un fallo de D1 no debe
 // dejar a alguien bloqueado 30 días sin haber votado de verdad.
+//
+// Carrera conocida y aceptada (reserva 2 del veredicto de auditoría de R1, RANKING-CIERRE
+// 2026-07-05): hasVoted() y markVoted() no son atómicos entre sí. Dos peticiones simultáneas de
+// la misma IP para la misma herramienta pueden pasar ambas el hasVoted() antes de que cualquiera
+// llame a markVoted(), contando 2 votos en vez de 1. Es aceptable a propósito: este dedup es un
+// tope de abuso/coste, no un sistema de contabilidad exacta. No lo trates como un bug a arreglar
+// sin releer esta nota primero.
 
 const VOTE_DEDUP_TTL_SECONDS = 30 * 24 * 60 * 60;
 
