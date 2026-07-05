@@ -1,5 +1,20 @@
 name = "escuela-ia"
 compatibility_date = "2026-07-03"
+# Necesario para @anthropic-ai/sdk (usa APIs de Node que no están disponibles por defecto en el
+# runtime de Workers) — pivote 2026-07-04, núcleo conversacional + Q&A de la Wiki de la IA.
+compatibility_flags = ["nodejs_compat"]
+
+# Entrypoint unificado del adapter @astrojs/cloudflare (dev y producción) — el sitio sigue
+# prerenderizado en su mayoría; este entrypoint solo entra en juego para las rutas con
+# `export const prerender = false` (src/pages/api/**).
+main = "@astrojs/cloudflare/entrypoints/server"
 
 [assets]
 directory = "./dist"
+
+# Contador de límite de uso (por IP/día) para /api/nucleo/chat y /api/wiki/ask — evita dejar el
+# endpoint de LLM abierto a coste ilimitado en un sitio gratuito y público. Namespace real
+# creado 2026-07-05 (`wrangler kv namespace create RATE_LIMIT`).
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "937199fe2ecb4d93bf070a93a3d36b13"

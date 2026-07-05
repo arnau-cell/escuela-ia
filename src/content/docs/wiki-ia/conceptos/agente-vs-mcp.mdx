@@ -1,0 +1,31 @@
+---
+title: "¿Agente o MCP? No es lo mismo"
+description: "Un agente decide qué hacer; un MCP es el canal por el que accede a herramientas externas. Explicado sin dar nada por sabido."
+translationKey: wiki-ia/conceptos/agente-vs-mcp
+sourceUpdated: 2026-07-04
+sidebar:
+  order: 2
+---
+
+Si ya sabes [qué es un agente de IA](/aprende/conceptos/que-es-un-agente-de-ia/), este concepto es
+el siguiente escalón: **un agente y un MCP no compiten entre sí — uno usa al otro.**
+
+## Un agente decide
+
+Un **agente** es la parte que razona: recibe tu petición ("organiza mis facturas de este mes"),
+decide qué pasos dar, y va comprobando si el resultado tiene sentido antes de continuar. Es el
+"cerebro" de la operación.
+
+## Un MCP es el canal hacia las herramientas
+
+**MCP** (Model Context Protocol) es un estándar abierto que define cómo un agente **se conecta**
+a herramientas externas — tu calendario, una base de datos, un servicio de email — sin que cada
+programa tenga que inventar su propia forma de hablar con la IA. Piensa en un MCP como un enchufe
+universal: la herramienta expone un MCP, y cualquier agente compatible puede conectarse ahí sin
+que nadie tenga que programar una integración a medida para cada combinación.
+
+## Por qué importa la diferencia
+
+Cuando una herramienta dice "compatible con MCP", no está diciendo que es un agente — está
+diciendo que **un agente puede usarla como una de sus herramientas**. El agente sigue siendo quien
+decide; el MCP es solo el conector que hace posible que llegue hasta ahí.

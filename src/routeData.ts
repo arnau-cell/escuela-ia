@@ -7,6 +7,7 @@ import { getCollection } from 'astro:content';
 const GROUPS = [
 	{ key: 'aprende', es: 'Aprende', en: 'Learn' },
 	{ key: 'hazlo', es: 'Hazlo', en: 'Build' },
+	{ key: 'wiki-ia', es: 'Wiki de la IA', en: 'AI Wiki' },
 	{ key: 'por-sector', es: 'Por sector', en: 'By industry' },
 	{ key: 'noticias', es: 'Noticias', en: 'News' },
 	{ key: 'comparte', es: 'Comparte', en: 'Share' },

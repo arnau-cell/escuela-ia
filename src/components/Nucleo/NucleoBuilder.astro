@@ -1,0 +1,384 @@
+---
+// Núcleo conversacional de Easy AI — pivote 2026-07-04. Mismo diseño validado en el mockup
+// interactivo (paleta clara, acentos eléctricos lima/magenta), ahora conectado de verdad a
+// /api/nucleo/chat (Claude Haiku 4.5) en vez del guion fijo del prototipo.
+interface Props {
+	locale: 'es' | 'en';
+}
+const { locale } = Astro.props;
+
+const UI = {
+	es: {
+		eyebrow: 'El',
+		eyebrowCore: 'núcleo',
+		eyebrowRest: 'de Easy AI',
+		headline1: 'Describe lo que quieres',
+		headlineEm: 'construir',
+		headlineDot: '.',
+		subhead:
+			'Automatizar tus facturas, ordenar los datos de tus clientes, montar un asistente para tu negocio — cuéntanoslo con tus palabras. Te iremos preguntando lo justo y armando el plan contigo, explicando cada pieza según aparece.',
+		placeholder: 'Quiero automatizar mis facturas...',
+		needIdea: '¿Necesitas una idea?',
+		start: 'Empezar →',
+		chips: [
+			{ label: 'Automatizar facturas', fill: 'Quiero automatizar mis facturas, ahora las hago todas a mano en Excel.' },
+			{ label: 'Organizar clientes', fill: 'Necesito organizar los datos de mis clientes, hoy están sueltos en varias hojas.' },
+			{ label: 'Responder WhatsApp', fill: 'Quiero que alguien me responda el WhatsApp de mi negocio por mí.' },
+			{ label: 'Analizar hojas de cálculo', fill: 'Quiero analizar una hoja de cálculo sin tener que aprender fórmulas.' },
+		],
+		reassure: 'Gratis. Sin registro. Neutral siempre: si hay una alternativa gratuita u open-source, te la mostramos igual que la de pago.',
+		aiNotice: 'Hablas con una IA generativa (Claude Haiku), no con una persona. Las respuestas pueden equivocarse — verifica antes de decisiones importantes.',
+		you: 'Tú',
+		assistant: 'Easy AI',
+		thinking: 'Escribiendo...',
+		replyPlaceholder: 'Escribe tu respuesta...',
+		send: 'Enviar',
+		planSoFar: 'Tu plan, en marcha',
+		masterPromptTag: 'Prompt maestro generado',
+		copy: 'Copiar prompt',
+		copied: 'Copiado ✓',
+		errorGeneric: 'Algo falló. Inténtalo de nuevo.',
+		toolLabel: 'Herramientas de este paso:',
+	},
+	en: {
+		eyebrow: 'The',
+		eyebrowCore: 'core',
+		eyebrowRest: 'of Easy AI',
+		headline1: 'Describe what you want to',
+		headlineEm: 'build',
+		headlineDot: '.',
+		subhead:
+			'Automating your invoices, organizing your client data, setting up an assistant for your business — tell us in your own words. We will ask what we need and build the plan with you, explaining each piece as it comes up.',
+		placeholder: 'I want to automate my invoices...',
+		needIdea: 'Need an idea?',
+		start: 'Start →',
+		chips: [
+			{ label: 'Automate invoices', fill: 'I want to automate my invoices, right now I do them all by hand in Excel.' },
+			{ label: 'Organize clients', fill: 'I need to organize my client data, today it is scattered across several spreadsheets.' },
+			{ label: 'Answer WhatsApp', fill: 'I want someone to answer my business WhatsApp for me.' },
+			{ label: 'Analyze spreadsheets', fill: 'I want to analyze a spreadsheet without having to learn formulas.' },
+		],
+		reassure: 'Free. No sign-up. Always neutral: if a free or open-source alternative exists, we show it right alongside the paid one.',
+		aiNotice: "You're talking to a generative AI (Claude Haiku), not a person. Answers can be wrong — verify before important decisions.",
+		you: 'You',
+		assistant: 'Easy AI',
+		thinking: 'Typing...',
+		replyPlaceholder: 'Type your answer...',
+		send: 'Send',
+		planSoFar: 'Your plan, in progress',
+		masterPromptTag: 'Generated master prompt',
+		copy: 'Copy prompt',
+		copied: 'Copied ✓',
+		errorGeneric: 'Something failed. Please try again.',
+		toolLabel: 'Tools for this step:',
+	},
+} as const;
+
+const t = UI[locale];
+---
+
+<section class="hero" id="nucleo" data-locale={locale}>
+	<div class="wrap hero-inner">
+		<p class="eyebrow">{t.eyebrow} <b>{t.eyebrowCore}</b> {t.eyebrowRest}</p>
+		<h1 class="headline">{t.headline1} <em>{t.headlineEm}</em>{t.headlineDot}</h1>
+		<p class="subhead">{t.subhead}</p>
+
+		<div class="builder" id="starterBuilder">
+			<input class="builder-input" id="starterInput" type="text" placeholder={t.placeholder} />
+			<div class="builder-row">
+				<span class="builder-hint">{t.needIdea}</span>
+				<button class="builder-send" id="starterSend" type="button">{t.start}</button>
+			</div>
+		</div>
+
+		<div class="chips" id="chipRow">
+			{t.chips.map((chip) => <span class="chip" data-fill={chip.fill}>{chip.label}</span>)}
+		</div>
+
+		<p class="reassure"><b>{t.reassure.split('.')[0]}.</b>{t.reassure.split('.').slice(1).join('.')}</p>
+	</div>
+</section>
+
+<section class="convo" id="convoSection" hidden>
+	<div class="wrap">
+		<p class="ai-notice" role="note">{t.aiNotice}</p>
+		<div class="convo-grid">
+			<div class="transcript" id="transcript"></div>
+
+			<div class="callouts">
+				<div class="plan-so-far" id="planSoFar" hidden>
+					<span class="tag">{t.planSoFar}</span>
+					<ul id="planList"></ul>
+				</div>
+				<div id="calloutSlot"></div>
+
+				<div class="prompt-card" id="promptCard" hidden>
+					<span class="tag">{t.masterPromptTag}</span>
+					<pre id="promptText"></pre>
+					<button class="copy-btn" id="copyBtn" type="button">{t.copy}</button>
+				</div>
+			</div>
+		</div>
+
+		<form class="reply-box" id="replyForm" hidden>
+			<input class="reply-input" id="replyInput" type="text" placeholder={t.replyPlaceholder} autocomplete="off" />
+			<button class="reply-send" type="submit">{t.send}</button>
+		</form>
+	</div>
+</section>
+
+<script type="application/json" id="nucleo-ui" is:inline set:html={JSON.stringify(t)} />
+
+<script type="module" is:inline>
+	const ui = JSON.parse(document.getElementById('nucleo-ui').textContent);
+	const locale = document.getElementById('nucleo').dataset.locale === 'en' ? 'en' : 'es';
+
+	const starterInput = document.getElementById('starterInput');
+	const starterSend = document.getElementById('starterSend');
+	const starterBuilder = document.getElementById('starterBuilder');
+	const chipRow = document.getElementById('chipRow');
+	const convoSection = document.getElementById('convoSection');
+	const transcript = document.getElementById('transcript');
+	const planSoFar = document.getElementById('planSoFar');
+	const planList = document.getElementById('planList');
+	const calloutSlot = document.getElementById('calloutSlot');
+	const promptCard = document.getElementById('promptCard');
+	const promptText = document.getElementById('promptText');
+	const copyBtn = document.getElementById('copyBtn');
+	const replyForm = document.getElementById('replyForm');
+	const replyInput = document.getElementById('replyInput');
+
+	let history = [];
+	let started = false;
+
+	chipRow.querySelectorAll('.chip').forEach((chip) => {
+		chip.addEventListener('click', () => {
+			starterInput.value = chip.getAttribute('data-fill');
+			starterInput.focus();
+		});
+	});
+
+	function addBubble(role, text) {
+		const div = document.createElement('div');
+		div.className = `bubble ${role === 'user' ? 'user' : 'ai'}`;
+		const who = document.createElement('span');
+		who.className = 'who';
+		who.textContent = role === 'user' ? ui.you : ui.assistant;
+		const txt = document.createElement('span');
+		txt.className = 'txt';
+		txt.textContent = text;
+		div.append(who, txt);
+		transcript.appendChild(div);
+		requestAnimationFrame(() => div.classList.add('shown'));
+		div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		return div;
+	}
+
+	function addLoadingBubble() {
+		const div = addBubble('ai', ui.thinking);
+		div.classList.add('loading');
+		return div;
+	}
+
+	async function send(userText) {
+		history.push({ role: 'user', content: userText });
+		addBubble('user', userText);
+		replyForm.hidden = true;
+		const loadingEl = addLoadingBubble();
+
+		try {
+			const res = await fetch('/api/nucleo/chat', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ messages: history, locale }),
+			});
+			const data = await res.json();
+			loadingEl.remove();
+
+			if (!res.ok) {
+				addBubble('ai', data.error ?? ui.errorGeneric);
+				replyForm.hidden = false;
+				replyInput.focus();
+				return;
+			}
+
+			history.push({ role: 'assistant', content: data.reply });
+			addBubble('ai', data.reply);
+
+			if (data.conceptCallout) {
+				const div = document.createElement('div');
+				div.className = 'callout';
+				const tag = document.createElement('span');
+				tag.className = 'tag';
+				tag.textContent = data.conceptCallout.tag;
+				const p = document.createElement('p');
+				p.textContent = data.conceptCallout.text;
+				div.append(tag, p);
+				calloutSlot.prepend(div);
+				requestAnimationFrame(() => div.classList.add('shown'));
+			}
+
+			if (data.planItem) {
+				planSoFar.hidden = false;
+				const li = document.createElement('li');
+				li.textContent = data.planItem;
+				planList.appendChild(li);
+				requestAnimationFrame(() => li.classList.add('shown'));
+			}
+
+			if (Array.isArray(data.platforms) && data.platforms.length) {
+				const label = document.createElement('p');
+				label.className = 'platform-refs';
+				label.innerHTML =
+					`<b>${ui.toolLabel}</b> ` +
+					data.platforms
+						.map((p) => `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`)
+						.join(', ');
+				transcript.appendChild(label);
+			}
+
+			if (data.done) {
+				promptText.textContent = data.masterPrompt ?? '';
+				promptCard.hidden = false;
+				replyForm.hidden = true;
+			} else {
+				replyForm.hidden = false;
+				replyInput.value = '';
+				replyInput.focus();
+			}
+		} catch (err) {
+			loadingEl.remove();
+			addBubble('ai', ui.errorGeneric);
+			replyForm.hidden = false;
+		}
+	}
+
+	function begin() {
+		if (started) return;
+		started = true;
+		const first = starterInput.value.trim() || starterInput.getAttribute('placeholder');
+		starterBuilder.style.display = 'none';
+		chipRow.style.display = 'none';
+		convoSection.hidden = false;
+		convoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		send(first);
+	}
+
+	starterSend.addEventListener('click', begin);
+	starterInput.addEventListener('keydown', (e) => {
+		if (e.key === 'Enter') begin();
+	});
+
+	replyForm.addEventListener('submit', (e) => {
+		e.preventDefault();
+		const text = replyInput.value.trim();
+		if (!text) return;
+		send(text);
+	});
+
+	copyBtn.addEventListener('click', () => {
+		const text = promptText.textContent;
+		try {
+			navigator.clipboard.writeText(text);
+		} catch (e) {
+			/* portapapeles no disponible; el botón sigue confirmando visualmente */
+		}
+		copyBtn.textContent = ui.copied;
+		setTimeout(() => {
+			copyBtn.textContent = ui.copy;
+		}, 1800);
+	});
+</script>
+
+<style>
+	:root {
+		--bg: #f4f6fa;
+		--bg-2: #ffffff;
+		--ink: #11141c;
+		--ink-dim: #565f70;
+		--line: #dce1ea;
+		--panel: #11141c;
+		--panel-line: rgba(255, 255, 255, 0.12);
+		--lime: #c6ff3d;
+		--lime-dim: #7a9e2e;
+		--magenta: #ff3dbd;
+		--mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Menlo, Consolas, monospace;
+		--sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+	}
+	* { box-sizing: border-box; }
+	.wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+	.hero {
+		padding: 84px 32px 60px;
+		text-align: center;
+		background: radial-gradient(circle at 1px 1px, rgba(17, 20, 28, 0.06) 1px, transparent 1px);
+		background-size: 26px 26px;
+		font-family: var(--sans);
+		color: var(--ink);
+	}
+	.hero-inner { max-width: 760px; margin: 0 auto; }
+	.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-dim); margin: 0 0 20px; }
+	.eyebrow b { color: var(--ink); background: var(--lime); padding: 1px 6px; border-radius: 3px; }
+	.headline { font-family: var(--mono); font-weight: 700; font-size: clamp(30px, 5vw, 50px); line-height: 1.1; letter-spacing: -0.01em; text-transform: uppercase; color: var(--ink); margin: 0 0 22px; text-wrap: balance; }
+	.headline em { font-style: normal; text-decoration: underline; text-decoration-color: var(--lime); text-decoration-thickness: 6px; text-underline-offset: 2px; }
+	.subhead { font-size: 17px; color: var(--ink-dim); max-width: 58ch; margin: 0 auto 40px; text-wrap: balance; }
+
+	.builder { background: var(--bg-2); border: 1.5px solid var(--line); box-shadow: 0 0 0 3px rgba(198,255,61,0.14), 0 18px 40px -20px rgba(17,20,28,0.25); border-radius: 8px; padding: 18px; text-align: left; }
+	.builder-input { width: 100%; background: transparent; border: none; color: var(--ink); font-family: var(--sans); font-size: 16px; padding: 6px 4px 16px; outline: none; }
+	.builder-input::placeholder { color: #97a0ae; }
+	.builder-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
+	.builder-hint { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-dim); }
+	.builder-send, .reply-send { font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); background: var(--lime); border: none; border-radius: 4px; padding: 9px 18px; cursor: pointer; }
+	.builder-send:hover, .reply-send:hover { box-shadow: 0 0 0 4px rgba(198,255,61,0.28); }
+
+	.chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 22px 0 0; }
+	.chip { font-family: var(--mono); font-size: 12px; color: var(--ink-dim); background: var(--bg-2); border: 1px solid var(--line); border-radius: 5px; padding: 8px 13px; cursor: pointer; }
+	.chip:hover { border-color: var(--lime-dim); color: var(--ink); }
+
+	.reassure { margin: 26px 0 0; font-size: 13px; color: var(--ink-dim); }
+	.reassure b { color: var(--ink); font-weight: 600; }
+
+	.convo { padding: 40px 32px 88px; font-family: var(--sans); color: var(--ink); }
+	.ai-notice { max-width: 620px; margin: 0 0 28px; font-size: 12.5px; color: var(--ink-dim); border-left: 3px solid var(--magenta); padding-left: 12px; }
+	.convo-grid { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: start; }
+	.transcript { display: flex; flex-direction: column; gap: 14px; min-height: 40px; }
+	.bubble { max-width: 86%; padding: 13px 16px; border-radius: 6px; font-size: 14.5px; opacity: 0; transform: translateY(8px); transition: opacity 0.3s ease, transform 0.3s ease; }
+	.bubble.shown { opacity: 1; transform: translateY(0); }
+	.bubble.user { align-self: flex-end; background: var(--panel); color: #fff; border-bottom-right-radius: 1px; }
+	.bubble.ai { align-self: flex-start; background: var(--bg-2); border: 1px solid var(--line); border-bottom-left-radius: 1px; }
+	.bubble.loading { opacity: 1; transform: none; font-style: italic; color: var(--ink-dim); }
+	.bubble .who { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; opacity: 0.55; }
+	.bubble.ai .who { color: var(--lime-dim); }
+	.platform-refs { font-size: 12.5px; color: var(--ink-dim); margin: -4px 0 0; }
+	.platform-refs a { color: var(--ink); }
+
+	.callouts { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 24px; }
+	.callout { background: var(--bg-2); border: 1px solid var(--line); border-left: 3px solid var(--magenta); border-radius: 3px; padding: 14px 16px; opacity: 0; transform: translateY(8px); transition: opacity 0.3s ease, transform 0.3s ease; }
+	.callout.shown { opacity: 1; transform: translateY(0); }
+	.callout .tag { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--magenta); margin-bottom: 6px; }
+	.callout p { margin: 0; font-size: 13px; color: var(--ink-dim); }
+
+	.plan-so-far { background: var(--panel); border-radius: 6px; padding: 18px; }
+	.plan-so-far .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--lime); text-transform: uppercase; }
+	.plan-so-far ul { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+	.plan-so-far li { font-size: 13.5px; color: #fff; padding-left: 18px; position: relative; opacity: 0.25; transition: opacity 0.3s ease; }
+	.plan-so-far li.shown { opacity: 1; }
+	.plan-so-far li::before { content: '✓'; position: absolute; left: 0; color: var(--lime); font-family: var(--mono); }
+
+	.prompt-card { background: var(--panel); border-radius: 6px; padding: 18px; }
+	.prompt-card .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--magenta); text-transform: uppercase; }
+	.prompt-card pre { white-space: pre-wrap; font-family: var(--mono); font-size: 12px; color: #d7dce6; margin: 10px 0 14px; line-height: 1.6; }
+	.copy-btn { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); background: var(--lime); border: none; border-radius: 4px; padding: 8px 14px; cursor: pointer; }
+
+	.reply-box { max-width: 1180px; margin: 24px auto 0; display: flex; gap: 10px; padding: 0 32px; }
+	.reply-input { flex: 1; padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px; font-family: var(--sans); font-size: 15px; background: var(--bg-2); color: var(--ink); }
+	.reply-input:focus { outline: 2px solid var(--lime-dim); }
+
+	@media (max-width: 860px) {
+		.convo-grid { grid-template-columns: 1fr; }
+		.callouts { position: static; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		* { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+	}
+</style>

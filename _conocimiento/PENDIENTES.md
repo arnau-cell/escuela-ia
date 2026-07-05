@@ -6,15 +6,6 @@
 
 ## Abiertas
 
-- [ ] **E7 v2 — ÚLTIMA CONDICIÓN antes del go/no-go: confirmar revisión legal de Arnau**: el defecto
-  técnico que causó el rechazo de E7 (rutas fantasma contaminando paginación y Pagefind) está
-  **arreglado de raíz y re-verificado de forma independiente en una segunda auditoría** (`page_count`
-  de Pagefind exacto 29=29 en ambos idiomas, en local y en producción real con anti-caché; las 4
-  transiciones de paginación y las 6 carpetas fantasma completas confirmadas correctas). El sitio está
-  **técnicamente listo para el go/no-go**. Lo único que queda: Arnau debe confirmar que ya revisó
-  personalmente los 3 textos legales (aviso legal, privacidad, cookies, ES+EN) — no encontrado ningún
-  registro de esa confirmación todavía. Si ya está hecho, decirlo y mover esta entrada a "Resueltas".
-  Detalle: `_privado/auditorias/E7-veredicto-v2.md`.
 - [ ] **E7 — reserva menor, no bloqueante**: Lighthouse "Best Practices" en 96/100 (no 100) por un
   error de CORS en consola contra `cloudflareinsights.com/cdn-cgi/rum` (función de RUM del beacon de
   Web Analytics, no la métrica principal de pageviews) — probablemente por vivir en `workers.dev` en
@@ -44,6 +35,19 @@
 
 ## Resueltas
 
+- [x] **E7 v2 — última condición antes del go/no-go: revisión legal de Arnau confirmada (2026-07-04)**:
+  Arnau revisó personalmente los 3 textos legales (aviso legal, privacidad, cookies, ES+EN) en la sesión
+  auditora final. De esa revisión salieron dos ajustes de contenido, aplicados en el momento: (1) su
+  nombre completo se redujo al mínimo legalmente exigible — solo permanece en el aviso legal/legal
+  notice (identificación del titular bajo LSSI art. 10, que la propia página cita), se quitó la
+  repetición en la política de privacidad y se sustituyó por su handle de GitHub en "sobre el proyecto";
+  cuando el proyecto constituya sociedad, esa sección pasará al nombre de la empresa, vía ya prevista en
+  el propio texto; (2) el aviso legal ya no dice "no es una actividad comercial" como algo permanente —
+  ahora dice "a día de hoy" y añade que la sección se actualizará si se introduce monetización en el
+  futuro (afiliados, productos propios, servicios de pago), para no atar el texto legal a un compromiso
+  que choca con el plan de negocio a más largo plazo (ver `_privado/`). Gates re-verificados tras los
+  cambios: build 83 páginas, i18n-check ✅, tests 39/39. Con esto, el veredicto técnico de E7 v2 queda
+  sin condiciones pendientes. Detalle: `_privado/auditorias/E7-veredicto-v2.md`.
 - [x] **E6 — Giscus activo en producción**: resuelto en cadena el 2026-07-03 — repo puesto público de
   nuevo (requisito duro de Giscus, documentado en `_conocimiento/DECISIONES.md`), app de giscus
   instalada, categoría de Discussions "Announcements" elegida (recomendación estándar para blogs).

@@ -1,0 +1,59 @@
+---
+// Cabecera a medida de la home de Easy AI — sin cromado de Starlight (ni sidebar, ni tema de
+// docs). El resto del sitio (Aprende, Wiki de IA, Por sector, Noticias, Comparte, Recursos) sigue
+// en Starlight; esto solo aplica a la home/núcleo, por diseño (ver PLAN_MAESTRO.md, pivote).
+interface Props {
+	locale: 'es' | 'en';
+}
+const { locale } = Astro.props;
+const base = locale === 'en' ? '/en' : '';
+
+const LINKS =
+	locale === 'en'
+		? [
+				{ href: '/en/#nucleo', label: 'Build' },
+				{ href: '/en/wiki/', label: 'AI Wiki' },
+				{ href: '/en/news/', label: 'News' },
+				{ href: '/en/share/', label: 'Share' },
+			]
+		: [
+				{ href: '/#nucleo', label: 'Construye' },
+				{ href: '/wiki-ia/', label: 'Wiki de IA' },
+				{ href: '/noticias/', label: 'Noticias' },
+				{ href: '/comparte/', label: 'Comparte' },
+			];
+
+const langHref = locale === 'en' ? '/' : '/en/';
+const langLabel = locale === 'en' ? 'ES' : 'EN';
+---
+
+<header class="site-header">
+	<nav class="nav">
+		<a class="logo" href={base + '/'}>EASY<span>AI</span></a>
+		<ul class="navlinks">
+			{LINKS.map((link) => (
+				<li><a href={link.href}>{link.label}</a></li>
+			))}
+		</ul>
+		<a class="navlang" href={langHref}>{langLabel}</a>
+	</nav>
+</header>
+
+<style>
+	:root {
+		--bg-2: #ffffff;
+		--ink: #11141c;
+		--ink-dim: #565f70;
+		--line: #dce1ea;
+		--lime: #c6ff3d;
+		--mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Menlo, Consolas, monospace;
+	}
+	.site-header { background: var(--bg-2); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+	.nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px 32px; max-width: 1180px; margin: 0 auto; }
+	.logo { font-family: var(--mono); font-weight: 700; font-size: 15px; letter-spacing: 0.04em; color: var(--ink); text-decoration: none; display: flex; align-items: baseline; }
+	.logo span { color: var(--ink); background: var(--lime); padding: 1px 6px; border-radius: 3px; margin-left: 4px; }
+	.navlinks { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+	.navlinks a { color: var(--ink-dim); text-decoration: none; }
+	.navlinks a:hover, .navlinks a:focus-visible { color: var(--ink); }
+	.navlang { font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; color: var(--ink-dim); border: 1px solid var(--line); padding: 6px 10px; border-radius: 4px; text-decoration: none; }
+</style>

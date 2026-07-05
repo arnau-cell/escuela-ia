@@ -1,0 +1,39 @@
+---
+// Home de Easy AI (ES) — página a medida, fuera del docsLoader de Starlight (sin sidebar, sin
+// tema de docs), por diseño del pivote (ver _conocimiento/PLAN_MAESTRO.md). El resto del sitio
+// sigue en Starlight.
+import NucleoHeader from '../components/Nucleo/NucleoHeader.astro';
+import NucleoBuilder from '../components/Nucleo/NucleoBuilder.astro';
+import { CF_BEACON_TOKEN } from '../config/analytics';
+
+const site = Astro.site;
+const toAbsolute = (path: string) => (site ? new URL(path, site).href : path);
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Easy AI — Describe lo que quieres construir</title>
+		<meta
+			name="description"
+			content="Describe en tus palabras lo que quieres automatizar o construir con IA. Te hacemos las preguntas justas y armamos el plan contigo, explicando cada pieza. Gratis, neutral, sin registro."
+		/>
+		<link rel="canonical" href={toAbsolute('/')} />
+		<link rel="alternate" hreflang="es" href={toAbsolute('/')} />
+		<link rel="alternate" hreflang="en" href={toAbsolute('/en/')} />
+		<link rel="alternate" hreflang="x-default" href={toAbsolute('/')} />
+		{CF_BEACON_TOKEN !== '' && (
+			<script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={`{"token": "${CF_BEACON_TOKEN}"}`} />
+		)}
+	</head>
+	<body>
+		<NucleoHeader locale="es" />
+		<NucleoBuilder locale="es" />
+	</body>
+</html>
+
+<style is:global>
+	body { margin: 0; }
+</style>
