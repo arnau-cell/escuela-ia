@@ -1,0 +1,54 @@
+---
+title: "How the ranking works"
+description: "The tool ranking's public formula, what signals it uses, the neutrality policy, and the anonymous vote's privacy."
+translationKey: wiki-ia/como-funciona-el-ranking
+sourceUpdated: 2026-07-05
+sidebar:
+  order: 6
+---
+
+The [tool Wiki](/en/wiki/tools/)'s ranking exists to order the catalog by real usefulness, not by
+who pays more. This page is the full formula, nothing hidden.
+
+## The formula
+
+```
+score = useful_votes + 0.5 × core_recommendations + 2 × editorial_score
+```
+
+Current formula version: `r1-2026-07-05` (the same one `GET /api/wiki/ranking` returns in the
+`formulaVersion` field — if the weights change, this version changes too).
+
+Today only the first signal exists (votes), so **score = votes**. Within each category, ties
+break alphabetically.
+
+## The signals
+
+| Signal | What is it? | Since when? |
+|---|---|---|
+| Useful votes | "Was this useful?" button on each card, 1 vote per visitor and tool every 30 days | Active |
+| Core recommendations | Every time the [conversational core](/en/) closes a plan, it counts as a real recommendation for each tool it included | Active |
+| Editorial score | Manual review with public criteria (real impact, usability, reliability) | Not yet — catalog still small |
+
+## What we don't do (neutrality policy)
+
+- **No pay-for-position.** No tool can pay to appear higher.
+- **No affiliate links.** Links go straight to each tool, no commission.
+- **The open-source or free alternative is always shown** when one exists, whether or not the
+  paid one scores higher.
+- **The ranking breaks ties, it never decides.** In the conversational core, when several tools
+  fit your need equally well, the best-rated one is mentioned first — but fit with your actual
+  need always wins, and the neutral alternative is always mentioned too.
+
+## Vote privacy
+
+The vote is fully anonymous: no accounts, no sign-in. To prevent repeat votes, your IP is
+transformed with a cryptographic signature (HMAC) using a server-side secret key — **your raw IP
+is never stored**, only that fingerprint, and only for 30 days. After that it's deleted
+automatically. No user profile is built and it's never cross-referenced with any other data.
+More detail in the [privacy policy](/en/resources/privacy/).
+
+## Next steps (not in this phase)
+
+Written reviews, star ratings and a community leaderboard are for later — they require identity
+and usage volume the catalog doesn't have yet.

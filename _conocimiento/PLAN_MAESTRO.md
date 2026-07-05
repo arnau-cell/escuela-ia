@@ -383,6 +383,21 @@ sponsored, afiliados — rompen la neutralidad, que es nuestro diferenciador).
   `_privado/protocolo/prompts/RANKING-WIKI-constructor.md` (R1 = D1 + endpoints voto/ranking +
   orden en la Wiki + página de transparencia; R2 = señal del núcleo + score en el prompt;
   R3 = ampliar catálogo a 40-60 herramientas + puntuación editorial).
-- **Prerrequisito**: PR #8 fusionado (el ciclo construye encima del pivote).
+- **Prerrequisito**: PR #8 fusionado (el ciclo construye encima del pivote) — **cumplido**, PR #8
+  fusionado en `master` el 2026-07-04/05.
 - Acciones exclusivas de Arnau al construir: `wrangler d1 create escuela-ia-ranking` (+ id real
   en `wrangler.toml`), `wrangler secret put VOTE_SALT`, aplicar la migración D1 en producción.
+
+#### R1 construido (2026-07-05), en PR sin fusionar — pendiente de auditoría
+
+D1 (`tool_stats` + migración versionada), `POST /api/wiki/vote` (dedup HMAC+KV, rate-limit
+20/día, valida `toolId` contra el catálogo real), `GET /api/wiki/ranking` (cacheado 300s,
+`formulaVersion`), botón de voto + reordenación en `WikiToolsList.astro` (degrada a alfabético
+sin JS/con la API caída), página "Cómo funciona el ranking" ES/EN, señal mínima de R2 (`chat.ts`
+incrementa `nucleo_recs` al cerrar un plan, fire-and-forget), y política de privacidad + LEGAL.md
+§1.9 actualizados. Los 4 gates en verde y verificación end-to-end en `wrangler dev` documentada
+paso a paso en `_privado/auditorias/RANKING-WIKI-handoff.md`. Fuera de alcance de R1 (según lo
+escrito, no improvisado): puntuación editorial, ampliación del catálogo, score dentro del prompt
+del núcleo (resto de R2), reviews/estrellas/leaderboard (v3).
+
+Siguiente paso: sesión auditora nueva y distinta (protocolo de siempre) antes de fusionar.

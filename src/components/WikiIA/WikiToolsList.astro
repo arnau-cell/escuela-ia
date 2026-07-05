@@ -1,14 +1,16 @@
 ---
 // Catálogo navegable de la Wiki de la IA — misma fuente de datos que el núcleo conversacional
-// (src/data/setup/platforms.json), agrupado por categoría de uso. Sin ranking de comunidad
-// todavía (decisión de Arnau, 2026-07-04: "wiki sí, ranking más adelante") — nota visible en vez
-// de estrellas inventadas.
+// (src/data/setup/platforms.json), agrupado por categoría de uso. Ranking real desde
+// RANKING-WIKI R1 (2026-07-05): orden servido alfabético (fallback si JS está deshabilitado o la
+// API falla) y reordenado en cliente por score cuando /api/wiki/ranking responde.
 import platforms from '../../data/setup/platforms.json';
 
 interface Props {
 	locale: 'es' | 'en';
 }
 const { locale } = Astro.props;
+
+const FORMULA_PATH = { es: '/wiki-ia/como-funciona-el-ranking/', en: '/en/wiki/how-ranking-works/' };
 
 const CATEGORY_LABELS: Record<string, { es: string; en: string }> = {
 	chat: { es: 'Chat / asistente general', en: 'Chat / general assistant' },
@@ -22,16 +24,26 @@ const CATEGORY_LABELS: Record<string, { es: string; en: string }> = {
 
 const UI = {
 	es: {
-		noRanking: 'Ranking de la comunidad: próximamente. Este orden es solo alfabético, no una recomendación.',
 		free: 'Gratis',
 		openSource: 'Open source',
 		alternative: 'Alternativa open-source/gratuita',
+		vote: '¿Te resulta útil?',
+		voted: 'Votado, ¡gracias!',
+		alreadyVoted: 'Ya has votado por esta herramienta.',
+		errorRateLimited: 'Límite diario de votos alcanzado.',
+		errorGeneric: 'No se pudo registrar el voto.',
+		formulaLinkText: 'Cómo funciona el ranking',
 	},
 	en: {
-		noRanking: 'Community ranking: coming soon. This order is alphabetical only, not a recommendation.',
 		free: 'Free',
 		openSource: 'Open source',
 		alternative: 'Open-source/free alternative',
+		vote: 'Was this useful?',
+		voted: 'Voted, thanks!',
+		alreadyVoted: "You've already voted for this tool.",
+		errorRateLimited: 'Daily vote limit reached.',
+		errorGeneric: 'Could not register the vote.',
+		formulaLinkText: 'How the ranking works',
 	},
 };
 const t = UI[locale];
@@ -50,30 +62,149 @@ const groups = categoryOrder
 	.filter((g) => g.items.length > 0);
 ---
 
-<p class="wiki-tools-note">{t.noRanking}</p>
+<p class="wiki-tools-note">
+	<a href={FORMULA_PATH[locale]}>{t.formulaLinkText}</a>
+</p>
 
-{groups.map((group) => (
-	<section class="wiki-tools-group">
-		<h3>{group.label}</h3>
-		<ul class="wiki-tools-list">
-			{group.items.map((p) => {
-				const alt = p.alternativeId ? byId.get(p.alternativeId) : null;
-				return (
-					<li>
-						<a href={p.url} target="_blank" rel="noopener"><strong>{p.name}</strong></a>
-						{p.openSource && <span class="badge">{t.openSource}</span>}
-						<p class="wiki-tools-cost">{p.costDetail[locale] ?? p.costDetail.es}</p>
-						{alt && (
-							<p class="wiki-tools-alt">
-								{t.alternative}: <a href={alt.url} target="_blank" rel="noopener">{alt.name}</a>
-							</p>
-						)}
-					</li>
-				);
-			})}
-		</ul>
-	</section>
-))}
+<div class="wiki-tools-root" data-locale={locale}>
+	{groups.map((group) => (
+		<section class="wiki-tools-group">
+			<h3>{group.label}</h3>
+			<ul class="wiki-tools-list" data-category={group.key}>
+				{group.items.map((p) => {
+					const alt = p.alternativeId ? byId.get(p.alternativeId) : null;
+					return (
+						<li data-tool-id={p.id} data-tool-name={p.name}>
+							<a href={p.url} target="_blank" rel="noopener"><strong>{p.name}</strong></a>
+							{p.openSource && <span class="badge">{t.openSource}</span>}
+							<p class="wiki-tools-cost">{p.costDetail[locale] ?? p.costDetail.es}</p>
+							{alt && (
+								<p class="wiki-tools-alt">
+									{t.alternative}: <a href={alt.url} target="_blank" rel="noopener">{alt.name}</a>
+								</p>
+							)}
+							<div class="wiki-tools-vote">
+								<button type="button" class="wiki-vote-btn" data-tool-id={p.id} aria-pressed="false">
+									<span class="wiki-vote-label">{t.vote}</span>
+									<span class="wiki-vote-count" data-count>0</span>
+								</button>
+								<p class="wiki-vote-message" data-vote-message hidden></p>
+							</div>
+						</li>
+					);
+				})}
+			</ul>
+		</section>
+	))}
+</div>
+
+<script type="application/json" id="wiki-tools-ui" is:inline set:html={JSON.stringify(t)} />
+
+<script type="module" is:inline>
+	// Misma lógica de orden que src/lib/wiki-tools-sort.js (testeada por separado) — duplicada
+	// aquí porque los scripts is:inline no pasan por Vite y no pueden importar de src/lib.
+	function sortToolsByScore(items, scoreById) {
+		return items
+			.slice()
+			.sort((a, b) => {
+				const scoreA = scoreById.get(a.id)?.score ?? 0;
+				const scoreB = scoreById.get(b.id)?.score ?? 0;
+				if (scoreB !== scoreA) return scoreB - scoreA;
+				return a.name.localeCompare(b.name);
+			})
+			.map((item) => item.id);
+	}
+
+	const ui = JSON.parse(document.getElementById('wiki-tools-ui').textContent);
+	const root = document.querySelector('.wiki-tools-root');
+	const locale = root.dataset.locale === 'en' ? 'en' : 'es';
+	const VOTED_KEY_PREFIX = 'wiki-vote:';
+
+	function markVotedUI(li, votes) {
+		const btn = li.querySelector('.wiki-vote-btn');
+		btn.disabled = true;
+		btn.setAttribute('aria-pressed', 'true');
+		btn.querySelector('.wiki-vote-label').textContent = ui.voted;
+		if (typeof votes === 'number') {
+			btn.querySelector('.wiki-vote-count').textContent = String(votes);
+		}
+	}
+
+	function showMessage(li, text) {
+		const msg = li.querySelector('[data-vote-message]');
+		msg.textContent = text;
+		msg.hidden = false;
+	}
+
+	// Estado local solo para la UX (deshabilitar el botón sin esperar red); la verdad del voto la
+	// tiene siempre el servidor — un localStorage borrado como mucho deja votar de nuevo y el
+	// servidor responde 409 si el dedup por IP sigue vigente.
+	for (const li of root.querySelectorAll('li[data-tool-id]')) {
+		const toolId = li.dataset.toolId;
+		if (localStorage.getItem(VOTED_KEY_PREFIX + toolId) === '1') {
+			markVotedUI(li);
+		}
+	}
+
+	root.addEventListener('click', async (event) => {
+		const btn = event.target.closest('.wiki-vote-btn');
+		if (!btn || btn.disabled) return;
+		const li = btn.closest('li[data-tool-id]');
+		const toolId = li.dataset.toolId;
+		btn.disabled = true;
+
+		try {
+			const res = await fetch('/api/wiki/vote', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ toolId, locale }),
+			});
+			const data = await res.json().catch(() => ({}));
+
+			if (res.ok) {
+				localStorage.setItem(VOTED_KEY_PREFIX + toolId, '1');
+				markVotedUI(li, data.votes);
+				return;
+			}
+			if (res.status === 409) {
+				localStorage.setItem(VOTED_KEY_PREFIX + toolId, '1');
+				markVotedUI(li);
+				showMessage(li, ui.alreadyVoted);
+				return;
+			}
+			btn.disabled = false;
+			showMessage(li, res.status === 429 ? ui.errorRateLimited : ui.errorGeneric);
+		} catch (err) {
+			btn.disabled = false;
+			showMessage(li, ui.errorGeneric);
+		}
+	});
+
+	// Reordenar por score; si la API falla, el orden servido (alfabético) queda intacto — error
+	// silencioso, sin romper la página.
+	fetch('/api/wiki/ranking')
+		.then((res) => (res.ok ? res.json() : Promise.reject(new Error('ranking fetch failed'))))
+		.then(({ tools }) => {
+			const scoreById = new Map(tools.map((tool) => [tool.id, tool]));
+
+			for (const li of root.querySelectorAll('li[data-tool-id]')) {
+				const entry = scoreById.get(li.dataset.toolId);
+				if (entry) {
+					li.querySelector('.wiki-vote-count').textContent = String(entry.votes);
+				}
+			}
+
+			for (const ul of root.querySelectorAll('.wiki-tools-list')) {
+				const lis = Array.from(ul.querySelectorAll('li[data-tool-id]'));
+				const liById = new Map(lis.map((li) => [li.dataset.toolId, li]));
+				const items = lis.map((li) => ({ id: li.dataset.toolId, name: li.dataset.toolName }));
+				for (const id of sortToolsByScore(items, scoreById)) ul.appendChild(liById.get(id));
+			}
+		})
+		.catch(() => {
+			/* orden alfabético servido por defecto, sin romper la página */
+		});
+</script>
 
 <style>
 	.wiki-tools-note {
@@ -108,6 +239,33 @@ const groups = categoryOrder
 	.wiki-tools-cost,
 	.wiki-tools-alt {
 		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+		margin: 0.35rem 0 0;
+	}
+	.wiki-tools-vote {
+		margin-top: 0.75rem;
+	}
+	.wiki-vote-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		font-size: var(--sl-text-sm);
+		padding: 0.3rem 0.7rem;
+		border-radius: 0.25rem;
+		border: 1px solid var(--sl-color-gray-5);
+		background: var(--sl-color-bg);
+		color: var(--sl-color-text);
+		cursor: pointer;
+	}
+	.wiki-vote-btn:disabled {
+		opacity: 0.7;
+		cursor: default;
+	}
+	.wiki-vote-count {
+		font-weight: 600;
+	}
+	.wiki-vote-message {
+		font-size: var(--sl-text-xs);
 		color: var(--sl-color-gray-3);
 		margin: 0.35rem 0 0;
 	}
