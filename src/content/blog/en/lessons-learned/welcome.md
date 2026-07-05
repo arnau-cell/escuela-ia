@@ -1,8 +1,8 @@
 ---
-title: "Why Escuela IA exists"
+title: "Why Easy AI exists"
 description: "A free, neutral site to understand AI from zero to technical, because the resources that already exist are either directories, news-only, or paid."
 translationKey: aprendizajes/bienvenida
-sourceUpdated: 2026-07-03
+sourceUpdated: 2026-07-05
 publishedAt: 2026-07-02
 category: aprendizajes
 author: Arnau
@@ -24,7 +24,7 @@ resources that assume you can already code, or paid services charging for what s
 None of them were, at the same time, neutral, bilingual, zero-to-advanced, organized by professional
 sector, and able to tell you "here's what makes sense for you, given your computer and your budget."
 
-## What Escuela IA is
+## What Easy AI is
 
 A free, neutral, bilingual (Spanish/English) site to understand artificial intelligence from zero to a
 technical level. It's not a business — it's a project meant to help, at minimal cost. In practice, that

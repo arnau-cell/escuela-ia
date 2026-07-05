@@ -1,7 +1,10 @@
 ---
-// Cabecera a medida de la home de Easy AI — sin cromado de Starlight (ni sidebar, ni tema de
-// docs). El resto del sitio (Aprende, Wiki de IA, Por sector, Noticias, Comparte, Recursos) sigue
-// en Starlight; esto solo aplica a la home/núcleo, por diseño (ver PLAN_MAESTRO.md, pivote).
+// Cabecera a medida de la home de Easy AI. El resto del sitio (Aprende, Wiki de IA, Por sector,
+// Noticias, Comparte, Recursos) usa Starlight re-skinado con la misma marca (REBRAND-EASYAI
+// 2026-07-05, ver src/styles/custom.css) — misma cabecera visualmente, distinta estructura
+// (documentación con sidebar) donde corresponde.
+import '../../styles/easy-ai-tokens.css';
+
 interface Props {
 	locale: 'es' | 'en';
 }
@@ -40,14 +43,7 @@ const langLabel = locale === 'en' ? 'ES' : 'EN';
 </header>
 
 <style>
-	:root {
-		--bg-2: #ffffff;
-		--ink: #11141c;
-		--ink-dim: #565f70;
-		--line: #dce1ea;
-		--lime: #c6ff3d;
-		--mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Menlo, Consolas, monospace;
-	}
+	/* Tokens de marca en src/styles/easy-ai-tokens.css, importado arriba. */
 	.site-header { background: var(--bg-2); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
 	.nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px 32px; max-width: 1180px; margin: 0 auto; }
 	.logo { font-family: var(--mono); font-weight: 700; font-size: 15px; letter-spacing: 0.04em; color: var(--ink); text-decoration: none; display: flex; align-items: baseline; }

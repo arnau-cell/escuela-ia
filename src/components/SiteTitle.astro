@@ -1,0 +1,30 @@
+---
+// Override de SiteTitle: mismo logo que la home (EASY + span "AI" en lima), en vez del título de
+// texto plano por defecto de Starlight — REBRAND-EASYAI 2026-07-05, ver
+// _conocimiento/investigacion/05_unificacion-marca-easy-ai.md. El resto de Header.astro (buscador
+// Pagefind, selector de idioma, iconos sociales) se mantiene tal cual: solo cambia el logo.
+const { siteTitleHref } = Astro.locals.starlightRoute;
+---
+
+<a href={siteTitleHref} class="site-title-logo sl-flex">EASY<span>AI</span></a>
+
+<style>
+	.site-title-logo {
+		align-items: baseline;
+		gap: 0;
+		font-family: var(--mono);
+		font-weight: 700;
+		font-size: 15px;
+		letter-spacing: 0.04em;
+		color: var(--ink);
+		text-decoration: none;
+		white-space: nowrap;
+	}
+	.site-title-logo span {
+		color: var(--ink);
+		background: var(--lime);
+		padding: 1px 6px;
+		border-radius: 3px;
+		margin-left: 4px;
+	}
+</style>

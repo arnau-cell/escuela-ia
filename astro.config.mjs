@@ -65,7 +65,9 @@ export default defineConfig({
 		// si detecta que el usuario no declaró ya uno (ver integrations/sitemap.ts en su código fuente).
 		sitemap({ filter: (page) => !isGhostRoute(page) }),
 		starlight({
-			title: { es: 'Escuela de la IA', en: 'AI School' },
+			// La marca no se traduce (REBRAND-EASYAI 2026-07-05): mismo "Easy AI" en ES y EN — ver
+			// _conocimiento/investigacion/05_unificacion-marca-easy-ai.md.
+			title: { es: 'Easy AI', en: 'Easy AI' },
 			description: 'Entiende la IA de cero a técnico. Gratis, neutral, bilingüe. / Understand AI from zero to technical. Free, neutral, bilingual.',
 			defaultLocale: 'root',
 			locales: {
@@ -84,6 +86,7 @@ export default defineConfig({
 				PageTitle: './src/components/PageTitle.astro',
 				Footer: './src/components/Footer.astro',
 				Head: './src/components/Head.astro',
+				SiteTitle: './src/components/SiteTitle.astro',
 			},
 		}),
 	],

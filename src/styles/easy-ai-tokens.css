@@ -1,0 +1,19 @@
+/* Tokens de marca de Easy AI — única fuente de verdad (RANKING-WIKI ya vivía duplicado en
+   NucleoBuilder.astro y NucleoHeader.astro; REBRAND-EASYAI 2026-07-05 lo centraliza aquí para que
+   la home/núcleo y el re-skin de Starlight lean de los mismos valores). Ver
+   _conocimiento/investigacion/05_unificacion-marca-easy-ai.md. Valores idénticos a los que ya
+   estaban inline — extraer esto no cambia nada visualmente. */
+:root {
+	--bg: #f4f6fa;
+	--bg-2: #ffffff;
+	--ink: #11141c;
+	--ink-dim: #565f70;
+	--line: #dce1ea;
+	--panel: #11141c;
+	--panel-line: rgba(255, 255, 255, 0.12);
+	--lime: #c6ff3d;
+	--lime-dim: #7a9e2e;
+	--magenta: #ff3dbd;
+	--mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Menlo, Consolas, monospace;
+	--sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}

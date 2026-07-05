@@ -1,8 +1,8 @@
 ---
-title: "Por qué existe Escuela IA"
+title: "Por qué existe Easy AI"
 description: "Un sitio gratuito y neutral para entender la IA de cero a técnico, porque los referentes que existen son o directorios, o solo noticias, o de pago."
 translationKey: aprendizajes/bienvenida
-sourceUpdated: 2026-07-03
+sourceUpdated: 2026-07-05
 publishedAt: 2026-07-02
 category: aprendizajes
 author: Arnau
@@ -23,7 +23,7 @@ sabes programar, o servicios de pago que cobran por lo que debería ser gratuito
 era, a la vez, neutral, bilingüe, de cero a avanzado, organizado por sector profesional, y con una forma
 de decirte "esto es lo que te conviene instalar a ti, con tu ordenador y tu presupuesto".
 
-## Qué es Escuela IA
+## Qué es Easy AI
 
 Un sitio gratuito, neutral y bilingüe (español/inglés) para entender la inteligencia artificial de cero a
 nivel técnico. No es un negocio — es un proyecto para ayudar, a coste mínimo. Eso significa, en la
