@@ -21,6 +21,11 @@ _DATOS/
 
 # Estrategia privada (legal, pitch, aceleradoras, protocolo) — nunca a GitHub (repo público)
 _privado/
+# Material de inversores/pitch generado fuera de _privado/ (incidente 2026-07-05: una sesión
+# dejó pitch decks en outputs/ sin ignorar — deben vivir en _privado/ o Drive, nunca en el repo)
+outputs/
+# Registros de sesión pendientes de archivar (contexto interno, no producto)
+_registro_pendiente/
 
 # Scripts efímeros
 .dot_*

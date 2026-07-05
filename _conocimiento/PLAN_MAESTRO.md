@@ -362,3 +362,27 @@ Workers — contexto de la Wiki ahora se genera en build, no en la petición). D
 **PR #8** (`pivote-nucleo` → `master`) abierto, sin fusionar — decisión de Arnau. Pendiente antes
 del go/no-go: `wrangler secret put ANTHROPIC_API_KEY` en producción, Lighthouse tras el primer
 deploy real con SSR, y fusionar el PR cuando Arnau lo decida.
+
+### RANKING-WIKI — ranking de herramientas estilo Futurepedia (decisión de Arnau, 2026-07-05)
+
+Arnau decidió implementar el **ranking de herramientas de la Wiki** con Futurepedia como
+referencia de formato, y usarlo además como **base de recomendación del núcleo**: los planes que
+el núcleo genera para cada cliente tienen en cuenta el ranking, y cada plan cerrado lo
+retroalimenta (contador de recomendaciones por herramienta — señal que ningún directorio tiene).
+
+Esto adelanta la parte de "voto" que estaba agrupada con comunidad/v3: el diseño usa **voto
+anónimo** (HMAC de IP con salt secreto + TTL 30 días, mismo patrón ya testeado del rate-limit) y
+por tanto NO requiere sistema de identidad — solo las reviews escritas siguen reservadas para v3.
+De Futurepedia se copian las señales y el formato (contador de "útil", orden por popularidad en
+categoría, curación editorial con criterios públicos); NUNCA su monetización (featured,
+sponsored, afiliados — rompen la neutralidad, que es nuestro diferenciador).
+
+- Investigación y diseño completo (fórmula pública del score, señales, fases):
+  `_conocimiento/investigacion/04_futurepedia-y-ranking-herramientas.md`.
+- Prompt constructor listo para el programador:
+  `_privado/protocolo/prompts/RANKING-WIKI-constructor.md` (R1 = D1 + endpoints voto/ranking +
+  orden en la Wiki + página de transparencia; R2 = señal del núcleo + score en el prompt;
+  R3 = ampliar catálogo a 40-60 herramientas + puntuación editorial).
+- **Prerrequisito**: PR #8 fusionado (el ciclo construye encima del pivote).
+- Acciones exclusivas de Arnau al construir: `wrangler d1 create escuela-ia-ranking` (+ id real
+  en `wrangler.toml`), `wrangler secret put VOTE_SALT`, aplicar la migración D1 en producción.

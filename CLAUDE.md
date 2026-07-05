@@ -32,6 +32,13 @@ de agentes) en ninguna fase de este proyecto. Construcción y auditoría son ses
 y secuenciales — nunca simultáneas, nunca la misma sesión. Protocolo completo y prompts listos para cada fase
 en `_privado/protocolo/` (privado, no en el repo público).
 
+**Ampliación (2026-07-05, tras incidente real): una sola VENTANA escribiendo en el repo a la vez.**
+El 2026-07-05 tres ventanas escribieron a la vez en este repo (pivote, planificación de ranking y pitch
+decks) y se cruzaron. Regla operativa: antes de escribir nada (código, docs u outputs), ejecuta `git status`;
+si hay cambios sin comitear que NO son tuyos, para y pregunta a Arnau qué ventana los está generando. Al
+terminar tu bloque de trabajo, comitea (o declara explícitamente qué dejas sin comitear y por qué). Material
+de pitch/inversores NUNCA fuera de `_privado/` o Drive (outputs/ está gitignorado como red de seguridad).
+
 ## Stack (decidido)
 
 Astro + Starlight · Cloudflare Workers (`escuela-ia.arnau-cell.workers.dev`, conectado 2026-07-03) · Pagefind · Giscus (activo) · Cloudflare Web Analytics.
