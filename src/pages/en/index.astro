@@ -29,7 +29,9 @@ const toAbsolute = (path: string) => (site ? new URL(path, site).href : path);
 	</head>
 	<body>
 		<NucleoHeader locale="en" />
-		<NucleoBuilder locale="en" />
+		<main>
+			<NucleoBuilder locale="en" />
+		</main>
 	</body>
 </html>
 
