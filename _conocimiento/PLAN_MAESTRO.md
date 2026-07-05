@@ -430,6 +430,18 @@ contenido futura, sin fecha fijada.
 (`_privado/auditorias/RANKING-CIERRE-veredicto.md`). Gates reproducidos (59/59), guard de
 `VOTE_SALT` verificado en vivo (arrancando sin el secret: mensaje claro en el log), el
 `communityScore` verificado sobre la función real del prompt (ES y EN, retrocompatible) y
-regresión e2e del voto en workerd limpia. Siguiente paso: fusionar PR #10 (decisión de Arnau) y
-arrancar el ciclo **REBRAND-EASYAI** (prompt constructor listo en
-`_privado/protocolo/prompts/REBRAND-EASYAI-constructor.md`).
+regresión e2e del voto en workerd limpia.
+
+**EN PRODUCCIÓN (2026-07-05, autorizado por Arnau: "que ya lo haga todo")**: PR #10 fusionado,
+D1 real creada (`escuela-ia-ranking`, id en `wrangler.toml`), `VOTE_SALT` como secret (aleatorio,
+no registrado en ningún log), migración remota aplicada, desplegado a
+`escuela-ia.arnau-cell.workers.dev` y smoke test completo sobre producción real: home 200,
+voto → 200 / revoto → 409 / ranking reflejando el voto con su caché de 300s, y **primera
+conversación real del núcleo en producción** (Haiku respondió en el personaje correcto: una
+pregunta cada vez). `ANTHROPIC_API_KEY` ya estaba como secret. **Lighthouse en producción con
+SSR: 100 / 100 / 96 / 100** — cierra el pendiente del pivote; el 96 de best-practices son dos
+ruidos cosméticos (beacon de Analytics bajo headless y favicon 404 en la home a medida — este
+último añadido al alcance del rebrand).
+
+Con esto, el ciclo RANKING está **vivo en producción**. Siguiente paso: ciclo **REBRAND-EASYAI**
+(prompt constructor listo en `_privado/protocolo/prompts/REBRAND-EASYAI-constructor.md`).
