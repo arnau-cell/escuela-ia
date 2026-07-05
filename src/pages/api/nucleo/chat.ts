@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { env } from 'cloudflare:workers';
 import { buildSystemPrompt } from '../../../data/nucleo/system-prompt.js';
 import { checkRateLimit, getClientIp } from '../../../lib/rate-limit.js';
-import { incrementNucleoRecs } from '../../../lib/ranking-db.js';
+import { incrementNucleoRecs, getToolScoreMap } from '../../../lib/ranking-db.js';
 import platforms from '../../../data/setup/platforms.json';
 
 const MODEL = 'claude-haiku-4-5';
@@ -72,8 +72,19 @@ export async function POST(context: APIContext) {
 			throw new Error('ANTHROPIC_API_KEY no está configurada (ver .env.local / wrangler secret).');
 		}
 
+		// Señal del ranking (RANKING-WIKI R2): el score desempata recomendaciones dentro del prompt,
+		// nunca decide el encaje ni sustituye la neutralidad — ver system-prompt.js. Un fallo de D1
+		// aquí no debe romper el chat: degrada a "sin señal de comunidad" (todo communityScore = 0),
+		// igual que la Wiki degrada a alfabético si /api/wiki/ranking falla.
+		let scoresById = new Map();
+		try {
+			scoresById = await getToolScoreMap(env.RANKING_DB, platforms);
+		} catch (error) {
+			console.error('[api/nucleo/chat] getToolScoreMap', error);
+		}
+
 		const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
-		const system = buildSystemPrompt(platforms, locale);
+		const system = buildSystemPrompt(platforms, locale, scoresById);
 
 		const response = await client.messages.parse({
 			model: MODEL,
