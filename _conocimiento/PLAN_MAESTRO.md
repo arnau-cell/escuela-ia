@@ -388,7 +388,7 @@ sponsored, afiliados — rompen la neutralidad, que es nuestro diferenciador).
 - Acciones exclusivas de Arnau al construir: `wrangler d1 create escuela-ia-ranking` (+ id real
   en `wrangler.toml`), `wrangler secret put VOTE_SALT`, aplicar la migración D1 en producción.
 
-#### R1 construido (2026-07-05), en PR sin fusionar — pendiente de auditoría
+#### R1 construido y auditado (2026-07-05): APROBADO CON RESERVAS LEVES, en PR #9 sin fusionar
 
 D1 (`tool_stats` + migración versionada), `POST /api/wiki/vote` (dedup HMAC+KV, rate-limit
 20/día, valida `toolId` contra el catálogo real), `GET /api/wiki/ranking` (cacheado 300s,
@@ -400,4 +400,10 @@ paso a paso en `_privado/auditorias/RANKING-WIKI-handoff.md`. Fuera de alcance d
 escrito, no improvisado): puntuación editorial, ampliación del catálogo, score dentro del prompt
 del núcleo (resto de R2), reviews/estrellas/leaderboard (v3).
 
-Siguiente paso: sesión auditora nueva y distinta (protocolo de siempre) antes de fusionar.
+**Auditado el 2026-07-05** (`_privado/auditorias/RANKING-WIKI-veredicto.md`): gates reproducidos,
+end-to-end completo en workerd (200/409/429/400, cache, dedup persistente) y — cerrando la
+limitación declarada por el constructor — **reordenación en cliente verificada con Chrome
+headless real** (score descendente + desempate alfabético correctos, contadores renderizados).
+3 reservas leves agendadas (guard explícito de `VOTE_SALT`, anotar la carrera de voto doble,
+comparador duplicado documentado); ninguna bloquea fusionar. Fusión y acciones de infra
+(D1 real, `VOTE_SALT`, migración remota) = decisión/manos de Arnau.
