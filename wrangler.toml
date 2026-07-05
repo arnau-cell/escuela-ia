@@ -29,10 +29,9 @@ id = "c5c80ae0525f49ef8d3795d5d6bf7303"
 
 # D1 del ranking de herramientas (RANKING-WIKI R1, 2026-07-05): agregados de votos/recomendaciones
 # del núcleo/puntuación editorial, sin ningún dato personal (ver migrations/0001_tool_stats.sql).
-# id PLACEHOLDER — pendiente de Arnau: `wrangler d1 create escuela-ia-ranking` y sustituir aquí,
-# mismo patrón que RATE_LIMIT en su día.
+# Base real creada el 2026-07-05 (`wrangler d1 create escuela-ia-ranking`, autorizado por Arnau).
 [[d1_databases]]
 binding = "RANKING_DB"
 database_name = "escuela-ia-ranking"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "765b5635-fd21-4b5c-9081-88f04e30c4ad"
 migrations_dir = "migrations"
