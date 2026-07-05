@@ -7,9 +7,9 @@ import type { APIContext } from 'astro';
 import Anthropic from '@anthropic-ai/sdk';
 import { z } from 'zod';
 import { env } from 'cloudflare:workers';
-import { getCollection } from 'astro:content';
 import { checkRateLimit, getClientIp } from '../../../lib/rate-limit.js';
 import { buildWikiContext } from '../../../data/wiki-ia/context.js';
+import wikiDocs from '../../../data/wiki-ia/content.generated.json';
 
 const MODEL = 'claude-haiku-4-5';
 const MAX_TOKENS = 1024;
@@ -55,8 +55,7 @@ export async function POST(context: APIContext) {
 			throw new Error('ANTHROPIC_API_KEY no está configurada (ver .env.local / wrangler secret).');
 		}
 
-		const docs = await getCollection('docs');
-		const system = buildWikiContext(docs, locale);
+		const system = buildWikiContext(wikiDocs, locale);
 
 		const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
 		const response = await client.messages.create({

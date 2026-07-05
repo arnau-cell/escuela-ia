@@ -5,6 +5,10 @@ dist/
 .cache/
 .wrangler/
 
+# Generado por scripts/generate-wiki-context.mjs (predev/prebuild) a partir del contenido real
+# de wiki-ia/* — no es fuente de verdad, se regenera solo.
+src/data/wiki-ia/content.generated.json
+
 # Entorno y secretos (NUNCA subir)
 .env
 .env.*
