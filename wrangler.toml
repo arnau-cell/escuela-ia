@@ -13,9 +13,8 @@ main = "@astrojs/cloudflare/entrypoints/server"
 directory = "./dist"
 
 # Contador de límite de uso (por IP/día) para /api/nucleo/chat y /api/wiki/ask — evita dejar el
-# endpoint de LLM abierto a coste ilimitado en un sitio gratuito y público.
-# PENDIENTE (acción exclusiva de Arnau, requiere `wrangler login`): crear el namespace real con
-# `wrangler kv namespace create RATE_LIMIT` y sustituir el id de abajo por el real.
+# endpoint de LLM abierto a coste ilimitado en un sitio gratuito y público. Namespace real
+# creado 2026-07-05 (`wrangler kv namespace create RATE_LIMIT`).
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id = "PENDIENTE_CREAR_CON_WRANGLER_KV_NAMESPACE_CREATE"
+id = "937199fe2ecb4d93bf070a93a3d36b13"
