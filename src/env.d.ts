@@ -9,5 +9,8 @@ declare namespace Cloudflare {
 	interface Env {
 		RATE_LIMIT: KVNamespace;
 		ANTHROPIC_API_KEY: string;
+		// Ranking de herramientas (RANKING-WIKI R1, 2026-07-05).
+		RANKING_DB: D1Database;
+		VOTE_SALT: string;
 	}
 }

@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { env } from 'cloudflare:workers';
 import { buildSystemPrompt } from '../../../data/nucleo/system-prompt.js';
 import { checkRateLimit, getClientIp } from '../../../lib/rate-limit.js';
+import { incrementNucleoRecs } from '../../../lib/ranking-db.js';
 import platforms from '../../../data/setup/platforms.json';
 
 const MODEL = 'claude-haiku-4-5';
@@ -91,7 +92,21 @@ export async function POST(context: APIContext) {
 		// catálogo real y se descartan los que no existan — garantía de neutralidad en código,
 		// no solo en el prompt.
 		const byId = new Map(platforms.map((p) => [p.id, p]));
-		const resolvedPlatforms = parsed.platformIds.map((id) => byId.get(id)).filter(Boolean);
+		const resolvedPlatforms = parsed.platformIds
+			.map((id) => byId.get(id))
+			.filter((p): p is NonNullable<typeof p> => p !== undefined);
+
+		// Señal del ranking (RANKING-WIKI R2 mínimo): cada plan cerrado cuenta como una recomendación
+		// real por herramienta, agregada sin ningún dato del usuario. Fire-and-forget vía waitUntil —
+		// nunca debe retrasar ni poder romper la respuesta al usuario.
+		if (parsed.done && resolvedPlatforms.length > 0) {
+			context.locals.cfContext.waitUntil(
+				incrementNucleoRecs(
+					env.RANKING_DB,
+					resolvedPlatforms.map((p) => p.id),
+				).catch((error) => console.error('[api/nucleo/chat] incrementNucleoRecs', error)),
+			);
+		}
 
 		return new Response(
 			JSON.stringify({

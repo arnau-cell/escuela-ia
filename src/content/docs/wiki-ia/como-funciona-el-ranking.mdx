@@ -1,0 +1,54 @@
+---
+title: "Cómo funciona el ranking"
+description: "La fórmula pública del ranking de herramientas, qué señales usa, la política de neutralidad y la privacidad del voto anónimo."
+translationKey: wiki-ia/como-funciona-el-ranking
+sourceUpdated: 2026-07-05
+sidebar:
+  order: 6
+---
+
+El ranking de la [Wiki de herramientas](/wiki-ia/herramientas/) existe para ordenar el catálogo por
+utilidad real, no por quién paga más. Esta página es la fórmula completa, sin nada oculto.
+
+## La fórmula
+
+```
+score = votos_útiles + 0.5 × recomendaciones_del_núcleo + 2 × puntuación_editorial
+```
+
+Versión actual de la fórmula: `r1-2026-07-05` (la misma que devuelve `GET /api/wiki/ranking` en el
+campo `formulaVersion` — si cambian los pesos, cambia esta versión).
+
+Hoy solo existe la primera señal (votos), así que **score = votos**. Dentro de cada categoría, el
+desempate es alfabético.
+
+## Las señales
+
+| Señal | ¿Qué es? | ¿Desde cuándo? |
+|---|---|---|
+| Votos útiles | Botón "¿Te resulta útil?" en cada tarjeta, 1 voto por visitante y herramienta cada 30 días | Ya activa |
+| Recomendaciones del núcleo | Cada vez que el [núcleo conversacional](/) cierra un plan, cuenta como recomendación real para cada herramienta que incluyó | Ya activa |
+| Puntuación editorial | Criba manual con criterios públicos (impacto real, usabilidad, fiabilidad) | Todavía no — catálogo aún pequeño |
+
+## Qué no hacemos (política de neutralidad)
+
+- **Nada de pago por posición.** Ninguna herramienta puede pagar para aparecer antes.
+- **Nada de afiliados.** Los enlaces van directos a cada herramienta, sin comisión.
+- **La alternativa open-source o gratuita se muestra siempre** que exista, esté o no mejor
+  puntuada la de pago.
+- **El ranking desempata, nunca decide.** En el núcleo conversacional, cuando varias herramientas
+  encajan igual de bien con lo que necesitas, se menciona antes la mejor valorada — pero el
+  encaje con tu necesidad manda siempre, y la alternativa neutral se menciona igualmente.
+
+## Privacidad del voto
+
+El voto es completamente anónimo: no hay cuentas ni inicio de sesión. Para evitar votos
+repetidos, tu IP se transforma con una firma criptográfica (HMAC) usando una clave secreta del
+servidor — **nunca se guarda tu IP tal cual**, solo esa huella, y solo durante 30 días. Pasado ese
+plazo se borra sola. No se construye ningún perfil de usuario ni se cruza con ningún otro dato.
+Más detalle en la [política de privacidad](/recursos/privacidad/).
+
+## Próximos pasos (no en esta fase)
+
+Reviews escritas, valoración por estrellas y un leaderboard de comunidad quedan para más adelante
+— requieren identidad y volumen de uso que el catálogo todavía no tiene.
