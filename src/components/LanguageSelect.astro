@@ -19,14 +19,24 @@ const label = targetLang === 'en' ? 'English' : 'Español';
 </a>
 
 <style>
+	/* Pill monospace, mismo lenguaje visual que el selector ES/EN de la home (NucleoHeader .navlang)
+	   — REBRAND-EASYAI 2026-07-05. */
 	.language-select-link {
 		display: inline-flex;
 		align-items: center;
-		font-size: var(--sl-text-sm);
-		color: var(--sl-color-text-accent);
+		font-family: var(--mono);
+		font-size: 12px;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--ink-dim);
+		border: 1px solid var(--line);
+		padding: 6px 10px;
+		border-radius: 4px;
 		white-space: nowrap;
+		text-decoration: none;
 	}
 	.language-select-link:hover {
-		text-decoration: underline;
+		color: var(--ink);
+		border-color: var(--ink-dim);
 	}
 </style>

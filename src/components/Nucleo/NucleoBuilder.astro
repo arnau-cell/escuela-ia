@@ -2,6 +2,8 @@
 // Núcleo conversacional de Easy AI — pivote 2026-07-04. Mismo diseño validado en el mockup
 // interactivo (paleta clara, acentos eléctricos lima/magenta), ahora conectado de verdad a
 // /api/nucleo/chat (Claude Haiku 4.5) en vez del guion fijo del prototipo.
+import '../../styles/easy-ai-tokens.css';
+
 interface Props {
 	locale: 'es' | 'en';
 }
@@ -291,20 +293,9 @@ const t = UI[locale];
 </script>
 
 <style>
-	:root {
-		--bg: #f4f6fa;
-		--bg-2: #ffffff;
-		--ink: #11141c;
-		--ink-dim: #565f70;
-		--line: #dce1ea;
-		--panel: #11141c;
-		--panel-line: rgba(255, 255, 255, 0.12);
-		--lime: #c6ff3d;
-		--lime-dim: #7a9e2e;
-		--magenta: #ff3dbd;
-		--mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', Menlo, Consolas, monospace;
-		--sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-	}
+	/* Tokens de marca (--bg, --ink, --lime...) en src/styles/easy-ai-tokens.css, importado arriba
+	   — única fuente de verdad (REBRAND-EASYAI 2026-07-05), reutilizada también por el re-skin de
+	   Starlight en custom.css. */
 	* { box-sizing: border-box; }
 	.wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
 

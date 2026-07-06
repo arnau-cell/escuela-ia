@@ -1,1 +1,85 @@
-/* Escuela IA · estilos propios (F6 los completa) */
+/* Easy AI · re-skin de Starlight (REBRAND-EASYAI 2026-07-05).
+   Objetivo: la Wiki/Aprende/Por sector/Noticias/Comparte usan los mismos tokens de marca que la
+   home/núcleo (src/styles/easy-ai-tokens.css) — misma marca en todo el sitio, sin reconstruir la
+   estructura de documentación (sidebar, buscador Pagefind). Ver
+   _conocimiento/investigacion/05_unificacion-marca-easy-ai.md. */
+@import './easy-ai-tokens.css';
+
+/* Tema claro únicamente en v1 (decisión de Arnau, coherente con la home): se fuerza la misma
+   paleta tanto si Starlight resuelve data-theme a "light" como a "dark" (el valor por defecto sin
+   atributo explícito, ver node_modules/@astrojs/starlight/style/props.css) — el toggle de tema se
+   oculta más abajo para no ofrecer un control que no hace nada. */
+:root,
+:root[data-theme='light'] {
+	--sl-color-white: var(--ink);
+	--sl-color-black: var(--bg-2);
+	--sl-color-gray-1: var(--ink);
+	--sl-color-gray-2: var(--ink-dim);
+	--sl-color-gray-3: var(--ink-dim);
+	--sl-color-gray-4: var(--line);
+	--sl-color-gray-5: var(--line);
+	--sl-color-gray-6: var(--line);
+	--sl-color-gray-7: var(--bg);
+
+	--sl-color-accent-low: var(--bg);
+	--sl-color-accent: var(--ink);
+	--sl-color-accent-high: var(--ink);
+
+	--sl-color-text: var(--ink);
+	--sl-color-text-accent: var(--ink);
+	--sl-color-text-invert: var(--bg-2);
+	--sl-color-bg: var(--bg-2);
+	--sl-color-bg-nav: var(--bg-2);
+	--sl-color-bg-sidebar: var(--bg-2);
+	--sl-color-bg-inline-code: var(--bg);
+	--sl-color-bg-accent: var(--lime);
+	--sl-color-hairline-light: var(--line);
+	--sl-color-hairline: var(--line);
+	--sl-color-hairline-shade: var(--line);
+
+	--__sl-font: var(--sans);
+	--__sl-font-mono: var(--mono);
+}
+
+/* Selector de tema oscuro/claro/auto retirado de la vista: v1 es solo claro, y no hay dos paletas
+   entre las que elegir (menos hacks que reescribir Header.astro para quitar el componente). */
+starlight-theme-select {
+	display: none;
+}
+
+/* Titulares monospace en mayúsculas, mismo lenguaje visual que la home (NucleoBuilder .headline).
+   #_top es el h1 de PageTitle.astro (PAGE_TITLE_ID de Starlight): vive fuera de
+   .sl-markdown-content, así que necesita su propio selector. */
+:where(.sl-markdown-content) :is(h1, h2, h3, h4, h5, h6),
+h1#_top,
+.group-label .large {
+	font-family: var(--mono);
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+}
+
+/* Enlaces del contenido: tinta + subrayado lima (mismo patrón que .headline em de la home), en
+   vez del azul de acento por defecto de Starlight — evita usar lima como color de texto (falla
+   contraste sobre claro), la reserva para fondos/subrayados. */
+:where(.sl-markdown-content) a {
+	color: var(--ink);
+	text-decoration-color: var(--lime);
+	text-decoration-thickness: 2px;
+	text-underline-offset: 2px;
+}
+
+[aria-current='page'] {
+	text-decoration: none;
+}
+
+/* El botón de menú móvil (sidebar) de Starlight, en modo claro, es un círculo blanco con icono
+   oscuro que solo se distingue por su box-shadow — apenas visible sobre un header ya blanco. Al
+   forzar el tema claro para todo el sitio (siempre visible, no solo para quien tuviera el toggle
+   en claro), ese contraste bajo deja de ser un caso raro y pasa a afectar a todo el mundo en
+   móvil: se sustituye por un círculo de tinta sólida con icono claro, mismo contraste que ya
+   tenían los botones lima/tinta del resto del sitio. Especificidad igual o mayor que la regla de
+   Starlight (:global([data-theme='light']) button) para ganar sin depender de !important. */
+:root[data-theme='light'] starlight-menu-button button {
+	background-color: var(--ink);
+	color: var(--bg-2);
+}

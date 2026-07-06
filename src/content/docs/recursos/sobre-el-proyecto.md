@@ -1,15 +1,15 @@
 ---
 title: "Sobre el proyecto"
-description: "Misión, política de neutralidad y licencias de Escuela IA — qué es este sitio y por qué existe."
+description: "Misión, política de neutralidad y licencias de Easy AI — qué es este sitio y por qué existe."
 translationKey: recursos/sobre-el-proyecto
-sourceUpdated: 2026-07-04
+sourceUpdated: 2026-07-05
 sidebar:
   order: 3
 ---
 
 ## Qué es
 
-Escuela de la IA (nombre provisional; el definitivo se fijará antes del lanzamiento con dominio propio)
+Easy AI (nombre provisional; el definitivo se fijará antes del lanzamiento con dominio propio)
 es un sitio gratuito, neutral y bilingüe (español/inglés) para entender la inteligencia artificial de
 cero a nivel técnico: qué es cada cosa, para qué sirve, cuándo usar una herramienta u otra, cuánto
 cuesta, y cómo montarte tu propio setup según tu ordenador y presupuesto.

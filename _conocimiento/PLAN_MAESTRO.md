@@ -445,3 +445,47 @@ ruidos cosméticos (beacon de Analytics bajo headless y favicon 404 en la home a
 
 Con esto, el ciclo RANKING está **vivo en producción**. Siguiente paso: ciclo **REBRAND-EASYAI**
 (prompt constructor listo en `_privado/protocolo/prompts/REBRAND-EASYAI-constructor.md`).
+
+### REBRAND-EASYAI — construido (2026-07-05), en PR sin fusionar
+
+Una sola marca y estética "Easy AI" en todo el sitio (antes: la home ya era Easy AI, el resto
+seguía con estética de documentación Starlight y marca "Escuela de la IA"). Re-skin de Starlight,
+no reconstrucción: tokens de marca extraídos a `src/styles/easy-ai-tokens.css` (única fuente de
+verdad, importado por la home/núcleo y por `custom.css`, verificado que no cambia nada visualmente
+en la home comparando el CSS generado byte a byte), `custom.css` mapea `--sl-*` a esos tokens y
+fuerza el tema claro en todo momento (el toggle oscuro/claro se retira, no aporta nada con paleta
+única), cabecera unificada (`SiteTitle.astro` nuevo con el logo EASY+lima-AI, selector de idioma
+restyleado a pill sin tocar su lógica de traducción), barrido completo de "Escuela de la IA"/"AI
+School"/"Escuela IA" (20 apariciones recontadas en 14 archivos — el análisis original hablaba de
+19/13, la diferencia son PRs fusionados después), favicon nuevo coherente con la marca (arregla el
+404 que Lighthouse detectó en la home a medida). Los 4 textos legales tocados (aviso legal, sobre
+el proyecto, y sus pares EN) cambiaron **solo el nombre**, ni una palabra más — pendiente de
+re-lectura de Arnau (checkpoint humano explícito, ver handoff).
+
+Verificación visual real con Chrome headless (capturas desktop/móvil, ES/EN, home + 3 secciones de
+docs): misma marca en todo el sitio, cero restos de la marca vieja (`grep` en cero), Lighthouse
+accessibility 100/100 sin degradar. Un bug encontrado y arreglado en el camino (el H1 real de cada
+página de Starlight vive fuera de `.sl-markdown-content` y se había quedado sin el estilo
+monospace-mayúsculas) y un fix de contraste en el botón de menú móvil (blanco-sobre-blanco en
+claro). Confirmado con un `git stash` de control que el botón de menú móvil no siendo visible en
+las capturas es un problema **preexistente de Starlight**, no introducido por este ciclo.
+
+Detalle completo, incluida la lista exacta de textos legales para la re-lectura de Arnau, en
+`_privado/auditorias/REBRAND-EASYAI-handoff.md`. Fuera de alcance (según lo escrito, no
+improvisado): renombrar repo/worker/carpeta local (espera al dominio definitivo), duplicar los 4
+enlaces de navegación de la home en la cabecera de Starlight (interpretación deliberada, señalada
+para que Arnau confirme o pida el cambio). Pendiente de Arnau: re-lectura de legales, decidir si
+"nombre provisional" se retira de `sobre-el-proyecto.md`/`about.md`, búsqueda de disponibilidad de
+marca (EUIPO/OEPM/DNPI) + dominio antes del go/no-go de lanzamiento (LEGAL.md §1.7).
+
+**Auditado el 2026-07-05: APROBADO, sin reservas técnicas**
+(`_privado/auditorias/REBRAND-EASYAI-veredicto.md`). Gates reproducidos; legales verificados
+palabra a palabra (solo nombre + fecha); tokens idénticos valor a valor al `:root` original;
+capturas propias en Chrome (desktop y móvil): coherencia total home↔docs con el H1 arreglado a la
+vista; favicon 200; Lighthouse accessibility 100 reproducido; marca vieja a cero. La decisión de
+alcance del constructor (no duplicar los enlaces de la home en la cabecera de docs) se valida
+como coherente con "re-skin, no reconstrucción" — queda como decisión de producto de Arnau.
+
+Siguiente paso: **checkpoint humano de Arnau** (re-leer los 4 legales renombrados + decidir sobre
+la cláusula "nombre provisional" + confirmar lo de los enlaces) y, con su visto bueno, fusionar
+PR #11 y desplegar.

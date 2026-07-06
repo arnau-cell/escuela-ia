@@ -1,15 +1,15 @@
 ---
 title: "About the project"
-description: "Escuela IA's mission, neutrality policy, and licenses — what this site is and why it exists."
+description: "Easy AI's mission, neutrality policy, and licenses — what this site is and why it exists."
 translationKey: recursos/sobre-el-proyecto
-sourceUpdated: 2026-07-04
+sourceUpdated: 2026-07-05
 sidebar:
   order: 3
 ---
 
 ## What it is
 
-Escuela de la IA / AI School (provisional name; the final one will be set before launching with its own
+Easy AI (provisional name; the final one will be set before launching with its own
 domain) is a free, neutral, bilingual (Spanish/English) site to understand artificial intelligence from
 zero to a technical level: what each thing is, what it's for, when to use one tool over another, what it
 costs, and how to set up your own AI setup based on your computer and budget.

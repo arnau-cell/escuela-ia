@@ -20,6 +20,7 @@ const toAbsolute = (path: string) => (site ? new URL(path, site).href : path);
 			name="description"
 			content="Describe en tus palabras lo que quieres automatizar o construir con IA. Te hacemos las preguntas justas y armamos el plan contigo, explicando cada pieza. Gratis, neutral, sin registro."
 		/>
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 		<link rel="canonical" href={toAbsolute('/')} />
 		<link rel="alternate" hreflang="es" href={toAbsolute('/')} />
 		<link rel="alternate" hreflang="en" href={toAbsolute('/en/')} />

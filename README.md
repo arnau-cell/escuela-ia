@@ -1,4 +1,4 @@
-# Escuela de la IA / AI School
+# Easy AI
 
 **ES** — El sitio de referencia gratuito y neutral para entender la IA de cero a nivel técnico, bilingüe (ES/EN). Sin afiliados de pago, siempre alternativas open-source, y una guía "monta tu setup" que te dice exactamente qué instalar según tu ordenador, presupuesto y objetivo. No es un negocio: es un proyecto para ayudar.
 

@@ -2,7 +2,7 @@
 title: "Aviso legal"
 description: "Identidad del titular, contacto, finalidad del sitio y licencias del código y el contenido."
 translationKey: recursos/aviso-legal
-sourceUpdated: 2026-07-04
+sourceUpdated: 2026-07-05
 sidebar:
   order: 4
 ---
@@ -20,7 +20,7 @@ independientemente de la ubicación del operador.
 
 ## Finalidad del sitio
 
-"Escuela de la IA / AI School" es un proyecto educativo, gratuito y neutral, cuyo objetivo es que
+"Easy AI" es un proyecto educativo, gratuito y neutral, cuyo objetivo es que
 cualquier persona entienda la inteligencia artificial de cero a nivel técnico. A día de hoy no es una
 actividad comercial: no vende productos ni servicios propios, no lleva afiliados de pago y no requiere
 registro de usuario para consultarlo. Esta sección se actualizará si el proyecto incorpora en el futuro
