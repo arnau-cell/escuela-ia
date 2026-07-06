@@ -1,4 +1,4 @@
-# Plan · "Escuela de la IA" (nombre provisional) — web educativa bilingüe sobre IA
+# Plan · Easy AI (antes "Escuela de la IA") — web educativa bilingüe sobre IA
 
 ## Contexto (por qué)
 
@@ -22,7 +22,7 @@ por sector + con "cómo montártelo tú"**. Ese es el diferenciador.
 
 | Decisión | Elección |
 |---|---|
-| **Nombre** | Provisional `escuela-ia` (display "Escuela de la IA / AI School"); nombre+dominio definitivos antes de lanzar |
+| **Nombre** | **Easy AI** (confirmado por Arnau, 2026-07-05); repo/URL siguen `escuela-ia` hasta tener búsqueda de marca + dominio definitivos |
 | **Mundo / ubicación** | **Mundo nuevo separado** (4º mundo, decisión explícita de Arnau — rompe a propósito la regla de "solo 3 mundos") |
 | **Repositorio** | **Público / open source** (código MIT · contenido CC BY-SA); permite contribución por PR |
 | **Arranque** | **Solo dejar el plan documentado por ahora.** No se construye nada todavía |
@@ -486,6 +486,14 @@ vista; favicon 200; Lighthouse accessibility 100 reproducido; marca vieja a cero
 alcance del constructor (no duplicar los enlaces de la home en la cabecera de docs) se valida
 como coherente con "re-skin, no reconstrucción" — queda como decisión de producto de Arnau.
 
-Siguiente paso: **checkpoint humano de Arnau** (re-leer los 4 legales renombrados + decidir sobre
-la cláusula "nombre provisional" + confirmar lo de los enlaces) y, con su visto bueno, fusionar
-PR #11 y desplegar.
+**Checkpoint humano cumplido y PUBLICADO (2026-07-05)**: Arnau re-leyó los 4 legales renombrados,
+confirmó **"Easy AI" como el nombre que toca** (la cláusula "(nombre provisional…)" se queda por
+ahora, hasta tener búsqueda de marca y dominio), y aprobó la cabecera de docs sin duplicar los
+enlaces de la home. PR #11 fusionado, build limpio de master desplegado a producción
+(`escuela-ia.arnau-cell.workers.dev`), smoke verificado: home 200, favicon 200, marca vieja a
+cero en las páginas servidas, API del ranking 200, y captura real de producción con la identidad
+Easy AI completa en las docs. **Todo el sitio es Easy AI.**
+
+Pendiente que sigue vivo (de Arnau, bloquea solo el go/no-go de lanzamiento): búsqueda de
+disponibilidad de marca "Easy AI" (EUIPO/OEPM/DNPI) + dominio definitivo; al tenerlos, el
+movimiento único de renombrar repo/worker/carpeta y retirar la cláusula provisional.
